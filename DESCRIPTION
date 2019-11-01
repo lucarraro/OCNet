@@ -1,0 +1,24 @@
+Package: OCNet
+Title: OCNet - an R-package to generate and analyze optimal channel networks
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Luca",
+           family = "Carraro",
+           role = c("aut", "cre"),
+           email = "luca.carraro@hotmail.it")
+Description: an R-package to generate and analyze optimal channel networks.
+Imports:
+    fields,
+    Matrix,
+    spam,
+	rgl,
+	methods
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+Depends: R (>= 3.5)
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

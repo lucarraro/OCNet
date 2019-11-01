@@ -1,0 +1,27 @@
+
+export(aggregate_OCN)
+export(create_OCN)
+export(create_peano)
+export(draw_contour_OCN)
+export(draw_elev2D_OCN)
+export(draw_elev3D_OCN)
+export(draw_elev3Drgl_OCN)
+export(draw_simple_OCN)
+export(draw_subcatchments_OCN)
+export(draw_thematic_OCN)
+export(find_area_threshold_OCN)
+export(landscape_OCN)
+export(paths_OCN)
+export(rivergeometry_OCN)
+import(fields)
+import(rgl)
+import(spam)
+
+importFrom("grDevices", "colorRampPalette", "contourLines", "rainbow",
+             "terrain.colors", "trans3d","hcl.colors")
+importFrom("graphics", "lines", "par", "persp", "plot", "points",
+			 "polygon")
+importFrom("methods", "new", "slot<-")
+importFrom("stats", "optim", "runif")
+
+useDynLib(OCNet, .registration = TRUE)
