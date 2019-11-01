@@ -6,9 +6,7 @@
 \description{
 A package that allows the generation and analysis of synthetic river network analogues, called Optimal Channel Networks (OCNs).
 }
-\details{
-Add details.
-}
+
 \section{References}{
 
 
@@ -21,5 +19,5 @@ Carraro et al.
 \href{../doc/OCNet.html}{\code{vignette("OCNet")}}
 }
 \author{
-Luca Carraro (\email{luca.carraro@hotmail.it}), Florian Altermatt, Emanuel A. Fronhofer, Isabelle Gounand, Andrea Rinaldo, Enrico Bertuzzo
+Luca Carraro (\email{luca.carraro@hotmail.it}), Florian Altermatt, Emanuel A. Fronhofer, Reinhard Furrer, Isabelle Gounand, Andrea Rinaldo, Enrico Bertuzzo
 }
