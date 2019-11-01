@@ -2,10 +2,28 @@ Package: OCNet
 Title: OCNet - an R-package to generate and analyze optimal channel networks
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "Luca",
+    c(person(given = "Luca",
            family = "Carraro",
            role = c("aut", "cre"),
-           email = "luca.carraro@hotmail.it")
+           email = "luca.carraro@hotmail.it"),
+     person(given = "Florian",
+           family = "Altermatt",
+           role = "ctb"),
+     person(given = "Emanuel A.",
+           family = "Fronhofer",
+           role = "ctb"),
+      person(given = "Reinhard",
+           family = "Furrer",
+           role = "ctb"),
+     person(given = "Isabelle",
+           family = "Gounand",
+           role = "ctb"),
+     person(given = "Andrea",
+           family = "Rinaldo",
+           role = "ctb"),
+    person(given = "Enrico",
+           family = "Bertuzzo",
+           role = "aut"))
 Description: an R-package to generate and analyze optimal channel networks.
 Imports:
     fields,
