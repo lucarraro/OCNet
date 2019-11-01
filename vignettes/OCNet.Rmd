@@ -1,6 +1,6 @@
 ---
 title: "An introduction to OCNet"
-author: "Luca Carraro, Florian Altermatt, Emanuel A. Fronhofer, Isabelle Gounand, Andrea Rinaldo, Enrico Bertuzzo"
+author: "Luca Carraro, Florian Altermatt, Emanuel A. Fronhofer, Reinhard Furrer, Isabelle Gounand, Andrea Rinaldo, Enrico Bertuzzo"
 date: "`r Sys.Date()`"
 output: 
     bookdown::html_document2: #rmarkdown::html_vignette: # pdf_document 
