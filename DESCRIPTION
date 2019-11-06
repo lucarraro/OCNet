@@ -31,7 +31,8 @@ Imports:
     spam,
 	rgl,
 	methods,
-	bookdown
+	bookdown,
+	igraph
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true

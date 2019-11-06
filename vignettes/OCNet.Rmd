@@ -22,7 +22,10 @@ knitr::opts_chunk$set(
 ``` 
 
 ```{r lib, echo = FALSE}
-library(OCNet)
+suppressPackageStartupMessages(library(OCNet))
+suppressPackageStartupMessages(library(spam))
+suppressPackageStartupMessages(library(Matrix))
+suppressPackageStartupMessages(library(igraph))
 ```
 
 # Overview
@@ -138,6 +141,7 @@ ex$SC$to_FD
 Let's build an OCN on a 20x20 lattice and assume that each cell represents a square of side 500 m. The total size of the catchment is therefore 100 km^2^. Let's locate the outlet close to the southwestern corner of the lattice. Function `draw_simple_OCN` can then be used to display the OCN.
 
 ```{r, fig.width=4, fig.height=4}
+set.seed(1)
 OCN_we <- create_OCN(20, 20, OutletPos = 3, cellsize = 500)
 draw_simple_OCN(OCN_we)
 
@@ -383,6 +387,28 @@ OCNet contains some ready-made large OCNs built via function `create_OCN`. Their
 
 ***
 
+# Compatibility with package igraph
+
+Adjacency matrices at all aggregation levels are produced as `spam` [@furrer2010] objects. In order to transform the OCN into an `igraph` [@csardi2006] graph object, the adjacency matrix must be converted into a `Matrix` object (via function `as.dgCMatrix.spam` of `spam`). Function `graph_from_adjacency_matrix` of `igraph` can then be used to obtain a graph object.
+
+
+
+```{r, fig.width=5, fig.height=4}
+par(mai=c(0.1,0.1,0.1,0.1))
+mm <- as.dgCMatrix.spam(OCN_we$AG$W)
+g <- graph_from_adjacency_matrix(mm)
+plot(g, vertex.color = rainbow(OCN_we$AG$Nnodes), 
+     layout = matrix(c(OCN_we$AG$X,OCN_we$AG$Y),ncol=2,nrow=OCN_we$AG$Nnodes))
+```
+
+```{r, fig.width=5, fig.height=3}
+draw_thematic_OCN(c(1:OCN_we$AG$Nnodes), OCN_we, DrawNodes = TRUE, Node_cex = 3,
+                  ColPalette = rainbow, DiscreteLevels = TRUE, NaNColor = "#999999")
+text(OCN_we$AG$X, OCN_we$AG$Y)
+
+```
+
+
 # References
 
 ---
@@ -506,5 +532,35 @@ references:
   type: article-journal
   issued:
     year: 2018 
+
+- id: furrer2010
+  title: spam. A Sparse Matrix R Package with Emphasis on MCMC Methods for Gaussian Markov Random Fields
+  author:
+  - family: Furrer
+    given: R. 
+  - family: Sain
+    given: S.R.  
+  container-title: Journal of Statistical Software
+  volume: 36(10)
+  URL: 'http://dx.doi.org/10.18637/jss.v036.i10'
+  page: 1-25
+  type: article-journal
+  issued:
+    year: 2010 
+
+- id: csardi2006
+  title: The igraph software package for complex network research
+  author:
+  - family: Csardi
+    given: G. 
+  - family: Nepusz
+    given: T.  
+  container-title: InterJournal
+  volume: Complex Systems
+  URL: 'http://igraph.org'
+  page: 1695
+  type: article-journal
+  issued:
+    year: 2006 
 
 ---
