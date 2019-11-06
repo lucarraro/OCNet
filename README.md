@@ -8,7 +8,7 @@ An R-package to generate and analyze Optimal Channel Networks
 install.packages("devtools")
 
 # install OCNet from GitHub
-devtools::install_github("lucarraro/OCNet")
+devtools::install_github("lucarraro/OCNet", build_vignettes = TRUE)
 ```
 
 # Authors
