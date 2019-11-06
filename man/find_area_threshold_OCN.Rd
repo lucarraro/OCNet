@@ -4,7 +4,7 @@
 \usage{
 find_area_threshold_OCN(OCN, thr_values = seq(OCN$cellsize,
   OCN$cellsize * max(OCN$FD$A), OCN$cellsize), MaxReachLength = Inf,
-  StreamOrderType = "Strahler")
+  StreamOrderType = "Strahler", DisplayUpdates = 0)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{landscape_OCN}}}
@@ -16,6 +16,8 @@ is higher than \code{MaxReachLength}, the reach starting from the channel head w
 pixel is considered as a new channel head, from which a new reach departs.}
 
 \item{StreamOrderType}{If \code{"Strahler"}, Strahler stream order is computed; if \code{"Shreve"}, Shreve stream order is computed.}
+
+\item{DisplayUpdates}{If \code{1}, progress updates are printed in the console while the function is running. If \code{0}, no updates are printed.}
 }
 \value{
 A list whose objcets are listed below.

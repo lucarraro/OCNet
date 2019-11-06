@@ -2,7 +2,8 @@
 find_area_threshold_OCN <- function(OCN,
                                     thr_values=seq(OCN$cellsize,OCN$cellsize*max(OCN$FD$A),OCN$cellsize),
                                     MaxReachLength=Inf,
-                                    StreamOrderType="Strahler"){
+                                    StreamOrderType="Strahler",
+                                    DisplayUpdates=0){
   
   if (!("Length" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to find_area_threshold_OCN.')
@@ -18,7 +19,7 @@ find_area_threshold_OCN <- function(OCN,
   vec_StreamOrder <- numeric(length(thr_values))
   
   for (thr in 1:(length(thr_values))){
-    cat(sprintf('\r%.2f%% completed',100*thr/length(thr_values)))
+    if (DisplayUpdates==1) {cat(sprintf('\r%.2f%% completed',100*thr/length(thr_values)))}
     # print(sprintf('Evaluating A_thr = %.0f m2',thr_values[thr]))
     
     RN_mask <- as.vector(OCN$FD$A >= thr_values[thr]) 
