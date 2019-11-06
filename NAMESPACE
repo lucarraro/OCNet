@@ -16,6 +16,7 @@ export(rivergeometry_OCN)
 import(fields)
 import(rgl)
 import(spam)
+import(bookdown)
 
 importFrom("grDevices", "colorRampPalette", "contourLines", "rainbow",
              "terrain.colors", "trans3d","hcl.colors")
