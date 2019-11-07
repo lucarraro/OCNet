@@ -11,7 +11,8 @@ draw_thematic_OCN <- function(theme,OCN,
                               Node_cex=2,
                               Node_pch=21,
                               NaNColor="#0099FF",
-                              BackgroundColor=NULL){
+                              BackgroundColor=NULL,
+                              add_colorbar=TRUE){
   
   if (!("RN" %in% names(OCN))){
     stop('Missing fields in OCN. You should run aggregate_OCN prior to draw_thematic_OCN.')
@@ -149,6 +150,6 @@ draw_thematic_OCN <- function(theme,OCN,
   }
   
   
-  image.plot(col=ColPalette,legend.only=TRUE,zlim=c(minval,maxval))
+  if (add_colorbar) {image.plot(col=ColPalette,legend.only=TRUE,zlim=c(minval,maxval))}
   
 }

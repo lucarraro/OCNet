@@ -391,7 +391,7 @@ OCNet contains some ready-made large OCNs built via function `create_OCN`. Their
 
 Adjacency matrices at all aggregation levels are produced as `spam` [@furrer2010] objects. In order to transform the OCN into an `igraph` [@csardi2006] graph object, the adjacency matrix must be converted into a `Matrix` object (via function `as.dgCMatrix.spam` of `spam`). Function `graph_from_adjacency_matrix` of `igraph` can then be used to obtain a graph object.
 
-
+For example, let's transform the previously obtained `OCN_we` at the AG level into a graph:
 
 ```{r, fig.width=5, fig.height=4}
 par(mai=c(0.1,0.1,0.1,0.1))
@@ -401,9 +401,12 @@ plot(g, vertex.color = rainbow(OCN_we$AG$Nnodes),
      layout = matrix(c(OCN_we$AG$X,OCN_we$AG$Y),ncol=2,nrow=OCN_we$AG$Nnodes))
 ```
 
+The same network can be displayed as an OCN:
+
 ```{r, fig.width=5, fig.height=3}
 draw_thematic_OCN(c(1:OCN_we$AG$Nnodes), OCN_we, DrawNodes = TRUE, Node_cex = 3,
-                  ColPalette = rainbow, DiscreteLevels = TRUE, NaNColor = "#999999")
+                  ColPalette = rainbow, DiscreteLevels = TRUE, NaNColor = "#999999",
+                  add_colorbar = FALSE)
 text(OCN_we$AG$X, OCN_we$AG$Y)
 
 ```

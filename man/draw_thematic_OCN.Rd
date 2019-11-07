@@ -8,7 +8,8 @@ draw_thematic_OCN(theme, OCN,
   ColPalette = colorRampPalette(c("yellow", "red", "black")),
   ColLevels = 1000, DiscreteLevels = FALSE, ExactDraw = FALSE,
   DrawNodes = FALSE, Node_cex = 2, Node_pch = 21,
-  NaNColor = "#0099FF", BackgroundColor = NULL)
+  NaNColor = "#0099FF", BackgroundColor = NULL,
+  add_colorbar=TRUE)
 }
 \arguments{
 \item{theme}{Vector (of length \code{OCN$AG$Nnodes} or \code{OCN$RN$Nnodes}) expressing the spatial field of interest. 
@@ -48,6 +49,8 @@ parameter \code{pch} of function \code{\link{points}}). It can be a scalar or a 
 equal to \code{OCN$N_outlets}. If \code{OCN$N_outlets > 1} and \code{length(BackgroundColor) == OCN$N_outlets}, each color is used to identify a different catchment
 (corresponding to the respective outlet). If instead \code{OCN$N_outlets > 1} and \code{length(BackgroundColor) == 1}, all catchment are colored with the same 
 \code{BackgroundColor}.}
+
+\item{add_colorbar}{If \code{TRUE}, add colorbar to the plot.}
 }
 \value{
 No output is returned.
