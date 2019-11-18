@@ -13,10 +13,13 @@ export(find_area_threshold_OCN)
 export(landscape_OCN)
 export(paths_OCN)
 export(rivergeometry_OCN)
+export(OCN_to_SSN)
+import(SSN)
 import(fields)
 import(rgl)
 import(spam)
 import(bookdown)
+import(igraph)
 
 importFrom("grDevices", "colorRampPalette", "contourLines", "rainbow",
              "terrain.colors", "trans3d","hcl.colors")
@@ -24,6 +27,9 @@ importFrom("graphics", "lines", "par", "persp", "plot", "points",
 			 "polygon")
 importFrom("methods", "new", "slot<-")
 importFrom("stats", "optim", "runif")
-importFrom("igraph", "graph_from_adjacency_matrix")
+importFrom("rgdal", "writeOGR")
+importFrom("sp", "Line", "Lines", "SpatialLines", "SpatialLinesDataFrame",
+	"SpatialPointsDataFrame")
+importFrom("utils", "write.table")
 
 useDynLib(OCNet, .registration = TRUE)
