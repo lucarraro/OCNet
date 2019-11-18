@@ -155,10 +155,20 @@ draw_elev3D_OCN(OCN_we, draw_river = FALSE)
 
 ```
 
-Next, the OCN can be aggregated by imposing a threshold on drainage area equal to 3 km^2^. Function `draw_subcatchments_OCN` shows how the lattice is partitioned into subcatchments. It is possible to add points at the locations of the nodes at the AG level. 
+Next, the OCN can be aggregated. Let's suppose that the number of nodes at the AG level be as close as possible^[It is not guaranteed that an OCN can be aggregated to an arbitrary number of nodes. This is due to the fact that the indigree of confluence nodes is typically 2 or 3, depending on the flow direction patterns. For example, if the outlet is not a confluence node, all confluence nodes have indegree equal to 2 and `MaxReachLength = Inf`, the resulting number of aggregated nodes will be even.] to 20. With function `find_area_threshold_OCN` we can derive the corresponding value of drainage area threshold:
+
+```{r}
+thr <- find_area_threshold_OCN(OCN_we)
+# find index corresponding to thr$Nnodes ~= 20
+ind_thr <- which(abs(thr$Nnodes - 20) == min(abs(thr$Nnodes - 20)))
+ind_thr <- max(ind_thr) # pick the last ind_thr that satisfies the condition above
+A_thr12 <- thr$thr_values[ind_thr] # corresponding threshold area
+```
+
+The resulting number of nodes is^[The number of aggregated nodes is here uneven because one node has indegree equal to 3 (see figure below).] `r thr$Nnodes[ind_thr]`, corresponding to a threshold area `A_thr12 = ` `r A_thr12/1e6` km^2^. The latter value can be now used in function `aggregate_OCN` to obtain the aggregated network. Function `draw_subcatchments_OCN` shows how the lattice is partitioned into subcatchments. It is possible to add points at the locations of the nodes at the AG level. 
 
 ```{r, fig.width=6, fig.height=2.8}
-OCN_we <- aggregate_OCN(OCN_we, A_thr = 3e6)
+OCN_we <- aggregate_OCN(OCN_we, A_thr = A_thr12)
 draw_subcatchments_OCN(OCN_we)
 points(OCN_we$AG$X,OCN_we$AG$Y, pch = 21, col = "blue", bg = "blue")
 
@@ -398,7 +408,7 @@ par(mai=c(0.1,0.1,0.1,0.1))
 mm <- as.dgCMatrix.spam(OCN_we$AG$W)
 g <- graph_from_adjacency_matrix(mm)
 plot(g, vertex.color = rainbow(OCN_we$AG$Nnodes), 
-     layout = matrix(c(OCN_we$AG$X,OCN_we$AG$Y),ncol=2,nrow=OCN_we$AG$Nnodes))
+     layout = matrix(c(OCN_we$AG$X,OCN_we$AG$Y),ncol = 2,nrow = OCN_we$AG$Nnodes))
 ```
 
 The same network can be displayed as an OCN:
