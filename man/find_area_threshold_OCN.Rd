@@ -3,7 +3,7 @@
 \title{Find relationship between number of nodes and threshold area in an OCN}
 \usage{
 find_area_threshold_OCN(OCN, thr_values = seq(OCN$cellsize,
-  OCN$cellsize * max(OCN$FD$A), OCN$cellsize), MaxReachLength = Inf,
+  max(OCN$FD$A), OCN$cellsize), MaxReachLength = Inf,
   StreamOrderType = "Strahler", DisplayUpdates = 0)
 }
 \arguments{

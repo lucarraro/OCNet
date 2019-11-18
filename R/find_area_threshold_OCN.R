@@ -1,6 +1,6 @@
 
 find_area_threshold_OCN <- function(OCN,
-                                    thr_values=seq(OCN$cellsize,OCN$cellsize*max(OCN$FD$A),OCN$cellsize),
+                                    thr_values=seq(OCN$cellsize,max(OCN$FD$A),OCN$cellsize),
                                     MaxReachLength=Inf,
                                     StreamOrderType="Strahler",
                                     DisplayUpdates=0){
