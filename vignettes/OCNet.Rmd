@@ -165,8 +165,7 @@ ind_thr <- max(ind_thr) # pick the last ind_thr that satisfies the condition abo
 A_thr12 <- thr$thr_values[ind_thr] # corresponding threshold area
 ```
 
-The resulting number of nodes is^[The number of aggregated nodes is here uneven because one node has indegree equal to 3 (see figure below).] `r thr$Nnodes[ind_thr]`, corresponding to a threshold area `A_thr12 = ` `r A_thr12/1e6` km^2^. The latter value can be now used in function `aggregate_OCN` to obtain the aggregated network. Function `draw_subcatchments_OCN` shows how the lattice is partitioned into subcatchments. It is possible to add points at the locations of the nodes at the AG level. 
-
+The resulting number of nodes is^[The number of aggregated nodes is here uneven because one node has indegree equal to 3 (see figure below).] `r thr$Nnodes[ind_thr]`, corresponding to a threshold area `A_thr12 = ` `r A_thr12/1e6` km^2^. The latter value can now be used in function `aggregate_OCN` to obtain the aggregated network. Function `draw_subcatchments_OCN` shows how the lattice is partitioned into subcatchments. It is possible to add points at the locations of the nodes at the AG level. 
 ```{r, fig.width=6, fig.height=2.8}
 OCN_we <- aggregate_OCN(OCN_we, A_thr = A_thr12)
 draw_subcatchments_OCN(OCN_we)
@@ -200,12 +199,12 @@ Therefore, the model equation is:
 $$
 \begin{split}
 P_i(t+1) &= \frac{r P_i(t)}{1+ (r-1)P_i(t)/K_i} - (p_d D_i + p_u U_i)G(K_i,K_i)\frac{P_i(t)}{K_i} +\\
-& + p_d \left( \sum_{j=1} W_{ji} G(K_j,K_j)\frac{P_j(t)}{K_j}\right) + p_u \left( \sum_{j=1} W_{ij} Y_i G(K_j,K_j)\frac{P_j(t)}{K_j}\right)
+& + p_d \left( \sum_{j=1} w_{ji} G(K_j,K_j)\frac{P_j(t)}{K_j}\right) + p_u \left( \sum_{j=1} w_{ij} Y_i G(K_j,K_j)\frac{P_j(t)}{K_j}\right)
 \end{split}
 $$
 where $D_i$ ($U_i$) is equal to one if there is a downstream (upstream) connection available from node $i$ and is null otherwise. Weights $Y_i$ are defined as:
 $$
-Y_i = \frac{A_i}{\sum_{k=1} W_{kj}A_k},
+Y_i = \frac{A_i}{\sum_{k=1} w_{kj}A_k},
 $$
 where $j$ identifies the node downstream of $i$. Moreover, it is $Y_o = 1$.
 
