@@ -3,3 +3,9 @@ addons:
   apt:
     packages:
     - libgdal-dev 
+    - libftgl2 
+    - libcgal-dev 
+    - libglu1-mesa-dev 
+    - apt-get 
+    - libx11-dev 
+    - libfreetype6-dev
