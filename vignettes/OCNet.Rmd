@@ -106,7 +106,7 @@ Outlet nodes at the AG level might also be sources, confluences or breaking node
 
 Fig. \@ref(fig:ex3-net) shows an alternative aggregation scheme for the network showed in Fig. \@ref(fig:ex-net) when the optional input `MaxReachLength` is set to a finite value.
 
-```{r ex3-net, echo=FALSE, fig.cap="Aggregation of the previous network with `A_thr` equal to 5 pixels and `MaxReachLength` equal to 3 pixels. Note that the length of the diagonal segments of the edges is equal to `sqrt(2)`.", out.width = '70%'}
+```{r ex3-net, echo=FALSE, fig.cap="Aggregation of the previous network with `A_thr` equal to 5 pixels and `MaxReachLength` equal to 3 pixel sides. Note that the length of the diagonal segments of the edges is equal to `sqrt(2)`.", out.width = '70%'}
 knitr::include_graphics("example_networks3.png")
 ```
 

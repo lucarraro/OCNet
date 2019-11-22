@@ -25,18 +25,9 @@ Authors@R:
            family = "Bertuzzo",
            role = "aut"))
 Description: An R-package to generate and analyze optimal channel networks.
-Imports:
-    fields,
-    Matrix,
-    spam,
-	rgl,
-	methods,
-	bookdown,
-	igraph,
-	SSN,
-	rgdal,
-	sp
-License: GPL-3 + file LICENSE
+Imports: fields, Matrix, spam, rgl, methods,
+	bookdown, igraph, SSN, rgdal, sp
+License: GPL-3 
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.5)
