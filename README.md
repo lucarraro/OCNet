@@ -1,6 +1,8 @@
 # OCNet
 An R-package to generate and analyze Optimal Channel Networks
 
+[![Linux Build Status](https://travis-ci.com/lucarraro/OCNet.svg?branch=master)](https://travis-ci.com/lucarraro/OCNet.svg?branch=master)
+
 ## Overview
 
 OCNet enables the creation and analysis of Optimal Channel Networks (OCNs). These are oriented spanning trees (built on rectangular lattices made up of square pixels) that reproduce all scaling features characteristic of real, natural river networks. As such, they can be used in a variety of numerical and laboratory experiments in the fields of hydrology, ecology and epidemiology. 
