@@ -36,7 +36,7 @@ devtools::install_github("lucarraro/OCNet", build_vignettes = TRUE)
 
 ### Linux
 
-Installing packages `rgdal` and `rgl` (imported by OCNet) gives rise to errors. This might be solved by running 
+Installing packages `rgdal` and `rgl` (imported by OCNet) gives rise to errors. This can be solved by running 
 
 ```
 sudo apt install libftgl2 libcgal-dev libglu1-mesa-dev libglu1-mesa-dev apt-get libx11-dev libfreetype6-dev libgdal-dev 

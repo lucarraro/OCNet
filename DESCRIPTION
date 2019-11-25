@@ -24,7 +24,11 @@ Authors@R:
     person(given = "Enrico",
            family = "Bertuzzo",
            role = "aut"))
-Description: An R-package to generate and analyze optimal channel networks.
+Description: Generate and analyze Optimal Channel Networks (OCNs): 
+	oriented spanning trees reproducing all scaling features characteristic 
+	of real, natural river networks. See Rinaldo et al. (2014) 	
+	<doi:10.1073/pnas.1322700111> for an overview on the OCN concept; 
+	Furrer and Sain (2010) <doi:10.18637/jss.v036.i10> for the construct used.
 Imports: fields, Matrix, spam, rgl, methods,
 	bookdown, igraph, SSN, rgdal, sp
 License: GPL-3 
