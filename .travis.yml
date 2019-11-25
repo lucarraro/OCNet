@@ -2,8 +2,9 @@ language: r
 before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -qq freeglut3-dev xorg openbox
-install:
-    R -e "options(rgl.useNULL = TRUE)"
+env:
+    global:
+    - RGL_USE_NULL=TRUE   
 addons:
   apt:
     packages:
