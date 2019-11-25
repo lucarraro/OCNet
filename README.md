@@ -32,6 +32,16 @@ if (!("devtools" %in% installed.packages())) {install.packages("devtools")}
 devtools::install_github("lucarraro/OCNet", build_vignettes = TRUE)
 ```
 
+## Installation issues and workarounds
+
+### Linux
+
+Installing packages `rgdal` and `rgl` (imported by OCNet) gives rise to errors. This might be solved by running 
+
+```
+sudo apt install libftgl2 libcgal-dev libglu1-mesa-dev libglu1-mesa-dev apt-get libx11-dev libfreetype6-dev libgdal-dev 
+```  
+
 ## Authors
 
 Luca Carraro (maintainer), Florian Altermatt, Emanuel A. Fronhofer, Reinhard Furrer, Isabelle Gounand, Andrea Rinaldo, Enrico Bertuzzo
