@@ -10,8 +10,6 @@ draw_elev3Drgl_OCN <- function(OCN,
   #aspect=c(1,1,0.1),
   #ColPalette=terrain.colors(1000,alpha=1),
   
-  options(rgl.useNULL = TRUE)
-  
   # give default values to unspecified arguments
   args.def <- list(aspect=c(1,1,0.1),axes=FALSE,xlab="",ylab="",zlab="")
   inargs <- list(...)
