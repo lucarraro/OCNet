@@ -1,6 +1,7 @@
 language: r
 before_install:
-    - R -e "install.packages('withr'); withr::with_envvar(RGL_USE_NULL = 'TRUE')"
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq freeglut3-dev xorg openbox
 addons:
   apt:
     packages:

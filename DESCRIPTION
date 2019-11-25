@@ -33,6 +33,5 @@ LazyData: true
 Depends: R (>= 3.5)
 Suggests: 
     knitr,
-    rmarkdown,
-	withr
+    rmarkdown
 VignetteBuilder: knitr
