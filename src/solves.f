@@ -7,6 +7,7 @@ c     spam. b is vector only and thus gCC10 ready.
 
       subroutine spamforward (n,x,b,l,jl,il,strow)
       implicit none
+      logical,  external :: eqZERO
 
       integer n, jl(*),il(n+1), strow
       double precision  x(n), b(n), l(*)
@@ -37,7 +38,7 @@ c     Reinhard Furrer June 2008, April 2012, Sept 2016
 
       if (strow .eq. 1) then
 c        if first diagonal element is zero, break
-         if (l(1) .eq. 0.0 ) then
+         if (eqZERO(l(1))) then
             k = 1
             goto 5
          endif
@@ -53,7 +54,7 @@ c     first row has one element, increase starting row
                t = t-l(j)*x(jl(j))
             else
                if (jl(j) .eq. k) then
-                 if (l(j) .eq. 0.0) goto 5 
+                 if (eqZERO(l(j))) goto 5 
 c     diagonal element is not zero, hence we divide and leave the loop
                    x(k) = t / l(j)
                    goto 3
@@ -70,3 +71,13 @@ c-----------------------------------------------------------------------
 
 
       
+      function eqZERO( a)
+      implicit none
+
+      logical eqZERO
+      double precision a
+
+      eqZERO = (abs( a) .LE. 1.1*epsilon( 0.0))
+      return
+      end function
+

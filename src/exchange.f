@@ -22,13 +22,17 @@ c     Alternatively, the value can be passed via `val`.
       
       integer nrow, ncol
       double precision a(*), val  
-      integer ja(*), ia(nrow+1)
-      integer i,j, k,l
+      integer  ja(*), ia(nrow+1)
+      integer  i,j, k,l
 
       integer kk,rr, lpos, ipos
-c  lpos contains the number of elements before l (case 2)   
-c  Case 1: position in vector 
-      
+c     lpos contains the number of elements before l (case 2)
+c     temporary assign a value to ipos  [-Wmaybe-uninitialized]
+      ipos = 1
+
+
+C     case 1: position in vector 
+
 
       val = 1.0
 C For simplicity, we distinguish different cases, shifting forward

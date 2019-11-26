@@ -27,7 +27,7 @@ c
 c Reinhard Furrer
 c-----------------------------------------------------------------
       logical insert
-      integer i,j, k, k1, k2, icount
+      integer i, k, k1, k2, icount
       integer iw(n)
       
       

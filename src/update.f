@@ -35,9 +35,9 @@ c      if (jj-1 .ne. no) => error
       end
 
 c     Fortran implementation of `!(k %in% outlet)` 
-      logical function kNotInOutlet(k, no, outlet)
+      PURE logical function kNotInOutlet(k, no, outlet)
       implicit none
-      integer  k, no, outlet(no)
+      integer,  intent(in) :: k, no, outlet(no)
       integer ii
 
       kNotInOutlet = .TRUE.
@@ -83,8 +83,12 @@ c if 'right'(==1), node and its upstream branch need to move rightwards in the p
 c if inv_perm[node] > inv_perm[down_new], node needs to be moved leftwards
          flag_move = -1
          k = down_new
-         do while (((inv_perm(node) .gt. inv_perm(k)))  .and.
-     &       kNotInOutlet(k, no, Outlet)) 
+
+C the following might be faster          
+c         do while (((inv_perm(node) .gt. inv_perm(k)))  .and.
+c     &       kNotInOutlet(k, no, Outlet))
+         do while ( kNotInOutlet(k, no, Outlet)  .and.
+     &       (inv_perm(node) .gt. inv_perm(k)))
             k = DownNode(k)
          enddo
          if (((inv_perm(node) .eq. inv_perm(k))) .and.
