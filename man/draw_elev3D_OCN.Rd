@@ -4,7 +4,8 @@
 \usage{
 draw_elev3D_OCN(OCN, ColPalette = terrain.colors(1000, alpha = 1),
   add_colorbar = TRUE, draw_river = TRUE, A_thr_draw = 0.002 *
-  OCN$dimX * OCN$dimY * OCN$cellsize^2, river_color = "#00CCFF")
+  OCN$dimX * OCN$dimY * OCN$cellsize^2, river_color = "#00CCFF",
+  theta=-20, phi=30, expand=0.05, shade=0.5)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{landscape_OCN}}.}
@@ -18,6 +19,11 @@ draw_elev3D_OCN(OCN, ColPalette = terrain.colors(1000, alpha = 1),
 \item{A_thr_draw}{Threshold drainage area value used to display the network.}
 
 \item{river_color}{Color used to plot the river.}
+
+\item{theta, phi, expand, shade}{Additional parameters passed to the perspective plotting 
+function \code{\link{persp}}. \code{theta} expresses azimuthal direction; \code{phi} gives 
+colatitude; \code{expand} is the expansion factor for the Z coordinates; \code{shade} controls
+the shade at a surface facet.}
 }
 \value{
 No output is returned.

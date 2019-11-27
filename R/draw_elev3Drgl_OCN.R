@@ -29,7 +29,7 @@ draw_elev3Drgl_OCN <- function(OCN,
     Xvec <- seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize)
     Yvec <- seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize)
     
-    Z_cg <- matrix(data=0,nrow=OCN$dimY/coarse_grain[2],ncol=OCN$dimY/coarse_grain[1])
+    Z_cg <- matrix(data=0,nrow=OCN$dimY/coarse_grain[2],ncol=OCN$dimX/coarse_grain[1])
     X_cg <- rep(0,OCN$dimX/coarse_grain[1])
     Y_cg <- rep(0,OCN$dimY/coarse_grain[2])
     
