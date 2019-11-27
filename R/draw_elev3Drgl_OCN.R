@@ -11,7 +11,7 @@ draw_elev3Drgl_OCN <- function(OCN,
   #ColPalette=terrain.colors(1000,alpha=1),
   
   # give default values to unspecified arguments
-  args.def <- list(aspect=c(1,1,0.1),axes=FALSE,xlab="",ylab="",zlab="")
+  args.def <- list(aspect=c(OCN$dimX/sqrt(OCN$dimX*OCN$dimY),OCN$dimY/sqrt(OCN$dimX*OCN$dimY),0.1),axes=FALSE,xlab="",ylab="",zlab="")
   inargs <- list(...)
   args.def[names(inargs)] <- inargs
   
@@ -22,6 +22,10 @@ draw_elev3Drgl_OCN <- function(OCN,
   if (!(chooseCM %in% 1:length(OCN$CM$A)) && !is.logical(chooseCM)) {
     stop('Invalid choice for chooseCM.')
   }
+  
+  if ((OCN$dimX %% coarse_grain[1] != 0) || (OCN$dimY %% coarse_grain[2] != 0)){
+    stop('coarse_grain[1] must be divisor of dimX; coarse_grain[2] must be divisor of dimY')
+  }   
   
   if ( !chooseCM || OCN$CM$A[chooseCM] == OCN$dimX*OCN$dimY*OCN$cellsize^2){ 
     

@@ -14,6 +14,9 @@ draw_elev3D_OCN <- function(OCN,
   if (!("Z" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_elev3D_OCN.')
   }
+  if ((OCN$dimX %% coarse_grain[1] != 0) || (OCN$dimY %% coarse_grain[2] != 0)){
+    stop('coarse_grain[1] must be divisor of dimX; coarse_grain[2] must be divisor of dimY')
+  }  
   
   Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
   Xvec <- seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize)
