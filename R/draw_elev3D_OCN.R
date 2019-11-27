@@ -1,21 +1,48 @@
 
 draw_elev3D_OCN <- function(OCN,
+                            coarse_grain=c(1,1),
                             ColPalette=terrain.colors(1000,alpha=1),
                             add_colorbar=TRUE,
                             draw_river=TRUE,
                             A_thr_draw=0.002*OCN$dimX*OCN$dimY*OCN$cellsize^2,
-                            river_color="#00CCFF"){
+                            river_color="#00CCFF",
+                            theta=-20,
+                            phi=30,
+                            expand=0.05,
+                            shade=0.5){
 
   if (!("Z" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_elev3D_OCN.')
   }
+  if ((OCN$dimX %% coarse_grain[1] != 0) || (OCN$dimY %% coarse_grain[2] != 0)){
+    stop('coarse_grain[1] must be divisor of dimX; coarse_grain[2] must be divisor of dimY')
+  }  
+  
+  Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
+  Xvec <- seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize)
+  Yvec <- seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize)
+  
+  Z_cg <- matrix(data=0,nrow=OCN$dimY/coarse_grain[2],ncol=OCN$dimX/coarse_grain[1])
+  X_cg <- rep(0,OCN$dimX/coarse_grain[1])
+  Y_cg <- rep(0,OCN$dimY/coarse_grain[2])
+  
+  for (i in 1:(OCN$dimX/coarse_grain[1])){
+    subX <- ((i-1)*coarse_grain[1]+1):(i*coarse_grain[1])
+    X_cg[i] <- mean(Xvec[subX])
+    for (j in 1:(OCN$dimY/coarse_grain[2])){
+      subY <- ((j-1)*coarse_grain[2]+1):(j*coarse_grain[2])
+      Z_cg[j,i] <- mean(Zmat[subY,subX])
+      Y_cg[j] <- mean(Yvec[subY])
+    }
+  }
+  Zmat <- Z_cg
   
   par(bty="n",mar=c(1,1,1,1))
   # draw 3D elevation map
-  Zmat<-matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
-  zfacet <- Zmat[-1, -1] + Zmat[-1, -OCN$dimX] + Zmat[-OCN$dimY, -1] + Zmat[-OCN$dimY, -OCN$dimX]
-  vt <- persp(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize),t(Zmat),
-              theta=-20,phi=30,col=ColPalette[cut(t(zfacet),1000)],expand=0.05,shade=0.5,
+  #Zmat<-matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
+  zfacet <- Zmat[-1, -1] + Zmat[-1, -OCN$dimX/coarse_grain[1]] + Zmat[-OCN$dimY/coarse_grain[2], -1] + Zmat[-OCN$dimY/coarse_grain[2], -OCN$dimX/coarse_grain[1]]
+  vt <- persp(seq(min(X_cg),max(X_cg),OCN$cellsize*coarse_grain[1]),seq(min(Y_cg),max(Y_cg),OCN$cellsize*coarse_grain[2]),t(Zmat),
+              theta=theta,phi=phi,col=ColPalette[cut(t(zfacet),1000)],expand=expand,shade=shade,
               border=NA,axes=FALSE)
   
   if (add_colorbar==TRUE){

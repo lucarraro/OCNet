@@ -11,7 +11,8 @@ draw_elev3Drgl_OCN(OCN, coarse_grain = c(1, 1), chooseCM = FALSE,
 
 \item{coarse_grain}{2x1 vector (only effective if \code{chooseCM = FALSE}). For aesthetic purposes, the elevation map can be coarse-grained into a \code{OCN$dimX/coarse_grain[1]}-by-\code{OCN$dimX/coarse_grain[2]} 
 domain, where each cell's elevation is the average of elevations of the corresponding \code{coarse_grain[1]}-by-\code{coarse_grain[2]} cells of the original elevation field. 
-\code{coarse_grain[1]} and \code{coarse_grain[2]} must be divisors of \code{OCN$dimX} and \code{OCN$dimY}, respectively.}
+\code{coarse_grain[1]} and \code{coarse_grain[2]} must be divisors of \code{OCN$dimX} and \code{OCN$dimY}, respectively. \code{coarse_grain = c(2,2)} is often sufficient to achieve a good graphical results for large 
+(i.e. at least 100x100 nodes) OCNs.}
 
 \item{chooseCM}{Index of catchment to display (only effective if \code{OCN$N_outlet > 1}). It can be a logical, or a scalar within \code{1:length(OCN$N_outlet)}. 
 If \code{TRUE}, the catchment with largest area is displayed. Note that, if the size of the chosen catchment is too small (e.g. \code{OCN$CM$A[chooseCM] < 5*OCN$cellsize^2}), an error might occur due to failure in triangulation.}

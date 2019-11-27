@@ -11,7 +11,7 @@ draw_elev3Drgl_OCN <- function(OCN,
   #ColPalette=terrain.colors(1000,alpha=1),
   
   # give default values to unspecified arguments
-  args.def <- list(aspect=c(1,1,0.1),axes=FALSE,xlab="",ylab="",zlab="")
+  args.def <- list(aspect=c(OCN$dimX/sqrt(OCN$dimX*OCN$dimY),OCN$dimY/sqrt(OCN$dimX*OCN$dimY),0.1),axes=FALSE,xlab="",ylab="",zlab="")
   inargs <- list(...)
   args.def[names(inargs)] <- inargs
   
@@ -23,13 +23,17 @@ draw_elev3Drgl_OCN <- function(OCN,
     stop('Invalid choice for chooseCM.')
   }
   
+  if ((OCN$dimX %% coarse_grain[1] != 0) || (OCN$dimY %% coarse_grain[2] != 0)){
+    stop('coarse_grain[1] must be divisor of dimX; coarse_grain[2] must be divisor of dimY')
+  }   
+  
   if ( !chooseCM || OCN$CM$A[chooseCM] == OCN$dimX*OCN$dimY*OCN$cellsize^2){ 
     
     Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
     Xvec <- seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize)
     Yvec <- seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize)
     
-    Z_cg <- matrix(data=0,nrow=OCN$dimY/coarse_grain[2],ncol=OCN$dimY/coarse_grain[1])
+    Z_cg <- matrix(data=0,nrow=OCN$dimY/coarse_grain[2],ncol=OCN$dimX/coarse_grain[1])
     X_cg <- rep(0,OCN$dimX/coarse_grain[1])
     Y_cg <- rep(0,OCN$dimY/coarse_grain[2])
     
