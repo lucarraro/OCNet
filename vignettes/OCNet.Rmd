@@ -66,6 +66,7 @@ The generation of an OCN is performed by function `create_OCN`. Its only require
           + `draw_subcatchments_OCN`: draws partition of the lattice into subcatchments as a result of the aggregation process of the OCN
           + `paths_OCN`: calculates paths and path lengths among OCN nodes
           + `rivergeometry_OCN`: evaluates hydraulic properties of the OCN
+          + `OCN_to_igraph`: transforms the OCN into an igraph object
           + `OCN_to_SSN`: transforms the OCN into a SpatialStreamNetwork object
       + `draw_contour_OCN`: draws "real-shaped" OCNs and catchment contours
       + `draw_elev2D_OCN`: draws 2D elevation field
