@@ -23,6 +23,10 @@ draw_elev3Drgl_OCN <- function(OCN,
     stop('Invalid choice for chooseCM.')
   }
   
+  if ((OCN$dimX %% coarse_grain[1] != 0) || (OCN$dimY %% coarse_grain[2] != 0)){
+    stop('coarse_grain[1] must be divisor of dimX; coarse_grain[2] must be divisor of dimY')
+  }   
+  
   if ( !chooseCM || OCN$CM$A[chooseCM] == OCN$dimX*OCN$dimY*OCN$cellsize^2){ 
     
     Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
