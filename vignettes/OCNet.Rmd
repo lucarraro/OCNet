@@ -68,12 +68,13 @@ The generation of an OCN is performed by function `create_OCN`. Its only require
           + `rivergeometry_OCN`: evaluates hydraulic properties of the OCN
           + `OCN_to_igraph`: transforms the OCN into an igraph object
           + `OCN_to_SSN`: transforms the OCN into a SpatialStreamNetwork object
-      + `draw_contour_OCN`: draws "real-shaped" OCNs and catchment contours
+      + `draw_contour_OCN`: draws "real-shaped"^[If the OCN was generated with option `PeriodicBoundaries = FALSE`, the real-shaped representation of the OCN is equal to the simple, within-lattice representation provided by `draw_simple_OCN`. If the OCN was generated with `PeriodicBoundaries = TRUE`, its real-shaped representation is such that, starting from the outlet(s), the position of a FD node `i` is flipped with respect to a lattice side if the edge between `i` and the pixel downstream of `i` crosses such lattice side.] OCNs and catchment contours
       + `draw_elev2D_OCN`: draws 2D elevation field
       + `draw_elev3D_OCN`: draws 3D elevation field
        + `draw_elev3Drgl_OCN`: draws 3D elevation field (via `rgl` rendering system)
-      + `find_area_thresholds_OCN`: finds relationship between threshold area and number of nodes at the AG level 
+      + `find_area_threshold_OCN`: finds relationship between threshold area and number of nodes at the RN and AG level (see Figure \@ref(fig:ex-net) for relevant definitions)
   + `draw_simple_OCN`: fast drawing of OCNs
+* `create_peano`: creates Peano networks
 
 OCNet functions are intended to be applied in sequential order: for each non-drawing function, the input list is copied into the output list, to which new sublists and objects are added.
 
@@ -85,12 +86,12 @@ Adjacency matrices and contributing area vectors of an OCN can be defined at dif
 
 0. *Nearest neighbours* (**N4**, **N8**). Every pixel of the lattice constitutes a node of the network. Each node is connected to its four (pixels that share an edge) or eight (pixels that share an edge or a vertex) nearest neighbours. At this level, $\mathbf{W}$ is defined but $\mathbf{A}$ is not. Note that this level does not describe flow connectivity, but rather proximity among pixels. Hence, $\mathbf{W}$ does not describe an oriented spanning tree.
 1. *Flow direction* (**FD**). At this level, every pixel of the lattice is a node, but connectivity follows the flow directions that have been found by the OCN search algorithm (operated by function `create_OCN`). Edges' lengths are equal to either `cellsize` (the size of a pixel side, optional input in `create_OCN`) or `cellsize*sqrt(2)`, depending on whether flow direction is horizontal/vertical or diagonal.
-2. *River network* (**RN**). The set of nodes at this level is a subset of the nodes at the FD level, such that their contributing area is larger than a certain threshold (optional input `A_thr` in `aggregate_OCN`). Such a procedure is customary in the hydrological problem of extracting a river network based on digital elevation models of the terrain [@ocallaghan1984]. Edges' lengths are again equal to either `cellsize` or `cellsize*sqrt(2)`.
-3. *Aggregated* (or *reach* - **AG**). The set of nodes at this level is a subset of the nodes at the RN level (see details in the next section). Accordingly, vector $\mathbf{A}$ is a subset of the homonymous vector defined at the RN level. Edges can span several pixels and therefore have various lengths.    
+2. *River network* (**RN**). The set of nodes at this level is a subset of the nodes at the FD level, such that their contributing area is larger than a certain threshold (optional input `A_thr` in `aggregate_OCN`). Such a procedure is customary in the hydrological problem of extracting a river network based on digital elevation models of the terrain [@ocallaghan1984], and corresponds to the geomorphological concept of erosion threshold (associated to a threshold in landscape-forming runoff, of which drainage area represents a proxy [@rodriguez2001]). Edges' lengths are again equal to either `cellsize` or `cellsize*sqrt(2)`.
+3. *Aggregated* (or *reach* - **AG**). The set of nodes at this level is a subset of the nodes at the RN level (see details in the next section). Accordingly, vector $\mathbf{A}$ is a subset of the vector of the same name defined at the RN level. Edges can span several pixels and therefore have various lengths.    
 4. *Subcatchment* (**SC**). The number of nodes at this level is generally^[This might not be the case when there are many outlets. If the area drained by one of these outlets is lower than the threshold imposed, the cluster of pixels drained by that outlet constitutes a node at the SC level that does not have a correspondence at the AG level.] equal to that at the AG level. Each node is constituted by the cluster of pixels that directly drain into the edge departing from the corresponding node at the AG level. Here $\mathbf{W}$ does not represent flow connectivity but rather identifies terrestrial borders among subcatchments and is therefore symmetric. 
 5. *Catchment* (**CM**). In this level, the number of nodes is equal to the number of outlets. Every node represents the portion of the lattice drained by its relative outlet. $\mathbf{A}$ stores drainage area values for each of these catchments, while $\mathbf{W}$ identifies terrestrial borders among catchments. 
 
-```{r ex-net, echo=FALSE, fig.cap="Representation of the different aggregation levels at which the network is defined (excluding the null levels N4 and N8). The example is obtained from a single-outlet 8x8 lattice. Letter 'O' identifies the outlet pixel. Arrows on the other pixels identify flow directions. Numbers represent the cumulative drainage area (in number of pixels). At the FD level, all 64 pixels belong to the network. To obtain the RN level, a threshold value of 5 on drainage area is applied to distinguish pixels belonging to the river network. The network at the AG level consists of 9 nodes. The SC level is obtained by splitting the lattice into portions whose pixels drain into the AG nodes and edges. In this example, because there is only one outlet, all pixels belong to a single node at the CM level.", out.width = '70%'}
+```{r ex-net, echo=FALSE, fig.cap="Representation of the different aggregation levels at which the network is defined (excluding the null levels N4 and N8). The example is obtained from a single-outlet 8x8 lattice. Letter 'O' identifies the outlet pixel. Arrows on the other pixels identify flow directions. Numbers represent the cumulative drainage area (in number of pixels). At the FD level, all 64 pixels belong to the network^[Note that this pattern of flow directions was not derived by an OCN search algortihm, but rather drawn manually for illustration purposes.]. To obtain the RN level, a threshold value of 5 on drainage area is applied to distinguish pixels belonging to the river network. The network at the AG level consists of 9 nodes. The SC level is obtained by splitting the lattice into portions whose pixels drain into the AG nodes and edges. In this example, because there is only one outlet, all pixels belong to a single node at the CM level.", out.width = '70%'}
 knitr::include_graphics("example_networks.png")
 ```
 
@@ -120,6 +121,8 @@ The example shown in Figure \@ref(fig:ex-ind) corresponds to the dataset `exampl
 ```{r ex-ind, echo=FALSE, fig.cap="Top-left panel: arrows display flow directions, numbers identify contributing areas. Bottom-left panel: the network is aggregated by imposing a threshold equal to 2 pixels. The other panels display indices of nodes at the different aggregation levels. ", out.width = '90%'}
 knitr::include_graphics("indices_example.png")
 ```
+
+The R code below displays the different `OCN$XX$to_YY` objects corresponding to the example in Figure \@ref(fig:ex-ind):
 
 ```{r}
 ex <- aggregate_OCN(landscape_OCN(OCN_4), A_thr = 2)
@@ -158,12 +161,12 @@ draw_elev3D_OCN(OCN_we, draw_river = FALSE)
 
 ```
 
-Next, the OCN can be aggregated. Let's suppose that the number of nodes at the AG level be as close as possible^[It is not guaranteed that an OCN can be aggregated to an arbitrary number of nodes. This is due to the fact that the indigree of confluence nodes is typically 2 or 3, depending on the flow direction patterns. For example, if the outlet is not a confluence node, all confluence nodes have indegree equal to 2 and `MaxReachLength = Inf`, the resulting number of aggregated nodes will be even.] to 20. With function `find_area_threshold_OCN` we can derive the corresponding value of drainage area threshold:
+Next, the OCN can be aggregated. Let's suppose that the desired number of nodes at the AG level be as close as possible^[It is not guaranteed that an OCN can be aggregated to an arbitrary number of nodes. This is due to the fact that the indegree of confluence nodes is typically 2 or 3, depending on the flow direction patterns. For example, if the outlet is not a confluence node, all confluence nodes have indegree equal to 2, and `MaxReachLength = Inf`, then the resulting number of aggregated nodes will be even.] to 20. With function `find_area_threshold_OCN` we can derive the corresponding value of drainage area threshold:
 
 ```{r}
 thr <- find_area_threshold_OCN(OCN_we)
 # find index corresponding to thr$Nnodes ~= 20
-ind_thr <- which(abs(thr$Nnodes - 20) == min(abs(thr$Nnodes - 20)))
+ind_thr <- which(abs(thr$Nnodes_AG - 20) == min(abs(thr$Nnodes_AG - 20)))
 ind_thr <- max(ind_thr) # pick the last ind_thr that satisfies the condition above
 A_thr20 <- thr$thr_values[ind_thr] # corresponding threshold area
 ```
@@ -321,7 +324,7 @@ draw_thematic_OCN(Pop[,100], OCN_we, minval = 0, maxval = max(K),
 
 # Peano networks
 
-Function `create_peano` can be used in lieu of `create_OCN` to generate Peano networks on square lattices. Peano networks are deterministic, plane-filling fractals whose topological measures (Horton's bifurcation and length ratios) are akin to those of real river networks. They are generated by means of an iterative algorithm: at each iteration, the size of the lattice side is doubled (see code below). As a result, Peano networks span squares of side equal to a power of 2. The outlet must be located at a corner of the square.  
+Function `create_peano` can be used in lieu of `create_OCN` to generate Peano networks on square lattices. Peano networks are deterministic, plane-filling fractals whose topological measures (Horton's bifurcation and length ratios) are akin to those of real river networks [@marani1991] and can then be used in a variety of synthetic experiments, as it is the case for OCNs (e.g. Campos et al. [-@campos2006]). Peano networks are generated by means of an iterative algorithm: at each iteration, the size of the lattice side is doubled (see code below). As a result, Peano networks span squares of side equal to a power of 2. The outlet must be located at a corner of the square.  
 
 ```{r, fig.width=7, fig.height=5}
 par(mfrow = c(2, 3))
@@ -363,7 +366,7 @@ draw_elev2D_OCN(Peano5)
 
 # List of ready-made OCNs
 
-OCNet contains some ready-made large OCNs built via function `create_OCN`. Their features are summarized in the Table below. Note that:
+OCNet contains some ready-made large OCNs built via function `create_OCN`. Their features are summarized in the Table below. Refer to the documentation of `create_OCN` for the definition of column names. Note that:
 
 * If not specified otherwise, the position of outlet(s) was derived from default options. 
 * **Cooling schedule**: 
@@ -479,6 +482,52 @@ references:
   type: article-journal
   issued:
     year: 2014
+
+- id: rodriguez2001
+  title: Fractal river basins. Chance and self-organization
+  author:
+  - family: Rodriguez-Iturbe
+    given: I.
+  - family: Rinaldo
+    given: A.
+  publisher: Cambridge University Press
+  type: book
+  issued:
+    year: 2001
+
+- id: campos2006
+  title: Transport on fractal river networks. Application to migration fronts
+  author:
+  - family: Campos
+    given: D.
+  - family: Fort
+    given: J. 
+  - family: Méndez
+    given: V.
+  container-title: Theoretical Population Biology
+  volume: 69(1)
+  URL: 'http://dx.doi.org/10.1016/j.tpb.2005.09.001'
+  page: 88-93
+  type: article-journal
+  issued:
+    year: 2006
+
+- id: marani1991
+  title: A note on fractal channel networks
+  author:
+  - family: Marani
+    given: A.
+  - family: Rigon
+    given: R. 
+  - family: Rinaldo
+    given: A.
+  container-title: Water Resources Research
+  volume: 27(12)
+  URL: 'http://dx.doi.org/10.1029/91WR02077'
+  page: 3041-3049
+  type: article-journal
+  issued:
+    year: 1991
 
 - id: rodriguez1992
   title: Energy dissipation, runoff production, and the three‐dimensional structure of river basins

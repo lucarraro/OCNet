@@ -21,6 +21,7 @@ pixel is considered as a new channel head, from which a new reach departs.}
 \value{
 A list that contains all objects contained in \code{OCN}, in addition to the objects listed below. 
 New sublists RN, AG, SC, containing variables at the corresponding aggregation levels, are created.
+Refer to section 4.3 of the vignette (\href{../doc/OCNet.html}{\code{vignette("OCNet")}}) for a more detailed explanation on values \code{OCN$XX$to_YY}, where \code{XX} and \code{YY} are two random aggregation levels.
 \item{\code{FD$to_RN}}{Vector (of length \code{OCN$FD$Nnodes}) whose values are equal to 0 if the FD pixel does not belong to the RN level. 
 If \code{OCN$FD$to_RN[i] != 0}, then \code{OCN$FD$to_RN[i]} is the index at the RN level of the pixel whose index at the FD level is \code{i}. 
 \code{OCN$FD$to_RN[i] = j} implies \code{OCN$RN$to_FD[j] = i}.}
@@ -96,7 +97,7 @@ Function that, given an OCN, builds the network at the river network (RN), aggre
 }
 \details{
 Note that each node (and the corresponding edge exiting from it, in the case of non-outlet nodes) at the AG level corresponds to 
-a subcatchment at the SG level that shares the same index: for instance, \code{SC$to_FD[i]} contains all elements of 
+a subcatchment at the SC level that shares the same index: for instance, \code{SC$to_FD[i]} contains all elements of 
 \code{AG$to_FD[i]} (that is, the indices of pixels at FD level that constitute the edge departing from node \code{i} 
 are also part of subcatchment \code{i}).
 }
