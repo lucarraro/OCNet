@@ -25,7 +25,7 @@ If \code{TRUE}, the catchment with largest area is displayed. Note that, if the 
 
 \item{river_color}{Color used to plot the river.}
 
-\item{...}{Further parameters passed to function \code{\link{persp3d}}.}
+\item{...}{Further parameters passed to function \code{\link{persp3d}}. The default value for \code{aspect} is \code{c(OCN$dimX/sqrt(OCN$dimX*OCN$dimY, OCN$dimY/sqrt(OCN$dimX*OCN$dimY, 1))}.}
 }
 \value{
 No output is returned.
@@ -39,5 +39,27 @@ To export in vectorial format, use \code{\link{rgl.postscript}} (but note that t
 The function will attempt at drawing a contour of the plotted entity (i.e. the lattice or a catchment, depending on \code{chooseCM}) at null elevation, and drawing polygons connecting this contour with the lattice/catchment contour at the real elevation. If \code{chooseCM != FALSE}, this might result in errors owing to failure of \code{\link{polygon3d}} in triangulating the polygons.  
 }
 \examples{
-\dontrun{draw_elev3Drgl_OCN(landscape_OCN(OCN_20))}
+\dontrun{
+draw_elev3Drgl_OCN(landscape_OCN(OCN_20))
+}
+
+\dontrun{
+OCN <- landscape_OCN(OCN_400_Allout) # this takes some minutes
+
+# draw the 3D representation of a single catchment within the OCN 
+# and add draw the river on top of it
+draw_elev3Drgl_OCN(OCN, chooseCM = 992, draw_river = TRUE)
+
+# draw the 3D representation of the largest catchment within the OCN. 
+# (here polygon3d fails at plotting the polygon at zero elevation)   
+draw_elev3Drgl_OCN(OCN, chooseCM = TRUE) 
+
+# draw the 3D representation of the whole OCN
+# and enhance the aspect ratio of Z coordinates 
+with respect to the default value (the final result will be ugly):  
+draw_elev3Drgl_OCN(OCN, aspect = c(1, 1, 0.2))
+
+# same as above, but operate coarse graining for better aesthetics: 
+draw_elev3Drgl_OCN(OCN, coarse_grain = c(5,5), aspect = c(1, 1, 0.2))
+}
 }

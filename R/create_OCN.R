@@ -278,7 +278,7 @@ create_OCN <- function(dimX,dimY,
   flag <- 0
   
   # simulated annealing algorithm
-  for (iter in 1:N_iter) {
+  for (iter in 2:N_iter) {
     t2 <- Sys.time() 
     # pick random node (excluding the outlet)
     Energy_new <- 100*Energy_0
@@ -307,15 +307,15 @@ create_OCN <- function(dimX,dimY,
     }
     
     # accept change if energy is lower or owing to the simulated annealing rule
-    if (Energy_new <= Energy[iter] | runif(1)<exp(-(Energy_new-Energy[iter])/Temperature[iter])) {
+    if (Energy_new <= Energy[iter-1] | runif(1)<exp(-(Energy_new-Energy[iter-1])/Temperature[iter-1])) {
       # update network
       flag <- 0
       pl <- pas$perm
       Wt <- pas$Wt_new
       A <- Anew[invPerm(pl)] # re-permute to the original indexing
-      Energy[iter+1] <- Energy_new
+      Energy[iter] <- Energy_new
       DownNode[node] <- down_new
-    } else {Energy[iter+1] <- Energy[iter]} # recject change and keep previous W
+    } else {Energy[iter] <- Energy[iter-1]} # recject change and keep previous W
     
     # write update
     if (DisplayUpdates==2){

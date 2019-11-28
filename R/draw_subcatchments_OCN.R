@@ -1,6 +1,7 @@
 
 draw_subcatchments_OCN <- function(OCN,
-                                   draw_river=TRUE){
+                                   draw_river = TRUE,
+                                   ColPalette = NULL){
   
   if (!("SC" %in% names(OCN))){
     stop('Missing fields in OCN. You should run aggregate_OCN prior to draw_subcatchments_OCN.')
@@ -45,6 +46,8 @@ draw_subcatchments_OCN <- function(OCN,
     Color_SC[OCN$SC$to_FD[[k]]] <- ColorID[k]
   }
   
+  
+  if (is.null(ColPalette)){
   ColPalette <- c("#009900", # green
                   "#FFFF00", # yellow
                   "#FF9900", # orange
@@ -55,6 +58,11 @@ draw_subcatchments_OCN <- function(OCN,
                   "#BBBBBB") # grey 70%
   
   ColPalette <- ColPalette[ColorList]
+  } else if (typeof(ColPalette)=="closure") {
+    ColPalette <- ColPalette(length(ColorList))
+  } else if (typeof(ColPalette)=="character") {
+    ColPalette <- ColPalette[1:length(ColorList)]
+  }
   
   par(pty="s",bty="n",mar=c(1,1,1,1))
   image(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),

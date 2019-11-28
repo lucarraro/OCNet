@@ -20,15 +20,16 @@ create_OCN(dimX, dimY, N_outlet = 1, OutletSide = "S",
 \item{N_outlet}{Number of outlets. If \code{N_outlet = "All"}, all border pixels are set as outlets.}
 
 \item{OutletSide}{Side of the lattice where the outlet(s) is/are placed. 
-It is a vector of characters, whose allowed values are \code{"N"} (northern side), \code{"E"}, \code{"S"}, \code{"W"}.}
+It is a vector of characters, whose allowed values are \code{"N"} (northern side), \code{"E"}, \code{"S"}, \code{"W"}.
+Its length must be equal to \code{N_outlet}.}
 
 \item{OutletPos}{Vector of positions of outlets within the sides specified by \code{OutletSide}. 
 If \code{OutletSide[i] = "N"} or \code{"S"}, then \code{OutletPos[i]} must be a natural number in the interval \code{1:dimX}; 
 if \code{OutletSide[i] = "W"} or \code{"E"}, then \code{OutletPos[i]} must be a natural number in the interval \code{1:dimY}. 
 If \code{N_outlet > 1} is specified by the user and \code{OutletSide}, \code{OutletPos} are not, a number of outlets equal to 
-\code{N_outlet} is randomly drawn among the border pixels.}
+\code{N_outlet} is randomly drawn among the border pixels. Its length must be equal to \code{N_outlet}.}
 
-\item{PeriodicBoundaries}{If \code{TRUE}, periodic boundaries are applied.}
+\item{PeriodicBoundaries}{If \code{TRUE}, periodic boundaries are applied. In this case, the lattice is the planar equivalent of a torus.}
 
 \item{type_initialstate}{Configuration of the initial state of the network. Possible values: \code{"I"} (representsting a valley); 
 \code{"T"} (T-shaped drainage pattern); \code{"V"} (V-shaped drainage pattern); \code{"H"} (hip roof). Default value is set to \code{"I"}, unless when \code{N_outlet = "All"}, where default is \code{"H"}. 
@@ -93,8 +94,8 @@ then \code{FD$DownNode[o] = 0}.}
 \item{\code{FD$X (FD$Y)}}{Vector (of length \code{dimX*dimY}) containing X (Y) coordinate values for all FD pixels.}
 \item{\code{FD$Nnodes}}{Number of nodes at FD level (equal to \code{dimX*dimY}).}
 \item{\code{FD$Outlet}}{Vector (of length \code{N_outlet}) indices of pixels at FD level corresponding to outlets.}
-\item{\code{Energy}}{Vector (of length \code{N_iter}) of energy values for each stage of the OCN during the search algorithm.}
-\item{\code{ExitFlag}}{Vector (of length \code{N_iter}) showing the outcome of the rewiring process. Its entries can assume one of the following values:
+\item{\code{Energy}}{Vector (of length \code{N_iter}) of energy values for each stage of the OCN during the search algorithm (only present if \code{SaveEnergy = TRUE}).}
+\item{\code{ExitFlag}}{Vector (of length \code{N_iter}) showing the outcome of the rewiring process (only present if \code{SaveExitFlag = TRUE}). Its entries can assume one of the following values:
 \describe{
 \item{\code{0}}{Rewiring is accepted.}
 \item{\code{1}}{Rewiring is not accepted (because it does not lower \code{Energy} or according to the acceptance probability of the simulated annealing algorithm).}
@@ -136,6 +137,41 @@ Within these regions, an \code{"I"}-type drainage pattern is produced if \code{t
 no action is performed if \code{type_initialstate = "H"}. Note that \code{type_initialstate = "H"} is the recommended choice only for large \code{N_outlet}.
 }
 \examples{
-# creates a single outlet 20x20 OCN with default options
-OCN <- create_OCN(20, 20) 
+# creates and displays a single outlet 20x20 OCN with default options
+set.seed(1)
+par(mfrow=c(1,1))
+OCN_a <- create_OCN(20, 20)
+draw_simple_OCN(OCN_a)
+
+\dontrun{
+# creates and displays a 2-outlet OCNs with manually set outlet location, 
+# and a 4-outlet OCNs with random outlet position.
+set.seed(1)
+par(mfrow=c(1,2))
+OCN_b1 <- create_OCN(30, 30, N_outlet = 2,OutletSide = c("N", "W"), OutletPos = c(15, 12))
+OCN_b2 <- create_OCN(30, 30, N_outlet = 4)
+draw_simple_OCN(OCN_b1,plot_title = "2-outlet OCN")
+draw_simple_OCN(OCN_b2,plot_title = "4-outlet OCN")
 }
+
+\dontrun{
+# generate 4 single-outlet OCNs on the same (50x50) domain starting from different initial states, 
+# while showing 20 intermediate plots and console updates.
+set.seed(1)
+par(mfrow=c(1,1))
+OCN_V <- create_OCN(100, 100, type_initialstate = "V", ShowIntermediatePlots = TRUE, N_updates = 20)
+OCN_T <- create_OCN(100, 100, type_initialstate = "T", ShowIntermediatePlots = TRUE, N_updates = 20)
+OCN_I <- create_OCN(100, 100, type_initialstate = "I", ShowIntermediatePlots = TRUE, N_updates = 20)
+}
+
+\dontrun{
+# generate a 2-outlet OCN and show intermediate plots. Note that different colors are used 
+# to identify the two networks  (all pixels are colored because A_thr_draw = 0).
+set.seed(1)
+OCN <- create_OCN(150, 70, N_outlet = 2, OutletPos = c(1, 150), OutletSide = c("S", "N"),
+		type_initialstate = "V", PeriodicBoundaries = TRUE, 
+		ShowIntermediatePlots = TRUE, A_thr_draw = 0)
+# The resulting networks have an irregular contour, and their outlets are located on the contour:
+draw_contour_OCN(landscape_OCN(OCN))}
+}
+
