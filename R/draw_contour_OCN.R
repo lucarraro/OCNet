@@ -2,7 +2,7 @@
 draw_contour_OCN <- function(OCN,
                              A_thr_draw=0.002*OCN$dimX*OCN$dimY*OCN$cellsize^2,
                              ExactDraw=TRUE,
-                             DrawOutlets=FALSE){
+                             DrawOutlets=0){
   
   if (!("X_draw" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_contour_OCN.')
@@ -36,7 +36,7 @@ draw_contour_OCN <- function(OCN,
   par(bty="n",mar=c(1,1,1,1))
   plot(c(min(X_draw),max(X_draw)),c(min(Y_draw),max(Y_draw)),type="n",xlab=" ",ylab=" ",axes=FALSE,asp=1)
   
-  if (DrawOutlets) {points(X_draw[OCN$FD$Outlet],Y_draw[OCN$FD$Outlet],pch=22,col="#000000",bg="#000000")}
+  if (DrawOutlets==1) {points(X_draw[OCN$FD$Outlet],Y_draw[OCN$FD$Outlet],pch=22,col="#000000",bg="#000000")}
   
   if (EasyDraw==FALSE){
     for (i in AvailableNodes){
@@ -56,5 +56,7 @@ draw_contour_OCN <- function(OCN,
       lines(Xc[[j]][[k]],Yc[[j]][[k]],lwd=2)
     }
   }
+  
+  if (DrawOutlets==2) {points(X_draw[OCN$FD$Outlet],Y_draw[OCN$FD$Outlet],pch=22,col="#000000",bg="#000000")}
   
 }

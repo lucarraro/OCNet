@@ -17,6 +17,7 @@ An \code{igraph} object.
 Function that transforms an OCN into an igraph object. 
 }
 \examples{
+# transform a 20x20 OCN, at the AG level, into a graph object 
 OCN <- aggregate_OCN(landscape_OCN(OCN_20), A_thr = 4)
 g <- OCN_to_igraph(OCN, level = "AG")
 plot(g, layout = matrix(c(OCN$AG$X,OCN$AG$Y), ncol = 2, nrow = OCN$AG$Nnodes))

@@ -39,8 +39,27 @@ given by the lattice coordinates (i.e. \code{OCN$level$X}, \code{OCN$level$Y}); 
 \code{OCN$PeriodicBoundaries == TRUE}, real coordinates are used (i.e. those defined by
  \code{OCN$FD$X_draw}, \code{OCN$FD$Y_draw}, see \code{\link{landscape_OCN}}).}
 \examples{
+# transform a 20x20 single-outlet OCN (aggregated at the AG level)
+# into a SSN object and plot it
 OCN <- aggregate_OCN(landscape_OCN(OCN_20), A_thr = 4)
-ssn1 <- OCN_to_SSN(OCN, level = "AG", obsDesign = SSN::poissonDesign(10), 
+ssn1 <- OCN_to_SSN(OCN, "AG", obsDesign = SSN::poissonDesign(10), 
 path=paste(tempdir(),"/OCN.ssn", sep = ""), importToR = TRUE)
 plot(ssn1)
+
+\dontrun{
+# create a 50x50 OCN with two outlets and periodic boundaries; 
+set.seed(1)
+OCN <- create_OCN(50, 50, N_outlet = 2, OutletSide = c("S", "N"),
+		OutletPos = c(1, 50), PeriodicBoundaries = TRUE)
+# aggregate the OCN
+OCN <- aggregate_OCN(landscape_OCN(OCN))
+# transform it into a SSN object aggregated at the RN level
+ssn2 <- OCN_to_SSN(OCN, "RN", obsDesign = SSN::binomialDesign(c(10, 10)),
+		path = paste(tempdir(),"/OCN2.ssn", sep = ""), importToR = TRUE)
+# plot the SSN object; it is constituted by two networks,
+# and nodes' coordinates are the "real" ones  
+par(mai = c(1, 1, 1, 1))
+plot(ssn2, xlab = "X", ylab = "Y")
+}
+
 }

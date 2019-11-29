@@ -7,7 +7,7 @@ draw_subcatchments_OCN(OCN, draw_river = TRUE, ColPalette = NULL)
 \arguments{
 \item{OCN}{List as produced by \code{\link{aggregate_OCN}}.}
 
-\item{draw_river}{if \code{TRUE}, draw the OCN on top of the elevation field.}
+\item{draw_river}{if \code{TRUE}, draw the OCN on top of the subcatchment map.}
 
 \item{ColPalette}{Color palette used. Default is \code{c("#009900", "#FFFF00",  "#FF9900", "#FF0000", "#FF00FF",  "#9900CC", "#555555", "#BBBBBB")}. Only the first \code{n} colors are used, where \code{n} is the number of different colors needed (calculated via a greedy coloring algorithm). \code{ColPalette} accepts both functions creating color palettes and vectors of colors (see examples); in the latter case, the length of the vector cannot be lower than \code{n} (\code{n} cannot be predicted a priori, but generally 6 colors should suffice).}
 }

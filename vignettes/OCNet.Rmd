@@ -382,8 +382,8 @@ OCNet contains some ready-made large OCNs built via function `create_OCN`. Their
 | ----------:|:------:|:------:|:----------:|:-------------------:|:-------------:|:----------------:|:--------:|:---:|:----:|:-----:|
 |`OCN_4`^[This is actually not an OCN, but was rather generated manually for illustration purposes.]     |   4    |   4    |    1       |      FALSE          |              |                   |  1       |     |      | Yes   |
 |`OCN_20`         |   20   |   20   |    1       |      FALSE          |   I           |  default         |  1       |  30 |  1   | Yes   |
-|`OCN_250`        |   250  |   250  |    1       |      FALSE          |   I           |  default         |  1       |  30 |  2   | Yes   |
-|`OCN_250_T`      |   250  |   250  |    1       |      FALSE          |   T           |  default         |  1       |  30 |  2   | No    |
+|`OCN_250`        |   250  |   250  |    1       |      FALSE          |   I           |  default         |  1       |  30 |  2   | No   |
+|`OCN_250_T`      |   250  |   250  |    1       |      FALSE          |   T           |  default         |  1       |  30 |  2   | Yes    |
 |`OCN_250_V`      |   250  |   250  |    1       |      FALSE          |   V           |  default         |  1       |  30 |  2   | No    |
 |`OCN_250_cold`   |   250  |   250  |    1       |      FALSE          |   I           |  cold            |  1       |  30 |  2   | No    |
 |`OCN_250_hot`    |   250  |   250  |    1       |      FALSE          |   I           |  hot             |  1       |  30 |  2   | No    |
