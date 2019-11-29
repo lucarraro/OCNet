@@ -2,12 +2,12 @@
 draw_contour_OCN <- function(OCN,
                              A_thr_draw=0.002*OCN$dimX*OCN$dimY*OCN$cellsize^2,
                              ExactDraw=TRUE,
+                             DrawContours=TRUE,
                              ColPal_river=NULL,
                              ColPal_cont="#000000",
                              DrawOutlets=0,
-                             pch=22,
-                             col="#000000",
-                             bg="#000000"){
+                             pch=15,
+                             ColPal_out="#000000"){
   
   if (!("X_draw" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_contour_OCN.')
@@ -58,11 +58,25 @@ draw_contour_OCN <- function(OCN,
     }
   }
   
+  if (ColPal_out==0) {
+    ColPal_out=ColPal_river
+  } else if (typeof(ColPal_out)=="closure") {
+    ColPal_out <- ColPal_out(OCN$N_outlet)
+  } else if (typeof(ColPal_out)=="character") {
+    if (length(ColPal_out)==1){
+      ColPal_out <- rep(ColPal_out,OCN$N_outlet)
+    }
+  }
+  
   AvailableNodes <- setdiff(1:OCN$FD$Nnodes,OCN$FD$Outlet)
   par(bty="n",mar=c(1,1,1,1))
   plot(c(min(X_draw),max(X_draw)),c(min(Y_draw),max(Y_draw)),type="n",xlab=" ",ylab=" ",axes=FALSE,asp=1)
   
-  if (DrawOutlets==1) {points(X_draw[OCN$FD$Outlet],Y_draw[OCN$FD$Outlet],pch=pch,col=col,bg=bg)}
+  if (DrawOutlets==1) {
+    for (i in 1:OCN$N_outlet){
+    points(X_draw[OCN$FD$Outlet[i]],Y_draw[OCN$FD$Outlet[i]],pch=pch,col=ColPal_out[i])
+    }
+  }
   
   if (EasyDraw==FALSE){
     for (i in AvailableNodes){
@@ -77,12 +91,17 @@ draw_contour_OCN <- function(OCN,
       lines(c(X_draw[i],X_draw[OCN$FD$DownNode[i]]),c(Y_draw[i],Y_draw[OCN$FD$DownNode[i]]),
             lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$Nnodes*OCN$cellsize^2))^0.5,col=ColPal_river[OCN$FD$to_CM[i]])}
   }
-  for (j in 1:OCN$N_outlet){
-    for (k in 1:length(Xc[[j]])){
-      lines(Xc[[j]][[k]],Yc[[j]][[k]],lwd=2,col=ColPal_cont[j])
+  if (DrawContours){
+    for (j in 1:OCN$N_outlet){
+      for (k in 1:length(Xc[[j]])){
+        lines(Xc[[j]][[k]],Yc[[j]][[k]],lwd=2,col=ColPal_cont[j])
+      }
     }
   }
-  
-  if (DrawOutlets==2) {points(X_draw[OCN$FD$Outlet],Y_draw[OCN$FD$Outlet],pch=pch,col=col,bg=bg)}
+  if (DrawOutlets==2) {
+    for (i in 1:OCN$N_outlet){
+      points(X_draw[OCN$FD$Outlet[i]],Y_draw[OCN$FD$Outlet[i]],pch=pch,col=ColPal_out[i])
+    }
+  }
   
 }
