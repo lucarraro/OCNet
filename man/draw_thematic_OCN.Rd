@@ -5,7 +5,7 @@
 draw_thematic_OCN(theme, OCN,
   minval = min(theme[!(is.nan(theme))]),
   maxval = max(theme[!(is.nan(theme))]), plot_title = "",
-  ColPalette = colorRampPalette(c("yellow", "red", "black")),
+  ColPalette = NULL,
   ColLevels = 1000, DiscreteLevels = FALSE, ExactDraw = FALSE,
   DrawNodes = FALSE, Node_cex = 2, Node_pch = 21,
   NaNColor = "#0099FF", BackgroundColor = NULL,
@@ -13,7 +13,7 @@ draw_thematic_OCN(theme, OCN,
 }
 \arguments{
 \item{theme}{Vector (of length \code{OCN$AG$Nnodes} or \code{OCN$RN$Nnodes}) expressing the spatial field of interest. 
-The vector can contain \code{NA} and \code{NaN} values to identify reaches or RN nodes where the theme is not defined.}
+The vector can contain \code{NA} and \code{NaN} values to identify RN or AG nodes where the theme is not defined.}
 
 \item{OCN}{List as produced by \code{\link{aggregate_OCN}}.}
 

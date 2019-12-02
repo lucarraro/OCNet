@@ -3,7 +3,7 @@ draw_thematic_OCN <- function(theme,OCN,
                               minval=min(theme[!(is.nan(theme))]),
                               maxval=max(theme[!(is.nan(theme))]),
                               plot_title="",
-                              ColPalette=colorRampPalette(c("yellow","red","black")),
+                              ColPalette=NULL,
                               ColLevels=1000,
                               DiscreteLevels=FALSE,
                               ExactDraw=FALSE,
@@ -21,6 +21,13 @@ draw_thematic_OCN <- function(theme,OCN,
   if (minval==maxval){maxval=minval+1}
   
   if (DiscreteLevels==TRUE) {ColLevels <- length(unique(theme))}
+  
+  if (typeof(ColPalette)=="closure") {
+    ColPalette <- ColPalette(length(ColLevels))
+  } else if (typeof(ColPalette)=="character") {
+    ColPalette <- ColPalette[1:length(ColLevels)]
+  } else if (is.null(ColPalette)){
+    ColPalette <- colorRampPalette(c("yellow","red","black"))}
   
   tmp <- "TMP"
   if (length(theme)==OCN$RN$Nnodes && (length(theme)==OCN$AG$Nnodes)){
