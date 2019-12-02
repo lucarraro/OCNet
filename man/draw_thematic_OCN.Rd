@@ -5,7 +5,7 @@
 draw_thematic_OCN(theme, OCN,
   minval = min(theme[!(is.nan(theme))]),
   maxval = max(theme[!(is.nan(theme))]), plot_title = "",
-  ColPalette = NULL,
+  ColPalette = colorRampPalette(c("yellow","red","black")),
   ColLevels = 1000, DiscreteLevels = FALSE, ExactDraw = FALSE,
   DrawNodes = FALSE, Node_cex = 2, Node_pch = 21,
   NaNColor = "#0099FF", BackgroundColor = NULL,
@@ -23,7 +23,7 @@ The vector can contain \code{NA} and \code{NaN} values to identify RN or AG node
 
 \item{plot_title}{String that will appear as title of the plot.}
 
-\item{ColPalette}{Color palette used to display theme values.}
+\item{ColPalette}{Color palette used to display theme values. \code{ColPalette} accepts both functions creating color palettes and vectors of colors (of which the first \code{ColLevels} elements are used). See \code{\link{Palettes}} and examples below.}
 
 \item{ColLevels}{Number of colors in the palette.}
 

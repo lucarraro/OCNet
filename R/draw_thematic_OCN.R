@@ -3,7 +3,7 @@ draw_thematic_OCN <- function(theme,OCN,
                               minval=min(theme[!(is.nan(theme))]),
                               maxval=max(theme[!(is.nan(theme))]),
                               plot_title="",
-                              ColPalette=NULL,
+                              ColPalette=colorRampPalette(c("yellow","red","black")),
                               ColLevels=1000,
                               DiscreteLevels=FALSE,
                               ExactDraw=FALSE,
@@ -23,11 +23,9 @@ draw_thematic_OCN <- function(theme,OCN,
   if (DiscreteLevels==TRUE) {ColLevels <- length(unique(theme))}
   
   if (typeof(ColPalette)=="closure") {
-    ColPalette <- ColPalette(length(ColLevels))
+    ColPalette <- ColPalette(ColLevels)
   } else if (typeof(ColPalette)=="character") {
-    ColPalette <- ColPalette[1:length(ColLevels)]
-  } else if (is.null(ColPalette)){
-    ColPalette <- colorRampPalette(c("yellow","red","black"))}
+    ColPalette <- ColPalette[1:ColLevels] }
   
   tmp <- "TMP"
   if (length(theme)==OCN$RN$Nnodes && (length(theme)==OCN$AG$Nnodes)){
@@ -78,7 +76,6 @@ draw_thematic_OCN <- function(theme,OCN,
     pch_vec <- Node_pch*rep(1,length(theme))
   } else {pch_vec <- Node_pch}
   
-  ColPalette <- ColPalette(ColLevels)
   
   AvailableNodes <- setdiff(1:OCN$FD$Nnodes,OCN$FD$Outlet)
   par(bty="n",mar=c(1,1,1,1))
