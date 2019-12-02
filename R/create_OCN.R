@@ -256,7 +256,7 @@ create_OCN <- function(dimX,dimY,
     par(bty="n")
     plot(c(min(X),max(X)),c(min(Y),max(Y)),main=sprintf('OCN %dx%d (initial state)',dimX,dimY),
          type="n",asp=1,axes=FALSE,xlab="",ylab="") # 
-    points(X[OutletPixel],Y[OutletPixel],pch=22,col=rnbw[catch[resort[OutletPixel]]],bg=rnbw[catch[resort[OutletPixel]]])
+    points(X[OutletPixel],Y[OutletPixel],pch=15,col=rnbw[catch[resort[OutletPixel]]])
     for (i in AvailableNodes){
       if (AA[i]<=A_thr_draw & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
         lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5,col="#E0E0E0")}
@@ -337,7 +337,7 @@ create_OCN <- function(dimX,dimY,
         }
         plot(c(min(X),max(X)),c(min(Y),max(Y)),type="n",main=sprintf('OCN %dx%d (%.1f%% completed)',dimX,dimY,iter/N_iter*100),
              asp=1,axes=FALSE,xlab=" ",ylab=" ") # 
-        points(X[OutletPixel],Y[OutletPixel],pch=22,col=rnbw[catch[resort[OutletPixel]]],bg=rnbw[catch[resort[OutletPixel]]])
+        points(X[OutletPixel],Y[OutletPixel],pch=15,col=rnbw[catch[resort[OutletPixel]]])
         for (i in AvailableNodes){
           if (AA[i]<=(A_thr_draw)  & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
             lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5,col="#E0E0E0")}
