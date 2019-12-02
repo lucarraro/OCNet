@@ -5,7 +5,7 @@
 draw_thematic_OCN(theme, OCN,
   minval = min(theme[!(is.nan(theme))]),
   maxval = max(theme[!(is.nan(theme))]), plot_title = "",
-  ColPalette = NULL,
+  ColPalette = colorRampPalette(c("yellow","red","black")),
   ColLevels = 1000, DiscreteLevels = FALSE, ExactDraw = FALSE,
   DrawNodes = FALSE, Node_cex = 2, Node_pch = 21,
   NaNColor = "#0099FF", BackgroundColor = NULL,
@@ -23,7 +23,7 @@ The vector can contain \code{NA} and \code{NaN} values to identify RN or AG node
 
 \item{plot_title}{String that will appear as title of the plot.}
 
-\item{ColPalette}{Color palette used to display theme values.}
+\item{ColPalette}{Color palette used to display theme values. \code{ColPalette} accepts both functions creating color palettes and vectors of colors (of which the first \code{ColLevels} elements are used). See \code{\link{hcl.colors}} and examples below.}
 
 \item{ColLevels}{Number of colors in the palette.}
 
@@ -62,7 +62,10 @@ Function that draws OCNs with color of reaches or RN nodes depending on an arbit
 This function can be used to show how a certain spatial field varies along the river network.
 }
 \examples{
-OCN <- aggregate_OCN(landscape_OCN(OCN_20))
+OCN <- aggregate_OCN(landscape_OCN(OCN_20), A_thr=4)
 draw_thematic_OCN(OCN$AG$StreamOrder, OCN, ColPalette = rainbow,
 DiscreteLevels = TRUE, BackgroundColor = "#999999")
+
+OCN <- paths_OCN(OCN)
+
 }
