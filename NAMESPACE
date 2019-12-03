@@ -25,7 +25,7 @@ import(igraph)
 importFrom("grDevices", "colorRampPalette", "contourLines", "rainbow",
              "terrain.colors", "trans3d","hcl.colors")
 importFrom("graphics", "lines", "par", "persp", "plot", "points",
-			 "polygon")
+			 "polygon","legend")
 importFrom("methods", "new", "slot<-")
 importFrom("stats", "optim", "runif")
 importFrom("rgdal", "writeOGR")

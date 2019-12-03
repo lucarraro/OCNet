@@ -201,7 +201,7 @@ aggregate_OCN <- function(OCN,
   }
   ind <- ind[-which(ind[,1]==0),]
   W_AG[ind] <- 1
-  Outlet_AG <- which(DownNode_AG==0)
+  Outlet_AG <- RN_to_AG[Outlet_RN]
   
   # Upstream_AG : list containing IDs of all reaches upstream of each reach (plus reach itself)
   Upstream_AG <- vector("list",Nnodes_AG)
