@@ -1,16 +1,16 @@
 
 draw_elev2D_OCN <- function(OCN,
-                              ColPalette=terrain.colors(1000,alpha=1)){
+                              colPalette=terrain.colors(1000,alpha=1)){
   
   if (!("Z" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_elev2D_OCN.')
   }
   
   # plot elevation map
-  par(bty="n",mar=c(1,1,1,1))
+  par(bty="n")
   Zmat<-matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
   image.plot(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),
              seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize),
-             t(Zmat),col=ColPalette,xlab=" ",ylab=" ",axes=FALSE,asp=1)  
+             t(Zmat),col=colPalette,xlab=" ",ylab=" ",axes=FALSE,asp=1)  
   
 }

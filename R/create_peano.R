@@ -1,35 +1,35 @@
 
-create_peano <- function(n_iter_peano,
-                         OutletPos="NE",
+create_peano <- function(nIterPeano,
+                         outletPos="NE",
                          xllcorner=1,
                          yllcorner=1,
                          cellsize=1){
   
-  if (!(OutletPos %in% c("NE","NW","SE","SW"))){
-    stop('Invalid OutletPos')}
+  if (!(outletPos %in% c("NE","NW","SE","SW"))){
+    stop('Invalid outletPos')}
   
   # create Peano flow direction matrix
   FlowDir_peano <- matrix(c(8,7,1,8),nrow=2,ncol=2,byrow=TRUE)
   
-  for (i in 1:n_iter_peano){
+  for (i in 1:nIterPeano){
     FlowDir_peano <- rbind(cbind(FlowDir_peano,flip_lr_peano(FlowDir_peano)),
                            cbind(flip_ud_peano(FlowDir_peano),FlowDir_peano))
   }
-  dim <- 2^(n_iter_peano+1)
+  dim <- 2^(nIterPeano+1)
   FlowDir_peano[dim,dim] <- 0
   Nnodes <- dim^2
   Outlet <- Nnodes
   
   # flip flow direction matrix if outlet position is not NE
-  if (OutletPos=="SE"){
+  if (outletPos=="SE"){
     FlowDir_peano <- flip_ud_peano(FlowDir_peano)
     FlowDir_peano[1,dim] <- 0
     Outlet <- Nnodes-dim+1}
-  if (OutletPos=="NW"){
+  if (outletPos=="NW"){
     FlowDir_peano <- flip_lr_peano(FlowDir_peano)
     FlowDir_peano[dim,1] <- 0
     Outlet <- dim}
-  if (OutletPos=="SW"){
+  if (outletPos=="SW"){
     FlowDir_peano <- flip_ud_peano(flip_lr_peano(FlowDir_peano))
     FlowDir_peano[1,1] <- 0
     FlowDir_peano[1,dim] <- 6
@@ -93,8 +93,8 @@ create_peano <- function(n_iter_peano,
   
   # write results 
   ## create list for export
-  FD <- list(A=A,W=W,DownNode=DownNode,X=X,Y=Y,Nnodes=Nnodes,Outlet=Outlet)
-  peano <- list(FD=FD,dimX=dim,dimY=dim,cellsize=cellsize,N_outlet=1,PeriodicBoundaries=FALSE,ExpEnergy=0.5)
+  FD <- list(A=A,W=W,downNode=DownNode,X=X,Y=Y,nNodes=Nnodes,outlet=Outlet)
+  peano <- list(FD=FD,dimX=dim,dimY=dim,cellsize=cellsize,nOutlet=1,periodicBoundaries=FALSE,expEnergy=0.5)
   # note: for peano networks, ExpEnergy only has the meaning of quantity related to the exponent of the slope-area relationship
   # s \propto A^(ExpEnergy-1)
   

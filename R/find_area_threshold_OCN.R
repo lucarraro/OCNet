@@ -1,51 +1,51 @@
 
 find_area_threshold_OCN <- function(OCN,
-                                    thr_values=seq(OCN$cellsize^2,min(OCN$CM$A),OCN$cellsize^2),
-                                    MaxReachLength=Inf,
-                                    StreamOrderType="Strahler",
-                                    DisplayUpdates=0){
+                                    thrValues=seq(OCN$cellsize^2,min(OCN$CM$A),OCN$cellsize^2),
+                                    maxReachLength=Inf,
+                                    streamOrderType="Strahler",
+                                    displayUpdates=0){
   
-  if (!("Length" %in% names(OCN$FD))){
+  if (!("slope" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to find_area_threshold_OCN.')
   }
   
-  if (max(thr_values) > min(OCN$CM$A)){
-    stop('max(thr_values) cannot be larger than min(OCN$CM$A)')
+  if (max(thrValues) > min(OCN$CM$A)){
+    stop('max(thrValues) cannot be larger than min(OCN$CM$A)')
   }
-  if (length(thr_values)>5000 && OCN$FD$Nnodes>5000){
+  if (length(thrValues)>5000 && OCN$FD$nNodes>5000){
     cat('Running...\n')
-    cat('To reduce computational time, reduce the length of thr_values.\n')
+    cat('To reduce computational time, reduce the length of thrValues.\n')
   }
   
-  vec_NnodesRN <- numeric(length(thr_values))
-  vec_NnodesAG <- numeric(length(thr_values))
-  vec_DrainageDensity <- numeric(length(thr_values))
-  vec_StreamOrder <- numeric(length(thr_values))
+  vec_nNodesRN <- numeric(length(thrValues))
+  vec_nNodesAG <- numeric(length(thrValues))
+  vec_DrainageDensity <- numeric(length(thrValues))
+  vec_StreamOrder <- numeric(length(thrValues))
   
-  for (thr in 1:(length(thr_values))){
-    if (DisplayUpdates==1) {cat(sprintf('\r%.2f%% completed',100*thr/length(thr_values)))}
-    # print(sprintf('Evaluating A_thr = %.0f m2',thr_values[thr]))
+  for (thr in 1:(length(thrValues))){
+    if (displayUpdates==1) {cat(sprintf('\r%.2f%% completed',100*thr/length(thrValues)))}
+    # print(sprintf('Evaluating A_thr = %.0f m2',thrValues[thr]))
     
-    RN_mask <- as.vector(OCN$FD$A >= thr_values[thr]) 
+    RN_mask <- as.vector(OCN$FD$A >= thrValues[thr]) 
     FD_to_RN <- RN_mask*cumsum(as.numeric(RN_mask)) # FD_to_RN[i] is the pixel ID at the RN level of the pixel whose ID at the FD level is i
     # if pixel i at FD level doesn't belong to RN, then FD_to_RN[i]=0
     
-    Nnodes_RN <- sum(RN_mask)
-    vec_NnodesRN[thr] <- Nnodes_RN
+    nNodes_RN <- sum(RN_mask)
+    vec_nNodesRN[thr] <- nNodes_RN
     
-    if (Nnodes_RN > 1){
+    if (nNodes_RN > 1){
       
       W_RN <- OCN$FD$W[RN_mask,,drop=FALSE]
       W_RN <- W_RN[,RN_mask,drop=FALSE]
       
-      Outlet_RN <- FD_to_RN[OCN$FD$Outlet]
+      Outlet_RN <- FD_to_RN[OCN$FD$outlet]
       Outlet_RN <- Outlet_RN[Outlet_RN!=0] # remove outlets if the corresponding catchment size is lower than A_threshold
-      DownNode_RN <- numeric(Nnodes_RN)
+      DownNode_RN <- numeric(nNodes_RN)
       tmp <- W_RN@rowpointers
       NotOutlet <- which((tmp[-1] - tmp[-length(tmp)])==1)
       DownNode_RN[NotOutlet] <- W_RN@colindices
       
-      Length_RN <- OCN$FD$Length[RN_mask]
+      Length_RN <- OCN$FD$leng[RN_mask]
       
       # Drainage density
       vec_DrainageDensity[thr] <- sum(Length_RN)/(OCN$dimX*OCN$dimY*OCN$cellsize^2)
@@ -64,20 +64,20 @@ find_area_threshold_OCN <- function(OCN,
       whichNodeAG <- which(IsNodeAG)
       
       
-      Nnodes_AG <- sum(IsNodeAG)
-      Length_AG <- numeric(Nnodes_AG)
-      RN_to_AG <- numeric(Nnodes_RN)
+      nNodes_AG <- sum(IsNodeAG)
+      Length_AG <- numeric(nNodes_AG)
+      RN_to_AG <- numeric(nNodes_RN)
       reachID <- 1
       while (length(whichNodeAG) != 0){ # explore all AG Nodes
         i <- whichNodeAG[1] # select the first
         RN_to_AG[i] <- reachID; j <- DownNode_RN[i] 
         Length_AG[reachID] <- Length_RN[i]
-        while (!IsNodeAG[j] && j!=0 && Length_AG[reachID] <= MaxReachLength) {
+        while (!IsNodeAG[j] && j!=0 && Length_AG[reachID] <= maxReachLength) {
           RN_to_AG[j] <- reachID 
           Length_AG[reachID] <-  Length_AG[reachID] + Length_RN[j]
           j_old <- j
           j <- DownNode_RN[j]} 
-        if (Length_AG[reachID] > MaxReachLength){
+        if (Length_AG[reachID] > maxReachLength){
           j <- j_old
           Length_AG[reachID] <-  Length_AG[reachID] - Length_RN[j]
           ChannelHeads[j] <- 1
@@ -85,13 +85,13 @@ find_area_threshold_OCN <- function(OCN,
         reachID <- reachID + 1
         whichNodeAG <- whichNodeAG[-1]
       }
-      Nnodes_AG <- length(Length_AG)
+      nNodes_AG <- length(Length_AG)
       
-      vec_NnodesAG[thr] <- Nnodes_AG
+      vec_nNodesAG[thr] <- nNodes_AG
       
-      # RN_to_AG <- numeric(Nnodes_RN)
+      # RN_to_AG <- numeric(nNodes_RN)
       # reachID <- 1
-      # for (i in 1:Nnodes_RN){
+      # for (i in 1:nNodes_RN){
       #   if (Source_Or_ConfluenceNotOutlet[i]) {
       #     RN_to_AG[i] <- reachID; j <- DownNode_RN[i]
       #      while (!Source_Or_ConfluenceNotOutlet[j] && j!=0) {
@@ -101,12 +101,12 @@ find_area_threshold_OCN <- function(OCN,
       
       #print('W matrix at AG level...',quote=FALSE); 
       # Adjacency matrix at reach level
-      DownNode_AG <- numeric(vec_NnodesAG[thr])
-      #W_AG <- sparseMatrix(i=1,j=1,x=0,dims=c(vec_Nnodes[thr],vec_Nnodes[thr]))
-      W_AG <- spam(0,vec_NnodesAG[thr],vec_NnodesAG[thr])
-      indices <- matrix(0,vec_NnodesAG[thr],2)
+      DownNode_AG <- numeric(vec_nNodesAG[thr])
+      #W_AG <- sparseMatrix(i=1,j=1,x=0,dims=c(vec_nNodes[thr],vec_nNodes[thr]))
+      W_AG <- spam(0,vec_nNodesAG[thr],vec_nNodesAG[thr])
+      indices <- matrix(0,vec_nNodesAG[thr],2)
       
-      for (i in 1:Nnodes_RN){ 
+      for (i in 1:nNodes_RN){ 
         if (DownNode_RN[i] != 0 && RN_to_AG[DownNode_RN[i]] != RN_to_AG[i]) {
           DownNode_AG[RN_to_AG[i]] <- RN_to_AG[DownNode_RN[i]]
           #W_AG[RN_to_AG[i],DownNode_AG[RN_to_AG[i]]] <- 1
@@ -115,7 +115,7 @@ find_area_threshold_OCN <- function(OCN,
       }
       
       
-      # for (i in 1:Nnodes_RN){ 
+      # for (i in 1:nNodes_RN){ 
       #   if (DownNode_RN[i]==0) {
       #     DownNode_AG[RN_to_AG[i]] <- reachID
       #     #W_AG[RN_to_AG[i],reachID] <- 1
@@ -131,9 +131,9 @@ find_area_threshold_OCN <- function(OCN,
       Outlet_AG <- which(DownNode_AG==0)
       
       # Upstream_AG : list containing IDs of all reaches upstream of each reach (plus reach itself)
-      Upstream_AG <- vector("list",vec_NnodesAG[thr])
-      Nupstream_AG <- numeric(vec_NnodesAG[thr])
-      for (i in 1:vec_NnodesAG[thr]){
+      Upstream_AG <- vector("list",vec_nNodesAG[thr])
+      Nupstream_AG <- numeric(vec_nNodesAG[thr])
+      for (i in 1:vec_nNodesAG[thr]){
         UpOneLevel <- which(DownNode_AG==i) # find reaches at one level upstream
         Upstream_AG[[i]] <- UpOneLevel      # add them to the list
         while (length(UpOneLevel)!=0) { # continue until there are no more reaches upstream
@@ -147,10 +147,10 @@ find_area_threshold_OCN <- function(OCN,
       
       
       ## Calculate stream Order
-      if (StreamOrderType=="Strahler"){
+      if (streamOrderType=="Strahler"){
         # calculate Strahler stream order
-        StreamOrder_AG <- numeric(vec_NnodesAG[thr])
-        for (i in 1:vec_NnodesAG[thr]){
+        StreamOrder_AG <- numeric(vec_nNodesAG[thr])
+        for (i in 1:vec_nNodesAG[thr]){
           j <- order(Nupstream_AG)[i] # index that explores reaches in a downstream direction
           tmp <- which(DownNode_AG==j) # set of reaches draining into j
           if (length(tmp)>0){
@@ -160,10 +160,10 @@ find_area_threshold_OCN <- function(OCN,
             } else {StreamOrder_AG[j] <- max(StreamOrder_AG[tmp])} # otherwise, keep previous stream order
           } else {StreamOrder_AG[j] <- 1} # if j is an headwater, impose StreamOrder = 1
         }
-      } else if (StreamOrderType=="Shreve"){
+      } else if (streamOrderType=="Shreve"){
         # calculate Shreve stream order
-        StreamOrder_AG <- numeric(vec_NnodesAG[thr])
-        for (i in 1:vec_NnodesAG[thr]){
+        StreamOrder_AG <- numeric(vec_nNodesAG[thr])
+        for (i in 1:vec_nNodesAG[thr]){
           j <- order(Nupstream_AG)[i] # index that explores reaches in a downstream direction
           tmp <- which(DownNode_AG==j) # set of reaches draining into j
           if (length(tmp)>0){
@@ -176,11 +176,11 @@ find_area_threshold_OCN <- function(OCN,
   }
   
   Thresholds <- vector("list",0)
-  Thresholds[["thr_values"]] <- thr_values
-  Thresholds[["Nnodes_RN"]] <- vec_NnodesRN
-  Thresholds[["Nnodes_AG"]] <- vec_NnodesAG
-  Thresholds[["DrainageDensity"]] <- vec_DrainageDensity
-  Thresholds[["StreamOrder"]] <- vec_StreamOrder
+  Thresholds[["thrValues"]] <- thrValues
+  Thresholds[["nNodesRN"]] <- vec_nNodesRN
+  Thresholds[["nNodesAG"]] <- vec_nNodesAG
+  Thresholds[["drainageDensity"]] <- vec_DrainageDensity
+  Thresholds[["streamOrder"]] <- vec_StreamOrder
   
   return(Thresholds)
 }

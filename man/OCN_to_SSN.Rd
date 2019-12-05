@@ -41,7 +41,7 @@ given by the lattice coordinates (i.e. \code{OCN$level$X}, \code{OCN$level$Y}); 
 \examples{
 # transform a 20x20 single-outlet OCN (aggregated at the AG level)
 # into a SSN object and plot it
-OCN <- aggregate_OCN(landscape_OCN(OCN_20), A_thr = 4)
+OCN <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 4)
 ssn1 <- OCN_to_SSN(OCN, "AG", obsDesign = SSN::poissonDesign(10), 
 path=paste(tempdir(),"/OCN.ssn", sep = ""), importToR = TRUE)
 plot(ssn1)
@@ -49,8 +49,8 @@ plot(ssn1)
 \dontrun{
 # create a 50x50 OCN with two outlets and periodic boundaries; 
 set.seed(1)
-OCN <- create_OCN(50, 50, N_outlet = 2, OutletSide = c("S", "N"),
-		OutletPos = c(1, 50), PeriodicBoundaries = TRUE)
+OCN <- create_OCN(50, 50, nOutlet = 2, outletSide = c("S", "N"),
+		outletPos = c(1, 50), periodicBoundaries = TRUE)
 # aggregate the OCN
 OCN <- aggregate_OCN(landscape_OCN(OCN))
 # transform it into a SSN object aggregated at the RN level
