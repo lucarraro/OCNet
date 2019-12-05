@@ -37,10 +37,10 @@ downstream path, then \code{AG$downstreamLengthUnconnected[i,j] = 0}. It is a \c
 Function that determines upstream and downstream paths and path lengths between any nodes of the network at the aggregated level.
 }
 \examples{
-# Calculate paths between nodes of an OCN
+# 1) Calculate paths between nodes of an OCN
 OCN <- paths_OCN(aggregate_OCN(landscape_OCN(OCN_20), thrA = 4))
 \dontrun{
-# Display distance to outlet (at the RN level) along the main stem
+# 2) Display distance to outlet (at the RN level) along the main stem
 # of an OCN
 OCN <- aggregate_OCN(landscape_OCN(OCN_250_T)) # this takes some seconds
 OCN <- paths_OCN(OCN, pathsRN = TRUE) # this takes some seconds

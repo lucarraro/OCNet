@@ -137,14 +137,14 @@ Within these regions, an \code{"I"}-type drainage pattern is produced if \code{t
 no action is performed if \code{typeInitialState = "H"}. Note that \code{typeInitialState = "H"} is the recommended choice only for large \code{nOutlet}.
 }
 \examples{
-# creates and displays a single outlet 20x20 OCN with default options
+# 1) creates and displays a single outlet 20x20 OCN with default options
 set.seed(1)
 par(mfrow=c(1,1))
 OCN_a <- create_OCN(20, 20)
 draw_simple_OCN(OCN_a)
 
 \dontrun{
-# creates and displays a 2-outlet OCNs with manually set outlet location, 
+# 2) creates and displays a 2-outlet OCNs with manually set outlet location, 
 # and a 4-outlet OCNs with random outlet position.
 set.seed(1)
 par(mfrow=c(1,2))
@@ -155,7 +155,7 @@ draw_simple_OCN(OCN_b2,plot_title = "4-outlet OCN")
 }
 
 \dontrun{
-# generate 3 single-outlet OCNs on the same (100x100) domain starting from different initial states, 
+# 3) generate 3 single-outlet OCNs on the same (100x100) domain starting from different initial states, 
 # and show 20 intermediate plots and console updates.
 set.seed(1)
 par(mfrow=c(1,1))
@@ -168,7 +168,7 @@ OCN_I <- create_OCN(100, 100, typeInitialState = "I", showIntermediatePlots = TR
 }
 
 \dontrun{
-# generate a 2-outlet OCN and show intermediate plots. Note that different colors are used 
+# 4) generate a 2-outlet OCN and show intermediate plots. Note that different colors are used 
 # to identify the two networks  (all pixels are colored because thrADraw = 0).
 set.seed(1)
 OCN <- create_OCN(150, 70, nOutlet = 2, outletPos = c(1, 150), outletSide = c("S", "N"),

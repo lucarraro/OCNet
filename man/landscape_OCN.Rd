@@ -74,11 +74,11 @@ The absolute elevation of the outlet pixels (and, consequently, of the whole lat
 optimization algorithm is not guaranteed for large \code{OCN$nOutlet} (say, \code{OCN$nOutlet > 10}).
 }
 \examples{
-# draw 2D elevation map of a 20x20 OCN with default options
+# 1) draw 2D elevation map of a 20x20 OCN with default options
 OCN2 <- landscape_OCN(OCN_20)
 
 \dontrun{
-# generate a 100x50 OCN; assume that the pixel resolution is 200 m
+# 2) generate a 100x50 OCN; assume that the pixel resolution is 200 m
 # (the total catchment area is 20 km2)
 set.seed(1)
 OCN <- create_OCN(100, 50, cellsize = 200, 
@@ -94,7 +94,7 @@ draw_elev3Drgl_OCN(OCN)
 }
 
 \dontrun{
-# generate a 100x50 OCN with 4 outlets
+# 3) generate a 100x50 OCN with 4 outlets
 set.seed(1)
 OCN <- create_OCN(100, 50, cellsize = 200, 
 		nOutlet = 4, displayUpdates = 0) # this takes about 40 s

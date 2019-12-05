@@ -47,16 +47,16 @@ path=paste(tempdir(),"/OCN.ssn", sep = ""), importToR = TRUE)
 plot(ssn1)
 
 \dontrun{
-# create a 50x50 OCN with two outlets and periodic boundaries; 
+# 1) create a 50x50 OCN with two outlets and periodic boundaries; 
 set.seed(1)
 OCN <- create_OCN(50, 50, nOutlet = 2, outletSide = c("S", "N"),
 		outletPos = c(1, 50), periodicBoundaries = TRUE)
-# aggregate the OCN
+# aggregate the OCN;
 OCN <- aggregate_OCN(landscape_OCN(OCN))
-# transform it into a SSN object aggregated at the RN level
+# transform it into a SSN object aggregated at the RN level;
 ssn2 <- OCN_to_SSN(OCN, "RN", obsDesign = SSN::binomialDesign(c(10, 10)),
 		path = paste(tempdir(),"/OCN2.ssn", sep = ""), importToR = TRUE)
-# plot the SSN object; it is constituted by two networks,
+# and plot the SSN object; it is constituted by two networks,
 # and nodes' coordinates are the "real" ones  
 par(mai = c(1, 1, 1, 1))
 plot(ssn2, xlab = "X", ylab = "Y")

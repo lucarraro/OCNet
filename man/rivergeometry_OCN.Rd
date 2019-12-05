@@ -40,7 +40,7 @@ See also Leopold, L. B., & Maddock, T. (1953). \emph{The hydraulic geometry of s
  (Vol. 252). US Government Printing Office.
 }
 \examples{
-# Compute river geometry of a 20x20 OCN with default options
+# 1) Compute river geometry of a 20x20 OCN with default options
 # and display river width at the RN level
 OCN <- rivergeometry_OCN(aggregate_OCN(landscape_OCN(OCN_20)))
 draw_thematic_OCN(OCN$RN$width,OCN)
