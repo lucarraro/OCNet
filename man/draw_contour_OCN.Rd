@@ -40,25 +40,25 @@ If \code{OCN$FD$nNodes > 40000}, in order to speed up the execution of this func
 by pixels such that \code{OCN$FD$A > thrADraw} is drawn.
 }
 \examples{
-# draw contour of a 20x20 single-outlet OCN
+# 1) draw contour of a 20x20 single-outlet OCN
 # (for single-outlet OCNs without periodic boundaries, the output
 # of draw_contour_OCN is very similar to that of draw_simple_OCN)
 draw_contour_OCN(landscape_OCN(OCN_20), thrADraw = 4)
 
 \dontrun{
-# plot real shape of multiple-outlet OCN created with periodic boundaries
+# 2a) plot real shape of multiple-outlet OCN created with periodic boundaries
 # add outlets on top of the rivers
 OCN <- landscape_OCN(OCN_300_4out_PB) # it takes around one minute
 draw_contour_OCN(OCN, drawOutlets = 2)
 
-# same as before, but use same color palette for rivers and contours
+# 2b) same as before, but use same color palette for rivers and contours
 draw_contour_OCN(OCN, colPalCont = 0)
 
-# draw contours of catchments obtained from an OCN with nOutlet = "All"
+# 2c) draw contours of catchments obtained from an OCN with nOutlet = "All"
 OCN <- landscape_OCN(OCN_400_Allout) # it takes some minutes
 draw_contour_OCN(OCN)
 
-# same as above, but do not plot contours, and plot outlets 
+# 2d) same as above, but do not plot contours, and plot outlets 
 # with same color palette as rivers
 draw_contour_OCN(OCN, drawContours = FALSE, drawOutlets = TRUE,
 		colPalOut = 0)

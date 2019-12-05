@@ -26,6 +26,16 @@ As such, it can be used as input for all other complementary functions of the pa
 Function that creates Peano networks on a square lattice.
 }
 \examples{
+# 1) create a peano network in a 32x32 square,
+# use landscape_OCN, aggregate_OCN functions,
+# and display subcatchment map and map of drainage area
 peano <- create_peano(4)
-
+peano <- aggregate_OCN(landscape_OCN(peano), thrA = 4)
+par(mfrow=c(1,3))
+draw_simple_OCN(peano
+title("Peano network")
+draw_subcatchments_OCN(peano)
+title("Subcatchments")
+draw_thematic_OCN(peano$RN$A, peano)
+title("Drainage area at RN level")
 }

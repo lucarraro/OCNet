@@ -21,13 +21,13 @@ No output is returned.
 Function that plots the non-aggregated OCN as calculated by \code{create_OCN}.
 }
 \examples{
-# draw OCN with default settings
+# 1a) draw OCN with default settings
 draw_simple_OCN(OCN_250_T)
-# same as above, but with decreased thrADraw
+# 1b) same as above, but with decreased thrADraw
 draw_simple_OCN(OCN_250_T, thrADraw = 0.001 * OCN_250$dimX * OCN_250$dimY)
-# same as the first example, but include the portion of network  
-# with drainage area lower than thrADraw 
 \dontrun{
+# 1c) same as the first example, but include the portion of network  
+# with drainage area lower than thrADraw 
 draw_simple_OCN(OCN_250_T, easyDraw = FALSE) # this will take some seconds
 }
 }

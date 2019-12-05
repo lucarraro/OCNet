@@ -44,22 +44,27 @@ draw_elev3Drgl_OCN(landscape_OCN(OCN_20))
 }
 
 \dontrun{
+# 1a) draw the 3D representation of a single catchment within an OCN 
+# generated with nOutlet = "All" and add draw the river on top of it
 OCN <- landscape_OCN(OCN_400_Allout) # this takes some minutes
-
-# draw the 3D representation of a single catchment within the OCN 
-# and add draw the river on top of it
 draw_elev3Drgl_OCN(OCN, chooseCM = 983, drawRiver = TRUE)
 
-# draw the 3D representation of the largest catchment within the OCN. 
+# 1b) draw the 3D representation of the largest catchment within the OCN 
 # (here polygon3d may fail at plotting the polygon at zero elevation)   
 draw_elev3Drgl_OCN(OCN, chooseCM = TRUE) 
 
-# draw the 3D representation of the whole OCN
+# 1c) draw the 3D representation of the whole OCN
 # and enhance the aspect ratio of Z coordinates 
 with respect to the default value (the final result will be ugly):  
 draw_elev3Drgl_OCN(OCN, aspect = c(1, 1, 0.2))
 
-# same as above, but operate coarse graining for better aesthetics: 
+# 1d) same as above, but operate coarse graining for better aesthetics: 
 draw_elev3Drgl_OCN(OCN, coarseGrain = c(5,5), aspect = c(1, 1, 0.2))
+
+# 2) draw the 3D representation of a single catchment of an OCN generated
+# with periodicBoundaries = TRUE
+# (note that the real shape of the catchment is drawn)
+OCN <- landscape_OCN(OCN_300_4out_PB) # this takes some minutes
+draw_elev3Drgl_OCN(OCN, chooseCM = TRUE) 
 }
 }

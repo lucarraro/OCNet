@@ -39,7 +39,7 @@ that corresponds to the desired number of nodes of the aggregated network.
 It is intended for use with single outlet OCNs, although its use with multiple outlet OCNs is allowed (provided that \code{max(thrValues) <= min(OCN$CM$A)}).
 }
 \examples{
-# derive relationship between threshold area and number of nodes
+# 1) derive relationship between threshold area and number of nodes
 OCN <- landscape_OCN(OCN_20)
 thr <- find_area_threshold_OCN(OCN)
 # log-log plot of number of nodes at the AG level versus 
