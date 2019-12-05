@@ -71,10 +71,10 @@ Strahler stream order is computed. If \code{streamOrderType = "Shreve"}, Shreve 
 \item{\code{AG$upstream}}{List (of length \code{AG$nNodes}) whose object \code{i} is a vector (of length \code{AG$nUpstream[i]}) containing 
 the indices of nodes (at the AG level) upstream of a node \code{i} (including \code{i}).}
 \item{\code{AG$toFD}}{Vector of length \code{AG$nNodes}) with with indices at FD level of nodes belonging to AG level. \code{AG$toFD[i] = j} implies \code{OCN$FD$toAG[j] = i}. }
-\item{\code{AG$toFDReach}}{List (of length \code{AG$nNodes}) whose object \code{i} is a vector of indices of FD nodes constituting the edge 
+\item{\code{AG$ReachToFD}}{List (of length \code{AG$nNodes}) whose object \code{i} is a vector of indices of FD nodes constituting the edge 
 departing from node \code{i}.}
 \item{\code{AG$toRN}}{Vector of length \code{AG$nNodes}) with with indices at RN level of nodes belonging to AG level. \code{AG$toRN[i] = j} implies \code{OCN$FD$toRN[j] = i}. }
-\item{\code{AG$toRNReach}}{List (of length \code{AG$nNodes}) whose object \code{i} is a vector of indices of RN nodes constituting the edge 
+\item{\code{AG$ReachToRN}}{List (of length \code{AG$nNodes}) whose object \code{i} is a vector of indices of RN nodes constituting the edge 
 departing from node \code{i}.}
 \item{\code{AG$toCM}}{Vector (of length \code{AG$nNodes}) with catchment index values for each AG node. Example: \code{AG$toCM[i] = j} if node
 \code{i} drains into the outlet whose location is defined by \code{outletSide[j]}, \code{outletPos[j]}.}

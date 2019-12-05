@@ -29,6 +29,20 @@ suppressPackageStartupMessages(library(igraph))
 suppressPackageStartupMessages(library(SSN))
 ```
 
+```{r, fig.width=7, fig.height=2}
+set.seed(1)
+OCN <- create_OCN(30, 20, outletPos = 1)
+OCN <- aggregate_OCN(landscape_OCN(OCN), thrA = 3)
+par(mfrow = c(1, 3), mai = c(0, 0, 0.2, 0.2))
+draw_simple_OCN(OCN, thrADraw = 3)
+title("Optimal Channel Network")
+draw_elev3D_OCN(OCN, drawRiver = FALSE, addColorbar = FALSE, expand = 0.2, theta = -30)
+title("Elevation")
+draw_thematic_OCN(OCN$AG$streamOrder, OCN, discreteLevels = TRUE, colPalette = rainbow(4))
+title("Strahler stream order")
+
+```
+
 # Overview
 
 OCNet enables the creation and analysis of Optimal Channel Networks (OCNs). These are oriented spanning trees (built on rectangular lattices made up of square pixels) that reproduce all scaling features characteristic of real, natural river networks [@rodriguez1992; @rinaldo2014]. As such, they can be used in a variety of numerical and laboratory experiments in the fields of hydrology, ecology and epidemiology. Notable examples include studies on metapopulations and metacommunities (e.g. Carrara et al. -@carrara2012), scenarios of waterborne pathogen invasions (e.g. Gatto et al. -@gatto2013) and biogeochemichal processes in streams (e.g. Helton et al. -@helton2018).
@@ -68,7 +82,7 @@ The generation of an OCN is performed by function `create_OCN`. Its only require
           + `rivergeometry_OCN`: evaluates hydraulic properties of the OCN
           + `OCN_to_igraph`: transforms the OCN into an igraph object
           + `OCN_to_SSN`: transforms the OCN into a SpatialStreamNetwork object
-      + `draw_contour_OCN`: draws "real-shaped"^[If the OCN was generated with option `PeriodicBoundaries = FALSE`, the real-shaped representation of the OCN is equal to the simple, within-lattice representation provided by `draw_simple_OCN`. If the OCN was generated with `PeriodicBoundaries = TRUE`, its real-shaped representation is such that, starting from the outlet(s), the position of a FD node `i` is flipped with respect to a lattice side if the edge between `i` and the pixel downstream of `i` crosses such lattice side.] OCNs and catchment contours
+      + `draw_contour_OCN`: draws "real-shaped"^[If the OCN was generated with option `periodicBoundaries = FALSE`, the real-shaped representation of the OCN is equal to the simple, within-lattice representation provided by `draw_simple_OCN`. If the OCN was generated with `periodicBoundaries = TRUE`, its real-shaped representation is such that, starting from the outlet(s), the position of a FD node `i` is flipped with respect to a lattice side if the edge between `i` and the pixel downstream of `i` crosses such lattice side.] OCNs and catchment contours
       + `draw_elev2D_OCN`: draws 2D elevation field
       + `draw_elev3D_OCN`: draws 3D elevation field
        + `draw_elev3Drgl_OCN`: draws 3D elevation field (via `rgl` rendering system)
@@ -102,19 +116,19 @@ Nodes at the AG level correspond to a subset of nodes at the RN level. In partic
 * *Sources*: nodes at the RN level with null indegree.
 * *Confluences*: nodes at the RN level with indegree larger than one.
 * *Outlets*: corresponding to outlets at the RN level.
-* *Breaking nodes* (only if `MaxReachLength` is finite): nodes that split edges that are longer than `MaxReachLength`.
+* *Breaking nodes* (only if `maxReachLength` is finite): nodes that split edges that are longer than `maxReachLength`.
 
-Outlet nodes at the AG level might also be sources, confluences or breaking nodes. All AG nodes except outlet nodes have outdegree equal to 1. All RN nodes that do not correspond to AG nodes constitute the edges of the network at the AG level: more specifically, each edge is formed by an AG node and a sequence of RN pixel downstream of the AG node, until another AG node is found.
+Outlet nodes at the AG level might also be sources, confluences or breaking nodes. All AG nodes except outlet nodes have outdegree equal to 1. All RN nodes that do not correspond to AG nodes constitute the edges of the network at the AG level: more specifically, each edge is formed by an AG node and a sequence of RN nodes downstream of the AG node, until another AG node is found.
 
-Fig. \@ref(fig:ex3-net) shows an alternative aggregation scheme for the network showed in Fig. \@ref(fig:ex-net) when the optional input `MaxReachLength` is set to a finite value.
+Fig. \@ref(fig:ex3-net) shows an alternative aggregation scheme for the network showed in Fig. \@ref(fig:ex-net) when the optional input `maxReachLength` is set to a finite value.
 
-```{r ex3-net, echo=FALSE, fig.cap="Aggregation of the previous network with `A_thr` equal to 5 pixels and `MaxReachLength` equal to 3 pixel sides. Note that the length of the diagonal segments of the edges is equal to `sqrt(2)`.", out.width = '70%'}
+```{r ex3-net, echo=FALSE, fig.cap="Aggregation of the previous network with `A_thr` equal to 5 pixels and `maxReachLength` equal to 3 pixel sides. Note that the length of the diagonal segments of the edges is equal to `sqrt(2)`.", out.width = '70%'}
 knitr::include_graphics("example_networks3.png")
 ```
 
 ## Correspondence between indices at different levels
 
-The output of `aggregate_OCN` contains objects named `OCN$XX$to_YY`, where `XX` and `YY` are two different aggregation levels. These objects define the correspondences between indices among aggregation levels. `OCN$XX$toYY` contains a number of elements equal to the number of nodes at `XX` level; each element `OCN$XX$to_YY[[i]]` contains the index/indices at `YY` level corresponding to node `i` at `XX` level. 
+The output of `aggregate_OCN` contains objects named `OCN$XX$toYY`, where `XX` and `YY` are two different aggregation levels. These objects define the correspondences between indices among aggregation levels. `OCN$XX$toYY` contains a number of elements equal to the number of nodes at `XX` level; each element `OCN$XX$toYY[[i]]` contains the index/indices at `YY` level corresponding to node `i` at `XX` level. For aggregation level AG, additional correspondence objects are marked by the string `Reach`: these consider the whole sequence of RN nodes constituting the edge departing from an AG node as belonging to the AG node.
 
 The example shown in Figure \@ref(fig:ex-ind) corresponds to the dataset `example_4x4` included in the package. Note that index numbering starts from the lower-left (southwestern) corner of the lattice.
 
@@ -122,7 +136,7 @@ The example shown in Figure \@ref(fig:ex-ind) corresponds to the dataset `exampl
 knitr::include_graphics("indices_example.png")
 ```
 
-The R code below displays the different `OCN$XX$to_YY` objects corresponding to the example in Figure \@ref(fig:ex-ind):
+The R code below displays the different `OCN$XX$toYY` objects corresponding to the example in Figure \@ref(fig:ex-ind):
 
 ```{r}
 ex <- aggregate_OCN(landscape_OCN(OCN_4), thrA = 2)
@@ -135,9 +149,9 @@ ex$RN$toAG
 ex$RN$toAGReach
 
 ex$AG$toFD
-ex$AG$toFDReach
+ex$AG$ReachToFD
 ex$AG$toRN
-ex$AG$toRNReach
+ex$AG$ReachToRN
 
 ex$SC$toFD
 
@@ -152,19 +166,21 @@ Let's build an OCN on a 20x20 lattice and assume that each cell represents a squ
 ```{r, fig.width=4, fig.height=4}
 set.seed(1)
 OCNwe <- create_OCN(20, 20, outletPos = 3, cellsize = 500)
+par(mai=c(0,0,0,0))
 draw_simple_OCN(OCNwe)
 
 ```
 
 Now, let's construct the elevation field subsumed by the OCN. Let's suppose that the outlet has null elevation and slope equal to 0.01. Then, we use `draw_elev3D_OCN` to draw the three-dimensional elevation map (values are in m). 
 
-```{r, fig.width=6, fig.height=2.8}
+```{r, fig.width=7, fig.height=2.8}
 OCNwe <- landscape_OCN(OCNwe, slope0 = 0.01)
+par(mai=c(0,0,0,0.5))
 draw_elev3D_OCN(OCNwe, drawRiver = FALSE)
 
 ```
 
-Next, the OCN can be aggregated. Let's suppose that the desired number of nodes at the AG level be as close as possible^[It is not guaranteed that an OCN can be aggregated to an arbitrary number of nodes. This is due to the fact that the indegree of confluence nodes is typically 2 or 3, depending on the flow direction patterns. For example, if the outlet is not a confluence node, all confluence nodes have indegree equal to 2, and `MaxReachLength = Inf`, then the resulting number of aggregated nodes will be even.] to 20. With function `find_area_threshold_OCN` we can derive the corresponding value of drainage area threshold:
+Next, the OCN can be aggregated. Let's suppose that the desired number of nodes at the AG level be as close as possible^[It is not guaranteed that an OCN can be aggregated to an arbitrary number of nodes. This is due to the fact that the indegree of confluence nodes is typically 2 or 3, depending on the flow direction patterns. For example, if the outlet is not a confluence node, all confluence nodes have indegree equal to 2, and `maxReachLength = Inf`, then the resulting number of aggregated nodes will be even.] to 20. With function `find_area_threshold_OCN` we can derive the corresponding value of drainage area threshold:
 
 ```{r}
 thr <- find_area_threshold_OCN(OCNwe)
@@ -174,9 +190,10 @@ indThr <- max(indThr) # pick the last ind_thr that satisfies the condition above
 thrA20 <- thr$thrValues[indThr] # corresponding threshold area
 ```
 
-The resulting number of nodes is^[The number of aggregated nodes is here uneven because one node has indegree equal to 3 (see figure below).] `r thr$Nnodes[indThr]`, corresponding to a threshold area `thrA20 = ` `r thrA20/1e6` km^2^. The latter value can now be used in function `aggregate_OCN` to obtain the aggregated network. Function `draw_subcatchments_OCN` shows how the lattice is partitioned into subcatchments. It is possible to add points at the locations of the nodes at the AG level. 
-```{r, fig.width=6, fig.height=2.8}
+The resulting number of nodes is^[The number of aggregated nodes is here uneven because one node has indegree equal to 3 (see figure below).] `r thr$nNodesAG[indThr]`, corresponding to a threshold area `thrA20 = ` `r thrA20/1e6` km^2^. The latter value can now be used in function `aggregate_OCN` to obtain the aggregated network. Function `draw_subcatchments_OCN` shows how the lattice is partitioned into subcatchments. It is possible to add points at the locations of the nodes at the AG level. 
+```{r, fig.width=7, fig.height=2.8}
 OCNwe <- aggregate_OCN(OCNwe, thrA = thrA20)
+par(mai=c(0.1,0,0.1,0))
 draw_subcatchments_OCN(OCNwe)
 points(OCNwe$AG$X,OCNwe$AG$Y, pch = 21, col = "blue", bg = "blue")
 
@@ -184,8 +201,9 @@ points(OCNwe$AG$X,OCNwe$AG$Y, pch = 21, col = "blue", bg = "blue")
 
 Finally, `draw_thematic_OCN` can be used to display the along-stream distances of RN-level nodes to the outlet (in m), as calculated by `paths_OCN`.
 
-```{r, fig.width=6, fig.height=2.8}
+```{r, fig.width=7, fig.height=2.8}
 OCNwe <- paths_OCN(OCNwe, pathsRN = TRUE)
+par(mai=c(0.1,0,0.1,0))
 draw_thematic_OCN(OCNwe$RN$downstreamPathLength[ , OCNwe$RN$outlet], OCNwe, 
                   backgroundColor = "#606060")
 
@@ -292,11 +310,11 @@ for (t in 2:nTimestep){
 ```
 
 The left panel of the graph below shows the time evolution of the local population at the outlet (red) and at the node at highest distance from the outlet (blue). In the right panel, the evolution total metapopulation size is shown. Dashed lines indicate population values at carrying capacity. 
-```{r, fig.width=7.2, fig.height=2.8}
+```{r, fig.width=7, fig.height=2.8}
 par(mfrow = c(1, 2))
 plot(pop[OCNwe$RN$outlet, ], type = "l", ylim = c(0, 1.05*K[OCNwe$RN$outlet]), col = "red", 
      xlab = "Time", ylab = "Population", lwd = 2)
-title("Evolution of local population size")
+title("Evolution of local pop. size")
 lines(c(1, nTimestep),c(K[OCNwe$RN$outlet], K[OCNwe$RN$outlet]), col = "red", lty = 2)
 farthestNode <- which(OCNwe$RN$downstreamPathLength[ , OCNwe$RN$outlet]
                       == max(OCNwe$RN$downstreamPathLength[ , OCNwe$RN$outlet]))[1]
@@ -305,13 +323,13 @@ lines(c(1, nTimestep), c(K[farthestNode], K[farthestNode]), col = "blue", lty = 
 
 plot(colSums(pop), type = "l", xlab = "Time", ylab = "Population", lwd = 2, ylim = c(0, 1.05*sum(K)))
 lines(c(1, nTimestep), c(sum(K),sum(K)), lty = 2)
-title("Evolution of metapopulation size")
+title("Evolution of metapop. size")
 ```
 
 
 Function `draw_thematic_OCN` can be used to visualize the spatial distribution of the metapopulation at given time points.
-```{r, fig.width=6, fig.height=5}
-par(mfrow = c(2, 2))
+```{r, fig.width=7, fig.height=5}
+par(mfrow = c(2, 2), mai = c(0.1, 0, 0.2, 0))
 draw_thematic_OCN(pop[,1], OCNwe, colLevels = c(0, max(K), 1000),
                   drawNodes = TRUE)
 title("Time = 1")
@@ -334,7 +352,7 @@ title("Time = 100")
 Function `create_peano` can be used in lieu of `create_OCN` to generate Peano networks on square lattices. Peano networks are deterministic, plane-filling fractals whose topological measures (Horton's bifurcation and length ratios) are akin to those of real river networks [@marani1991] and can then be used in a variety of synthetic experiments, as it is the case for OCNs (e.g. Campos et al. [-@campos2006]). Peano networks are generated by means of an iterative algorithm: at each iteration, the size of the lattice side is doubled (see code below). As a result, Peano networks span squares of side equal to a power of 2. The outlet must be located at a corner of the square.  
 
 ```{r, fig.width=7, fig.height=5}
-par(mfrow = c(2, 3))
+par(mfrow = c(2, 3), mai = c(0, 0, 0.2, 0))
 peano0 <- create_peano(0)
 draw_simple_OCN(peano0)
 title("Iteration: 0 - Lattice size: 2x2")
@@ -363,7 +381,8 @@ title("Iteration: 5 - Lattice size: 64x64")
 
 The output of `create_peano` is a list containing the same objects as those produced by `create_OCN`. As such, it can be used as input for all other complementary functions of the package.
 
-```{r, fig.width=5, fig.height=4}
+```{r, fig.width=5, fig.height=3.5}
+par(mai = c(0, 0, 0, 0))
 peano5 <- landscape_OCN(peano5)
 draw_elev2D_OCN(peano5)
 
@@ -428,9 +447,10 @@ plot.igraph(g, vertex.color = rainbow(OCNwe$AG$nNodes),
 The same network can be displayed as an OCN:
 
 ```{r, fig.width=5, fig.height=3}
+par(mai=c(0,0,0,0))
 draw_thematic_OCN(c(1:OCNwe$AG$nNodes), OCNwe, discreteLevels = TRUE, drawNodes = TRUE,
-                  colPalette = rainbow,  cex = 3, nanColor = "#999999",
-                  addLegend = FALSE)
+                  colPalette = rainbow,  cex = 3, riverColor = "#999999",
+                  backgroundColor = "#00000000", addLegend = FALSE)
 text(OCNwe$AG$X, OCNwe$AG$Y)
 
 ```
