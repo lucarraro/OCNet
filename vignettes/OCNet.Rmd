@@ -130,7 +130,7 @@ knitr::include_graphics("example_networks3.png")
 
 The output of `aggregate_OCN` contains objects named `OCN$XX$toYY`, where `XX` and `YY` are two different aggregation levels. These objects define the correspondences between indices among aggregation levels. `OCN$XX$toYY` contains a number of elements equal to the number of nodes at `XX` level; each element `OCN$XX$toYY[[i]]` contains the index/indices at `YY` level corresponding to node `i` at `XX` level. For aggregation level AG, additional correspondence objects are marked by the string `Reach`: these consider the whole sequence of RN nodes constituting the edge departing from an AG node as belonging to the AG node.
 
-The example shown in Figure \@ref(fig:ex-ind) corresponds to the dataset `example_4x4` included in the package. Note that index numbering starts from the lower-left (southwestern) corner of the lattice.
+The example shown in Figure \@ref(fig:ex-ind) corresponds to the dataset `OCN_4` included in the package. Note that index numbering starts from the lower-left (southwestern) corner of the lattice.
 
 ```{r ex-ind, echo=FALSE, fig.cap="Top-left panel: arrows display flow directions, numbers identify contributing areas. Bottom-left panel: the network is aggregated by imposing a threshold equal to 2 pixels. The other panels display indices of nodes at the different aggregation levels. ", out.width = '90%'}
 knitr::include_graphics("indices_example.png")
