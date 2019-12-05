@@ -155,8 +155,8 @@ draw_simple_OCN(OCN_b2,plot_title = "4-outlet OCN")
 }
 
 \dontrun{
-# 3) generate 3 single-outlet OCNs on the same (100x100) domain starting from different initial states, 
-# and show 20 intermediate plots and console updates.
+# 3) generate 3 single-outlet OCNs on the same (100x100) domain starting from different 
+# initial states, and show 20 intermediate plots and console updates.
 set.seed(1)
 par(mfrow=c(1,1))
 OCN_V <- create_OCN(100, 100, typeInitialState = "V", showIntermediatePlots = TRUE, 

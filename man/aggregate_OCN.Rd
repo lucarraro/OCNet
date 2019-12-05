@@ -108,11 +108,11 @@ a subcatchment at the SC level that shares the same index: for instance, \code{S
 are also part of subcatchment \code{i}).
 }
 \examples{
-1) # aggregate a 20x20 OCN by imposting thrA = 4
+# 1) aggregate a 20x20 OCN by imposting thrA = 4
 OCN <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 4)
 
 \dontrun{
-2) # explore the effects of thrA and maxReachLength on a large OCN
+# 2) explore the effects of thrA and maxReachLength on a large OCN
 OCN <- landscape_OCN(OCN_250_T) # it takes some seconds
 OCN_a <- aggregate_OCN(OCN, thrA = 200) # it takes some seconds
 OCN_b <- aggregate_OCN(OCN, thrA = 1000) # it takes some seconds
