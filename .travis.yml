@@ -1,18 +1,19 @@
 language: r
-
+os:
+  - linux
+  - osx
 before_install:
-    - sudo apt-get update -qq
-    - sudo apt-get install -qq freeglut3-dev xorg openbox
+    - if ["$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update -qq; fi
+    - if ["$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -qq freeglut3-dev xorg openbox; fi
 env:
     global:
-    - RGL_USE_NULL=TRUE
+    - RGL_USE_NULL=TRUE 
 addons:
   apt:
     packages:
-    - libgdal-dev
-    - libftgl2
-    - libcgal-dev
-    - libglu1-mesa-dev 
-    - libx11-dev
-    - libfreetype6-dev
-
+    - if ["$TRAVIS_OS_NAME" = "linux" ]; then libgdal-dev; fi 
+    - if ["$TRAVIS_OS_NAME" = "linux" ]; then libftgl2; fi 
+    - if ["$TRAVIS_OS_NAME" = "linux" ]; then libcgal-dev; fi
+    - if ["$TRAVIS_OS_NAME" = "linux" ]; then libglu1-mesa-dev; fi 
+    - if ["$TRAVIS_OS_NAME" = "linux" ]; then libx11-dev; fi
+    - if ["$TRAVIS_OS_NAME" = "linux" ]; then libfreetype6-dev; fi
