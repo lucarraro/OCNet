@@ -2,14 +2,13 @@
 draw_thematic_OCN <- function(theme,OCN,
                               discreteLevels=FALSE,
                               colLevels=NULL,
-                              title="",
                               cutoff=FALSE,
                               colPalette=colorRampPalette(c("yellow","red","black")),
                               exactDraw=FALSE,
                               chooseCM=FALSE,
                               drawNodes=FALSE,
-                              node.cex=2,
-                              node.pch=21,
+                              cex=2,
+                              pch=21,
                               nanColor="#0099FF",
                               riverColor="#0099FF",
                               backgroundColor="#999999",
@@ -43,7 +42,7 @@ draw_thematic_OCN <- function(theme,OCN,
     colPalette <- colPalette[1:N_colLevels] }
   
   tmp <- "TMP"
-  if (length(theme)==OCN$RN$Nnodes && (length(theme)==OCN$AG$Nnodes)){
+  if (length(theme)==OCN$RN$nNodes && (length(theme)==OCN$AG$nNodes)){
     while ((tmp != "RN") && (tmp != "AG"))
       tmp <- readline(prompt="theme can be interpreted as a vector both at the RN and AG levels. Choose desired level by typing RN or AG: ")
     if (tmp == "RN"){
@@ -55,53 +54,53 @@ draw_thematic_OCN <- function(theme,OCN,
     }
   } 
   
-  if (length(theme)==OCN$RN$Nnodes){
+  if (length(theme)==OCN$RN$nNodes){
     byRN = TRUE
-  } else if (length(theme)==OCN$AG$Nnodes){
+  } else if (length(theme)==OCN$AG$nNodes){
     byRN = FALSE
   } else {
     stop('theme has invalid length')
   }
   
-  if (length(node.cex)>1 && length(node.cex) != length(theme)){
-    stop('node.cex has invalid length')
+  if (length(cex)>1 && length(cex) != length(theme)){
+    stop('cex has invalid length')
   }
   
-  if (length(node.pch)>1 && length(node.pch) != length(theme)){
-    stop('node.pch has invalid length')
+  if (length(pch)>1 && length(pch) != length(theme)){
+    stop('pch has invalid length')
   }
   
   if (chooseCM==TRUE && is.logical(chooseCM)){
     chooseCM <- which(OCN$CM$A==max(OCN$CM$A))
   } else if (isFALSE(chooseCM)) {
-    chooseCM <- 1:OCN$N_outlet
+    chooseCM <- 1:OCN$nOutlet
   }
   
   if (exactDraw==TRUE){
-    X <- OCN$FD$X_draw#[which( OCN$FD$to_CM %in% chooseCM )]
-    Y <- OCN$FD$Y_draw#[which( OCN$FD$to_CM %in% chooseCM )]
-    Xc <- OCN$CM$X_contour_draw
-    Yc <- OCN$CM$Y_contour_draw
+    X <- OCN$FD$XDraw#[which( OCN$FD$toCM %in% chooseCM )]
+    Y <- OCN$FD$YDraw#[which( OCN$FD$toCM %in% chooseCM )]
+    Xc <- OCN$CM$XContourDraw
+    Yc <- OCN$CM$YContourDraw
   } else {
-    X <- OCN$FD$X#[which( OCN$FD$to_CM %in% chooseCM )]
-    Y <- OCN$FD$Y#[which( OCN$FD$to_CM %in% chooseCM )]
-    Xc <- OCN$CM$X_contour
-    Yc <- OCN$CM$Y_contour
+    X <- OCN$FD$X#[which( OCN$FD$toCM %in% chooseCM )]
+    Y <- OCN$FD$Y#[which( OCN$FD$toCM %in% chooseCM )]
+    Xc <- OCN$CM$XContour
+    Yc <- OCN$CM$YContour
   }
   
-  if (length(node.cex)==1){
-    cex_vec <- node.cex*rep(1,length(theme))
-  } else {cex_vec <- node.cex}
+  if (length(cex)==1){
+    cex_vec <- cex*rep(1,length(theme))
+  } else {cex_vec <- cex}
   
-  if (length(node.pch)==1){
-    pch_vec <- node.pch*rep(1,length(theme))
-  } else {pch_vec <- node.pch}
+  if (length(pch)==1){
+    pch_vec <- pch*rep(1,length(theme))
+  } else {pch_vec <- pch}
   
-  AvailableNodes <- setdiff(which(OCN$FD$to_CM %in% chooseCM),OCN$FD$Outlet)
+  AvailableNodes <- setdiff(which(OCN$FD$toCM %in% chooseCM),OCN$FD$outlet)
   par(bty="n")
-  plot(c(min(X[OCN$FD$to_CM %in% chooseCM]),max(X[OCN$FD$to_CM %in% chooseCM])),
-       c(min(Y[OCN$FD$to_CM %in% chooseCM]),max(Y[OCN$FD$to_CM %in% chooseCM])),
-       type="n",xlab=" ",ylab=" ",main=title,axes=FALSE,asp=1)
+  plot(c(min(X[OCN$FD$toCM %in% chooseCM]),max(X[OCN$FD$toCM %in% chooseCM])),
+       c(min(Y[OCN$FD$toCM %in% chooseCM]),max(Y[OCN$FD$toCM %in% chooseCM])),
+       type="n",xlab=" ",ylab=" ",axes=FALSE,asp=1)
   
   if (!is.null(backgroundColor)){
     if ((length(chooseCM) > 1) && (length(backgroundColor)==1) ){
@@ -113,11 +112,11 @@ draw_thematic_OCN <- function(theme,OCN,
   }
   
   for (i in AvailableNodes){
-    rn <- OCN$FD$to_RN[i]
-    reach <- OCN$RN$to_AG[OCN$FD$to_RN[i]]
-    if (OCN$FD$A[i]>=OCN$A_thr & 
-        abs(X[i]-X[OCN$FD$DownNode[i]]) <= OCN$cellsize & 
-        abs(Y[i]-Y[OCN$FD$DownNode[i]]) <= OCN$cellsize  ) {
+    rn <- OCN$FD$toRN[i]
+    reach <- OCN$RN$toAGReach[OCN$FD$toRN[i]]
+    if (OCN$FD$A[i]>=OCN$thrA & 
+        abs(X[i]-X[OCN$FD$downNode[i]]) <= OCN$cellsize & 
+        abs(Y[i]-Y[OCN$FD$downNode[i]]) <= OCN$cellsize  ) {
       if ( (byRN==TRUE && (is.nan(theme[rn])==TRUE | is.na(theme[rn])==TRUE)) ||
           (byRN==FALSE && (is.nan(theme[reach])==TRUE | is.na(theme[reach])==TRUE)) ||
           (byRN==TRUE && cutoff==TRUE && (theme[rn] < min(Breakpoints) || theme[rn] > max(Breakpoints))) ||
@@ -137,18 +136,18 @@ draw_thematic_OCN <- function(theme,OCN,
         hexcolor <- colPalette[colvalue]
       }
       if (drawNodes==TRUE){
-        lines(c(X[i],X[OCN$FD$DownNode[i]]),c(Y[i],Y[OCN$FD$DownNode[i]]),
-              lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$Nnodes*OCN$cellsize^2))^0.5,col=riverColor)
+        lines(c(X[i],X[OCN$FD$downNode[i]]),c(Y[i],Y[OCN$FD$downNode[i]]),
+              lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=riverColor)
       } else {
-        lines(c(X[i],X[OCN$FD$DownNode[i]]),c(Y[i],Y[OCN$FD$DownNode[i]]),
-              lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$Nnodes*OCN$cellsize^2))^0.5,col=hexcolor)}
+        lines(c(X[i],X[OCN$FD$downNode[i]]),c(Y[i],Y[OCN$FD$downNode[i]]),
+              lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=hexcolor)}
     }
   }
   
   if (drawNodes==TRUE && exactDraw==FALSE){
     if (byRN==TRUE){
-      nodes <- which(OCN$RN$to_CM %in% chooseCM)
-    } else {nodes <- which(OCN$AG$to_CM %in% chooseCM)}
+      nodes <- which(OCN$RN$toCM %in% chooseCM)
+    } else {nodes <- which(OCN$AG$toCM %in% chooseCM)}
     for (i in nodes){
       if (is.nan(theme[i]) || (cutoff==TRUE && (theme[i] < min(Breakpoints) || theme[i] > max(Breakpoints)) )){
         hexcolor <- nanColor
@@ -169,8 +168,8 @@ draw_thematic_OCN <- function(theme,OCN,
   
   if (drawNodes==TRUE && exactDraw==TRUE){
     if (byRN==TRUE){
-      nodes <- which(OCN$RN$to_CM %in% chooseCM)
-    } else {nodes <- which(OCN$AG$to_CM %in% chooseCM)}
+      nodes <- which(OCN$RN$toCM %in% chooseCM)
+    } else {nodes <- which(OCN$AG$toCM %in% chooseCM)}
     for (i in nodes){
       if (is.nan(theme[i]) || (cutoff==TRUE && (theme[i] < min(Breakpoints) || theme[i] > max(Breakpoints)) )){
         hexcolor <- nanColor
@@ -213,7 +212,7 @@ draw_thematic_OCN <- function(theme,OCN,
                                   as.character(round(1000*Breakpoints[N_colLevels+1])/1000),"]",sep="")
       }
       
-      legend(x=1.01*max(X[OCN$FD$to_CM %in% chooseCM]),y=max(Y[OCN$FD$to_CM %in% chooseCM]),
+      legend(x=1.01*max(X[OCN$FD$toCM %in% chooseCM]),y=max(Y[OCN$FD$toCM %in% chooseCM]),
              str,fill=colPalette,ncol=ceiling(N_colLevels/20), xpd=TRUE, cex=0.8, bty="n")
     }
   }

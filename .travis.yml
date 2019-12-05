@@ -7,7 +7,7 @@ before_install:
     - if ["$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -qq freeglut3-dev xorg openbox; fi
 env:
     global:
-    - if ["$TRAVIS_OS_NAME" = "linux" ]; then RGL_USE_NULL=TRUE; fi  
+    - RGL_USE_NULL=TRUE 
 addons:
   apt:
     packages:
