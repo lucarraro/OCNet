@@ -32,7 +32,7 @@ Function that creates Peano networks on a square lattice.
 peano <- create_peano(4)
 peano <- aggregate_OCN(landscape_OCN(peano), thrA = 4)
 par(mfrow=c(1,3))
-draw_simple_OCN(peano
+draw_simple_OCN(peano)
 title("Peano network")
 draw_subcatchments_OCN(peano)
 title("Subcatchments")
