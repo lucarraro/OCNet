@@ -32,14 +32,14 @@ OCN_to_SSN <- function (OCN, level, obsDesign, predDesign = noPoints, path, impo
   sub_OCN <- NULL
   eval(parse(text=(paste("sub_OCN <- OCN$",level,sep=""))))
   
-  # recalculate coordinates if PeriodicBoundaries == TRUE
-  if (OCN$PeriodicBoundaries==TRUE){
-    X <- vector(mode="numeric", length=sub_OCN$Nnodes)
-    Y <- vector(mode="numeric", length=sub_OCN$Nnodes)
-    for (i in 1:sub_OCN$Nnodes){
+  # recalculate coordinates if periodicBoundaries == TRUE
+  if (OCN$periodicBoundaries==TRUE){
+    X <- vector(mode="numeric", length=sub_OCN$nNodes)
+    Y <- vector(mode="numeric", length=sub_OCN$nNodes)
+    for (i in 1:sub_OCN$nNodes){
       node <- which(OCN$FD$X==sub_OCN$X[i] & OCN$FD$Y==sub_OCN$Y[i])
-      X[i] <- OCN$FD$X_draw[node]
-      Y[i] <- OCN$FD$Y_draw[node]
+      X[i] <- OCN$FD$XDraw[node]
+      Y[i] <- OCN$FD$YDraw[node]
     }
   } else {
     X <- sub_OCN$X
@@ -47,7 +47,7 @@ OCN_to_SSN <- function (OCN, level, obsDesign, predDesign = noPoints, path, impo
   }
   
   #initialization
-  n_networks <- length(unique(sub_OCN$to_CM)) #length(sub_OCN$Outlet)
+  n_networks <- length(unique(sub_OCN$toCM)) #length(sub_OCN$outlet)
   edges <- vector(mode = "list", length = n_networks)
   tree.graphs <- edges
   locations <- edges
@@ -61,27 +61,27 @@ OCN_to_SSN <- function (OCN, level, obsDesign, predDesign = noPoints, path, impo
 
   list_OCN <- vector(mode = "list", length = n_networks)
   for (i in 1:n_networks){
-    indices_sub <- which(sub_OCN$to_CM==i)
+    indices_sub <- which(sub_OCN$toCM==i)
     list_OCN[[i]]$W <- sub_OCN$W[indices_sub,indices_sub,drop=FALSE]
     list_OCN[[i]]$X <- X[indices_sub] 
     list_OCN[[i]]$Y <- Y[indices_sub] 
-    list_OCN[[i]]$Length <- sub_OCN$Length[indices_sub] 
-    list_OCN[[i]]$Outlet <- which(rowSums(list_OCN[[i]]$W)==0)
+    list_OCN[[i]]$leng <- sub_OCN$leng[indices_sub] 
+    list_OCN[[i]]$outlet <- which(rowSums(list_OCN[[i]]$W)==0)
     #list_OCN[[i]]$A <- sub_OCN$A[indices_sub] 
-    list_OCN[[i]]$Nnodes <- length(indices_sub) 
+    list_OCN[[i]]$nNodes <- length(indices_sub) 
   }
   
   treeFunction <- function (OCN) # rewritten   
   {
     mm <- as.dgCMatrix.spam(t(OCN$W)) # transpose because trees are seen from the outlet towards the branches
     # add fake node at the outlet
-    mm <- cbind(rbind(mm,rep(0,OCN$Nnodes)),rep(0,OCN$Nnodes + 1) )
-    mm[OCN$Nnodes + 1,OCN$Outlet] <- 1
+    mm <- cbind(rbind(mm,rep(0,OCN$nNodes)),rep(0,OCN$nNodes + 1) )
+    mm[OCN$nNodes + 1,OCN$outlet] <- 1
     
     g <- graph_from_adjacency_matrix(mm)
 
-    locations_this_network <- matrix(c(c(OCN$X,OCN$X[OCN$Outlet]),c(OCN$Y,OCN$Y[OCN$Outlet])),ncol=2,nrow=OCN$Nnodes+1)
-    return( list(locations = locations_this_network, graph = g, initialPoint = OCN$Nnodes + 1) )
+    locations_this_network <- matrix(c(c(OCN$X,OCN$X[OCN$outlet]),c(OCN$Y,OCN$Y[OCN$outlet])),ncol=2,nrow=OCN$nNodes+1)
+    return( list(locations = locations_this_network, graph = g, initialPoint = OCN$nNodes + 1) )
   }
   
   # generate network
@@ -100,7 +100,7 @@ OCN_to_SSN <- function (OCN, level, obsDesign, predDesign = noPoints, path, impo
     n_edges[i] = nrow(edges_this_network)
     
      tmp <- vector(mode = "numeric", length = n_edges[i])
-     for (k in 1:n_edges[i]) {tmp[k] <- list_OCN[[i]]$Length[edges[[i]][k,2]]} # "reverse" length (as the OCN is reversed)
+     for (k in 1:n_edges[i]) {tmp[k] <- list_OCN[[i]]$leng[edges[[i]][k,2]]} # "reverse" length (as the OCN is reversed)
      edge_lengths[[i]] <- tmp
     
     rids[[i]] <- (1:n_edges[i]) + cumulative_nedges

@@ -29,6 +29,20 @@ suppressPackageStartupMessages(library(igraph))
 suppressPackageStartupMessages(library(SSN))
 ```
 
+```{r, fig.width=7, fig.height=2}
+set.seed(1)
+OCN <- create_OCN(30, 20, outletPos = 1)
+OCN <- aggregate_OCN(landscape_OCN(OCN), thrA = 3)
+par(mfrow = c(1, 3), mai = c(0, 0, 0.2, 0.2))
+draw_simple_OCN(OCN, thrADraw = 3)
+title("Optimal Channel Network")
+draw_elev3D_OCN(OCN, drawRiver = FALSE, addColorbar = FALSE, expand = 0.2, theta = -30)
+title("Elevation")
+draw_thematic_OCN(OCN$AG$streamOrder, OCN, discreteLevels = TRUE, colPalette = rainbow(4))
+title("Strahler stream order")
+
+```
+
 # Overview
 
 OCNet enables the creation and analysis of Optimal Channel Networks (OCNs). These are oriented spanning trees (built on rectangular lattices made up of square pixels) that reproduce all scaling features characteristic of real, natural river networks [@rodriguez1992; @rinaldo2014]. As such, they can be used in a variety of numerical and laboratory experiments in the fields of hydrology, ecology and epidemiology. Notable examples include studies on metapopulations and metacommunities (e.g. Carrara et al. -@carrara2012), scenarios of waterborne pathogen invasions (e.g. Gatto et al. -@gatto2013) and biogeochemichal processes in streams (e.g. Helton et al. -@helton2018).
@@ -68,12 +82,13 @@ The generation of an OCN is performed by function `create_OCN`. Its only require
           + `rivergeometry_OCN`: evaluates hydraulic properties of the OCN
           + `OCN_to_igraph`: transforms the OCN into an igraph object
           + `OCN_to_SSN`: transforms the OCN into a SpatialStreamNetwork object
-      + `draw_contour_OCN`: draws "real-shaped" OCNs and catchment contours
+      + `draw_contour_OCN`: draws "real-shaped"^[If the OCN was generated with option `periodicBoundaries = FALSE`, the real-shaped representation of the OCN is equal to the simple, within-lattice representation provided by `draw_simple_OCN`. If the OCN was generated with `periodicBoundaries = TRUE`, its real-shaped representation is such that, starting from the outlet(s), the position of a FD node `i` is flipped with respect to a lattice side if the edge between `i` and the pixel downstream of `i` crosses such lattice side.] OCNs and catchment contours
       + `draw_elev2D_OCN`: draws 2D elevation field
       + `draw_elev3D_OCN`: draws 3D elevation field
        + `draw_elev3Drgl_OCN`: draws 3D elevation field (via `rgl` rendering system)
-      + `find_area_thresholds_OCN`: finds relationship between threshold area and number of nodes at the AG level 
+      + `find_area_threshold_OCN`: finds relationship between threshold area and number of nodes at the RN and AG level (see Figure \@ref(fig:ex-net) for relevant definitions)
   + `draw_simple_OCN`: fast drawing of OCNs
+* `create_peano`: creates Peano networks
 
 OCNet functions are intended to be applied in sequential order: for each non-drawing function, the input list is copied into the output list, to which new sublists and objects are added.
 
@@ -85,12 +100,12 @@ Adjacency matrices and contributing area vectors of an OCN can be defined at dif
 
 0. *Nearest neighbours* (**N4**, **N8**). Every pixel of the lattice constitutes a node of the network. Each node is connected to its four (pixels that share an edge) or eight (pixels that share an edge or a vertex) nearest neighbours. At this level, $\mathbf{W}$ is defined but $\mathbf{A}$ is not. Note that this level does not describe flow connectivity, but rather proximity among pixels. Hence, $\mathbf{W}$ does not describe an oriented spanning tree.
 1. *Flow direction* (**FD**). At this level, every pixel of the lattice is a node, but connectivity follows the flow directions that have been found by the OCN search algorithm (operated by function `create_OCN`). Edges' lengths are equal to either `cellsize` (the size of a pixel side, optional input in `create_OCN`) or `cellsize*sqrt(2)`, depending on whether flow direction is horizontal/vertical or diagonal.
-2. *River network* (**RN**). The set of nodes at this level is a subset of the nodes at the FD level, such that their contributing area is larger than a certain threshold (optional input `A_thr` in `aggregate_OCN`). Such a procedure is customary in the hydrological problem of extracting a river network based on digital elevation models of the terrain [@ocallaghan1984]. Edges' lengths are again equal to either `cellsize` or `cellsize*sqrt(2)`.
-3. *Aggregated* (or *reach* - **AG**). The set of nodes at this level is a subset of the nodes at the RN level (see details in the next section). Accordingly, vector $\mathbf{A}$ is a subset of the homonymous vector defined at the RN level. Edges can span several pixels and therefore have various lengths.    
+2. *River network* (**RN**). The set of nodes at this level is a subset of the nodes at the FD level, such that their contributing area is larger than a certain threshold (optional input `A_thr` in `aggregate_OCN`). Such a procedure is customary in the hydrological problem of extracting a river network based on digital elevation models of the terrain [@ocallaghan1984], and corresponds to the geomorphological concept of erosion threshold (associated to a threshold in landscape-forming runoff, of which drainage area represents a proxy [@rodriguez2001]). Edges' lengths are again equal to either `cellsize` or `cellsize*sqrt(2)`.
+3. *Aggregated* (or *reach* - **AG**). The set of nodes at this level is a subset of the nodes at the RN level (see details in the next section). Accordingly, vector $\mathbf{A}$ is a subset of the vector of the same name defined at the RN level. Edges can span several pixels and therefore have various lengths.    
 4. *Subcatchment* (**SC**). The number of nodes at this level is generally^[This might not be the case when there are many outlets. If the area drained by one of these outlets is lower than the threshold imposed, the cluster of pixels drained by that outlet constitutes a node at the SC level that does not have a correspondence at the AG level.] equal to that at the AG level. Each node is constituted by the cluster of pixels that directly drain into the edge departing from the corresponding node at the AG level. Here $\mathbf{W}$ does not represent flow connectivity but rather identifies terrestrial borders among subcatchments and is therefore symmetric. 
 5. *Catchment* (**CM**). In this level, the number of nodes is equal to the number of outlets. Every node represents the portion of the lattice drained by its relative outlet. $\mathbf{A}$ stores drainage area values for each of these catchments, while $\mathbf{W}$ identifies terrestrial borders among catchments. 
 
-```{r ex-net, echo=FALSE, fig.cap="Representation of the different aggregation levels at which the network is defined (excluding the null levels N4 and N8). The example is obtained from a single-outlet 8x8 lattice. Letter 'O' identifies the outlet pixel. Arrows on the other pixels identify flow directions. Numbers represent the cumulative drainage area (in number of pixels). At the FD level, all 64 pixels belong to the network. To obtain the RN level, a threshold value of 5 on drainage area is applied to distinguish pixels belonging to the river network. The network at the AG level consists of 9 nodes. The SC level is obtained by splitting the lattice into portions whose pixels drain into the AG nodes and edges. In this example, because there is only one outlet, all pixels belong to a single node at the CM level.", out.width = '70%'}
+```{r ex-net, echo=FALSE, fig.cap="Representation of the different aggregation levels at which the network is defined (excluding the null levels N4 and N8). The example is obtained from a single-outlet 8x8 lattice. Letter 'O' identifies the outlet pixel. Arrows on the other pixels identify flow directions. Numbers represent the cumulative drainage area (in number of pixels). At the FD level, all 64 pixels belong to the network^[Note that this pattern of flow directions was not derived by an OCN search algortihm, but rather drawn manually for illustration purposes.]. To obtain the RN level, a threshold value of 5 on drainage area is applied to distinguish pixels belonging to the river network. The network at the AG level consists of 9 nodes. The SC level is obtained by splitting the lattice into portions whose pixels drain into the AG nodes and edges. In this example, because there is only one outlet, all pixels belong to a single node at the CM level.", out.width = '70%'}
 knitr::include_graphics("example_networks.png")
 ```
 
@@ -101,39 +116,44 @@ Nodes at the AG level correspond to a subset of nodes at the RN level. In partic
 * *Sources*: nodes at the RN level with null indegree.
 * *Confluences*: nodes at the RN level with indegree larger than one.
 * *Outlets*: corresponding to outlets at the RN level.
-* *Breaking nodes* (only if `MaxReachLength` is finite): nodes that split edges that are longer than `MaxReachLength`.
+* *Breaking nodes* (only if `maxReachLength` is finite): nodes that split edges that are longer than `maxReachLength`.
 
-Outlet nodes at the AG level might also be sources, confluences or breaking nodes. All AG nodes except outlet nodes have outdegree equal to 1. All RN nodes that do not correspond to AG nodes constitute the edges of the network at the AG level: more specifically, each edge is formed by an AG node and a sequence of RN pixel downstream of the AG node, until another AG node is found.
+Outlet nodes at the AG level might also be sources, confluences or breaking nodes. All AG nodes except outlet nodes have outdegree equal to 1. All RN nodes that do not correspond to AG nodes constitute the edges of the network at the AG level: more specifically, each edge is formed by an AG node and a sequence of RN nodes downstream of the AG node, until another AG node is found.
 
-Fig. \@ref(fig:ex3-net) shows an alternative aggregation scheme for the network showed in Fig. \@ref(fig:ex-net) when the optional input `MaxReachLength` is set to a finite value.
+Fig. \@ref(fig:ex3-net) shows an alternative aggregation scheme for the network showed in Fig. \@ref(fig:ex-net) when the optional input `maxReachLength` is set to a finite value.
 
-```{r ex3-net, echo=FALSE, fig.cap="Aggregation of the previous network with `A_thr` equal to 5 pixels and `MaxReachLength` equal to 3 pixel sides. Note that the length of the diagonal segments of the edges is equal to `sqrt(2)`.", out.width = '70%'}
+```{r ex3-net, echo=FALSE, fig.cap="Aggregation of the previous network with `A_thr` equal to 5 pixels and `maxReachLength` equal to 3 pixel sides. Note that the length of the diagonal segments of the edges is equal to `sqrt(2)`.", out.width = '70%'}
 knitr::include_graphics("example_networks3.png")
 ```
 
 ## Correspondence between indices at different levels
 
-The output of `aggregate_OCN` contains objects named `OCN$XX$to_YY`, where `XX` and `YY` are two different aggregation levels. These objects define the correspondences between indices among aggregation levels. `OCN$XX$to_YY` contains a number of elements equal to the number of nodes at `XX` level; each element `OCN$XX$to_YY[[i]]` contains the index/indices at `YY` level corresponding to node `i` at `XX` level. 
+The output of `aggregate_OCN` contains objects named `OCN$XX$toYY`, where `XX` and `YY` are two different aggregation levels. These objects define the correspondences between indices among aggregation levels. `OCN$XX$toYY` contains a number of elements equal to the number of nodes at `XX` level; each element `OCN$XX$toYY[[i]]` contains the index/indices at `YY` level corresponding to node `i` at `XX` level. For aggregation level AG, additional correspondence objects are marked by the string `Reach`: these consider the whole sequence of RN nodes constituting the edge departing from an AG node as belonging to the AG node.
 
-The example shown in Figure \@ref(fig:ex-ind) corresponds to the dataset `example_4x4` included in the package. Note that index numbering starts from the lower-left (southwestern) corner of the lattice.
+The example shown in Figure \@ref(fig:ex-ind) corresponds to the dataset `OCN_4` included in the package. Note that index numbering starts from the lower-left (southwestern) corner of the lattice.
 
 ```{r ex-ind, echo=FALSE, fig.cap="Top-left panel: arrows display flow directions, numbers identify contributing areas. Bottom-left panel: the network is aggregated by imposing a threshold equal to 2 pixels. The other panels display indices of nodes at the different aggregation levels. ", out.width = '90%'}
 knitr::include_graphics("indices_example.png")
 ```
 
+The R code below displays the different `OCN$XX$toYY` objects corresponding to the example in Figure \@ref(fig:ex-ind):
+
 ```{r}
-ex <- aggregate_OCN(landscape_OCN(OCN_4), A_thr = 2)
+ex <- aggregate_OCN(landscape_OCN(OCN_4), thrA = 2)
 
-ex$FD$to_RN
-ex$FD$to_SC
+ex$FD$toRN
+ex$FD$toSC
 
-ex$RN$to_FD
-ex$RN$to_AG
+ex$RN$toFD
+ex$RN$toAG
+ex$RN$toAGReach
 
-ex$AG$to_FD
-ex$AG$to_RN
+ex$AG$toFD
+ex$AG$ReachToFD
+ex$AG$toRN
+ex$AG$ReachToRN
 
-ex$SC$to_FD
+ex$SC$toFD
 
 ```
 
@@ -145,43 +165,47 @@ Let's build an OCN on a 20x20 lattice and assume that each cell represents a squ
 
 ```{r, fig.width=4, fig.height=4}
 set.seed(1)
-OCN_we <- create_OCN(20, 20, OutletPos = 3, cellsize = 500)
-draw_simple_OCN(OCN_we)
+OCNwe <- create_OCN(20, 20, outletPos = 3, cellsize = 500)
+par(mai=c(0,0,0,0))
+draw_simple_OCN(OCNwe)
 
 ```
 
 Now, let's construct the elevation field subsumed by the OCN. Let's suppose that the outlet has null elevation and slope equal to 0.01. Then, we use `draw_elev3D_OCN` to draw the three-dimensional elevation map (values are in m). 
 
-```{r, fig.width=6, fig.height=2.8}
-OCN_we <- landscape_OCN(OCN_we, Slope_0 = 0.01)
-draw_elev3D_OCN(OCN_we, draw_river = FALSE)
+```{r, fig.width=7, fig.height=2.8}
+OCNwe <- landscape_OCN(OCNwe, slope0 = 0.01)
+par(mai=c(0,0,0,0.5))
+draw_elev3D_OCN(OCNwe, drawRiver = FALSE)
 
 ```
 
-Next, the OCN can be aggregated. Let's suppose that the number of nodes at the AG level be as close as possible^[It is not guaranteed that an OCN can be aggregated to an arbitrary number of nodes. This is due to the fact that the indigree of confluence nodes is typically 2 or 3, depending on the flow direction patterns. For example, if the outlet is not a confluence node, all confluence nodes have indegree equal to 2 and `MaxReachLength = Inf`, the resulting number of aggregated nodes will be even.] to 20. With function `find_area_threshold_OCN` we can derive the corresponding value of drainage area threshold:
+Next, the OCN can be aggregated. Let's suppose that the desired number of nodes at the AG level be as close as possible^[It is not guaranteed that an OCN can be aggregated to an arbitrary number of nodes. This is due to the fact that the indegree of confluence nodes is typically 2 or 3, depending on the flow direction patterns. For example, if the outlet is not a confluence node, all confluence nodes have indegree equal to 2, and `maxReachLength = Inf`, then the resulting number of aggregated nodes will be even.] to 20. With function `find_area_threshold_OCN` we can derive the corresponding value of drainage area threshold:
 
 ```{r}
-thr <- find_area_threshold_OCN(OCN_we)
+thr <- find_area_threshold_OCN(OCNwe)
 # find index corresponding to thr$Nnodes ~= 20
-ind_thr <- which(abs(thr$Nnodes - 20) == min(abs(thr$Nnodes - 20)))
-ind_thr <- max(ind_thr) # pick the last ind_thr that satisfies the condition above
-A_thr20 <- thr$thr_values[ind_thr] # corresponding threshold area
+indThr <- which(abs(thr$nNodesAG - 20) == min(abs(thr$nNodesAG - 20)))
+indThr <- max(indThr) # pick the last ind_thr that satisfies the condition above
+thrA20 <- thr$thrValues[indThr] # corresponding threshold area
 ```
 
-The resulting number of nodes is^[The number of aggregated nodes is here uneven because one node has indegree equal to 3 (see figure below).] `r thr$Nnodes[ind_thr]`, corresponding to a threshold area `A_thr20 = ` `r A_thr20/1e6` km^2^. The latter value can now be used in function `aggregate_OCN` to obtain the aggregated network. Function `draw_subcatchments_OCN` shows how the lattice is partitioned into subcatchments. It is possible to add points at the locations of the nodes at the AG level. 
-```{r, fig.width=6, fig.height=2.8}
-OCN_we <- aggregate_OCN(OCN_we, A_thr = A_thr20)
-draw_subcatchments_OCN(OCN_we)
-points(OCN_we$AG$X,OCN_we$AG$Y, pch = 21, col = "blue", bg = "blue")
+The resulting number of nodes is^[The number of aggregated nodes is here uneven because one node has indegree equal to 3 (see figure below).] `r thr$nNodesAG[indThr]`, corresponding to a threshold area `thrA20 = ` `r thrA20/1e6` km^2^. The latter value can now be used in function `aggregate_OCN` to obtain the aggregated network. Function `draw_subcatchments_OCN` shows how the lattice is partitioned into subcatchments. It is possible to add points at the locations of the nodes at the AG level. 
+```{r, fig.width=7, fig.height=2.8}
+OCNwe <- aggregate_OCN(OCNwe, thrA = thrA20)
+par(mai=c(0.1,0,0.1,0))
+draw_subcatchments_OCN(OCNwe)
+points(OCNwe$AG$X,OCNwe$AG$Y, pch = 21, col = "blue", bg = "blue")
 
 ```
 
 Finally, `draw_thematic_OCN` can be used to display the along-stream distances of RN-level nodes to the outlet (in m), as calculated by `paths_OCN`.
 
-```{r, fig.width=6, fig.height=2.8}
-OCN_we <- paths_OCN(OCN_we, pathsRNlevel = TRUE)
-draw_thematic_OCN(OCN_we$RN$DownstreamPathLength[ , OCN_we$RN$Outlet], OCN_we, 
-                  BackgroundColor = "#606060")
+```{r, fig.width=7, fig.height=2.8}
+OCNwe <- paths_OCN(OCNwe, pathsRN = TRUE)
+par(mai=c(0.1,0,0.1,0))
+draw_thematic_OCN(OCNwe$RN$downstreamPathLength[ , OCNwe$RN$outlet], OCNwe, 
+                  backgroundColor = "#606060")
 
 ```
 
@@ -227,24 +251,24 @@ For this example, let's use the previously derived `OCN_we` aggregated at the RN
 
 ```{r}
 ## Input data
-OCN_we <- rivergeometry_OCN(OCN_we, width_max = 5) # evaluate river width 
-K <- 10*OCN_we$RN$width                            # calculate carrying capacity 
-Pop0 <- 2*mean(K)*runif(OCN_we$RN$Nnodes)          # initial random population vector
-N_timestep <- 100                                  # number of timesteps
+OCNwe <- rivergeometry_OCN(OCNwe, widthMax = 5)   # evaluate river width 
+K <- 10*OCNwe$RN$width                             # calculate carrying capacity 
+pop0 <- 2*mean(K)*runif(OCNwe$RN$nNodes)           # initial random population vector
+nTimestep <- 100                                   # number of timesteps
 r <- 1.05                                          # proliferation rate
-p_d <- 0.6                                         # probability to move downstream
-p_u <- 1 - p_d                                     # probability to move upstream
+pd <- 0.6                                          # probability to move downstream
+pu <- 1 - pd                                       # probability to move upstream
 Go <- 5                                            # parameter controlling mobility 
-# (no. individuals exiting from outlet node at carrying capacity is p_u*Go) 
+# (no. individuals exiting from outlet node at carrying capacity is pu*Go) 
 ```
 
 We can now compute weights $Y$:
 ```{r}
 ## Weights for upstream movement
-Y <- rep(1,OCN_we$RN$Nnodes)                    
-for (i in 1:OCN_we$RN$Nnodes){
-  if (i != OCN_we$RN$Outlet){
-    Y[i] <- OCN_we$RN$A[i]/(OCN_we$RN$W[ , OCN_we$RN$DownNode[i]] %*% OCN_we$RN$A)
+Y <- rep(1,OCNwe$RN$nNodes)                    
+for (i in 1:OCNwe$RN$nNodes){
+  if (i != OCNwe$RN$outlet){
+    Y[i] <- OCNwe$RN$A[i]/(OCNwe$RN$W[ , OCNwe$RN$downNode[i]] %*% OCNwe$RN$A)
   }
 }
 ```
@@ -252,68 +276,72 @@ for (i in 1:OCN_we$RN$Nnodes){
 and $G(K_i,K_i)$:
 ```{r}
 ## Evaluate expected number of individuals moving at carrying capacity
-GKK <- rep(0, OCN_we$RN$Nnodes)
-for (i in (1:OCN_we$RN$Nnodes)){
-  path <- OCN_we$RN$DownstreamPath[[i]][[OCN_we$RN$Outlet]] # select path
+GKK <- rep(0, OCNwe$RN$nNodes)
+for (i in (1:OCNwe$RN$nNodes)){
+  path <- OCNwe$RN$downstreamPath[[i]][[OCNwe$RN$outlet]] # select path
   prod <- Go                                                # initialize product of Y 
   for (j in path){
     prod <- prod*Y[i]
   }
-  GKK[i] <- (p_u/p_d)^(length(path))*prod  
+  GKK[i] <- (pu/pd)^(length(path))*prod  
 }
 ```
 
 We can now run the metapopulation model:
 ```{r}
 ## Run metapopulation model
-Pop <- matrix(data=0,ncol=N_timestep,nrow=OCN_we$RN$Nnodes)  # metapopulation matrix
-Pop[,1] <- Pop0                                              # initialization
-for (t in 2:N_timestep){
-  for (i in 1:OCN_we$RN$Nnodes){
-    Pop[i, t] <- 
+pop <- matrix(data=0,ncol=nTimestep,nrow=OCNwe$RN$nNodes)  # metapopulation matrix
+pop[,1] <- pop0                                              # initialization
+for (t in 2:nTimestep){
+  for (i in 1:OCNwe$RN$nNodes){
+    pop[i, t] <- 
       # Beverton-Holt growth model
-      r*Pop[i, t-1]/(1 + Pop[i, t-1]*(r-1)/K[i]) 
+      r*pop[i, t-1]/(1 + pop[i, t-1]*(r-1)/K[i]) 
       # individuals exiting from node i
-                - (p_u*(sum(OCN_we$RN$W[ , i])>0) + p_d*(sum(OCN_we$RN$W[i, ])>0)) * 
-      GKK[i] * (Pop[i,t-1]/K[i]) 
+                - (pu*(sum(OCNwe$RN$W[ , i])>0) + pd*(sum(OCNwe$RN$W[i, ])>0)) * 
+      GKK[i] * (pop[i,t-1]/K[i]) 
       # individuals entering in i from the upstream nodes
-                + p_d * OCN_we$RN$W[ , i] %*% (GKK*Pop[ , t-1]/K) 
+                + pd * OCNwe$RN$W[ , i] %*% (GKK*pop[ , t-1]/K) 
       # individuals entering in i from the downstream node
-                + p_u * Y[i] * OCN_we$RN$W[i, ] %*% (GKK*Pop[ , t-1]/K) 
+                + pu * Y[i] * OCNwe$RN$W[i, ] %*% (GKK*pop[ , t-1]/K) 
     
   }
 }
 ```
 
 The left panel of the graph below shows the time evolution of the local population at the outlet (red) and at the node at highest distance from the outlet (blue). In the right panel, the evolution total metapopulation size is shown. Dashed lines indicate population values at carrying capacity. 
-```{r, fig.width=7.2, fig.height=2.8}
+```{r, fig.width=7, fig.height=2.8}
 par(mfrow = c(1, 2))
-plot(Pop[OCN_we$RN$Outlet, ], type = "l", ylim = c(0, 1.05*K[OCN_we$RN$Outlet]), col = "red", 
+plot(pop[OCNwe$RN$outlet, ], type = "l", ylim = c(0, 1.05*K[OCNwe$RN$outlet]), col = "red", 
      xlab = "Time", ylab = "Population", lwd = 2)
-title(main = "Evolution of local population size")
-lines(c(1, N_timestep),c(K[OCN_we$RN$Outlet], K[OCN_we$RN$Outlet]), col = "red", lty = 2)
-FarthestNode <- which(OCN_we$RN$DownstreamPathLength[ , OCN_we$RN$Outlet]
-                      == max(OCN_we$RN$DownstreamPathLength[ , OCN_we$RN$Outlet]))[1]
-lines(Pop[FarthestNode, ], type="l", col="blue",lwd=2)
-lines(c(1, N_timestep), c(K[FarthestNode], K[FarthestNode]), col = "blue", lty = 2)
+title("Evolution of local pop. size")
+lines(c(1, nTimestep),c(K[OCNwe$RN$outlet], K[OCNwe$RN$outlet]), col = "red", lty = 2)
+farthestNode <- which(OCNwe$RN$downstreamPathLength[ , OCNwe$RN$outlet]
+                      == max(OCNwe$RN$downstreamPathLength[ , OCNwe$RN$outlet]))[1]
+lines(pop[farthestNode, ], type="l", col="blue",lwd=2)
+lines(c(1, nTimestep), c(K[farthestNode], K[farthestNode]), col = "blue", lty = 2)
 
-plot(colSums(Pop), type = "l", xlab = "Time", ylab = "Population", lwd = 2, ylim = c(0, 1.05*sum(K)))
-lines(c(1, N_timestep), c(sum(K),sum(K)), lty = 2)
-title(main = "Evolution of metapopulation size")
+plot(colSums(pop), type = "l", xlab = "Time", ylab = "Population", lwd = 2, ylim = c(0, 1.05*sum(K)))
+lines(c(1, nTimestep), c(sum(K),sum(K)), lty = 2)
+title("Evolution of metapop. size")
 ```
 
 
 Function `draw_thematic_OCN` can be used to visualize the spatial distribution of the metapopulation at given time points.
-```{r, fig.width=6, fig.height=5}
-par(mfrow = c(2, 2))
-draw_thematic_OCN(Pop[,1], OCN_we, minval = 0, maxval = max(K),
-                  DrawNodes = TRUE, plot_title = "Time = 1")
-draw_thematic_OCN(Pop[,5], OCN_we, minval = 0, maxval = max(K),
-                  DrawNodes = TRUE, plot_title = "Time = 5")
-draw_thematic_OCN(Pop[,20], OCN_we, minval = 0, maxval = max(K),
-                  DrawNodes = TRUE, plot_title = "Time = 20")
-draw_thematic_OCN(Pop[,100], OCN_we, minval = 0, maxval = max(K),
-                  DrawNodes = TRUE, plot_title = "Time = 100")
+```{r, fig.width=7, fig.height=5}
+par(mfrow = c(2, 2), mai = c(0.1, 0, 0.2, 0))
+draw_thematic_OCN(pop[,1], OCNwe, colLevels = c(0, max(K), 1000),
+                  drawNodes = TRUE)
+title("Time = 1")
+draw_thematic_OCN(pop[,5], OCNwe, colLevels = c(0, max(K), 1000),
+                  drawNodes = TRUE)
+title("Time = 5")
+draw_thematic_OCN(pop[,20], OCNwe, colLevels = c(0, max(K), 1000),
+                  drawNodes = TRUE)
+title("Time = 20")
+draw_thematic_OCN(pop[,100], OCNwe, colLevels = c(0, max(K), 1000),
+                  drawNodes = TRUE)
+title("Time = 100")
 
 ```
 
@@ -321,41 +349,42 @@ draw_thematic_OCN(Pop[,100], OCN_we, minval = 0, maxval = max(K),
 
 # Peano networks
 
-Function `create_peano` can be used in lieu of `create_OCN` to generate Peano networks on square lattices. Peano networks are deterministic, plane-filling fractals whose topological measures (Horton's bifurcation and length ratios) are akin to those of real river networks. They are generated by means of an iterative algorithm: at each iteration, the size of the lattice side is doubled (see code below). As a result, Peano networks span squares of side equal to a power of 2. The outlet must be located at a corner of the square.  
+Function `create_peano` can be used in lieu of `create_OCN` to generate Peano networks on square lattices. Peano networks are deterministic, plane-filling fractals whose topological measures (Horton's bifurcation and length ratios) are akin to those of real river networks [@marani1991] and can then be used in a variety of synthetic experiments, as it is the case for OCNs (e.g. Campos et al. [-@campos2006]). Peano networks are generated by means of an iterative algorithm: at each iteration, the size of the lattice side is doubled (see code below). As a result, Peano networks span squares of side equal to a power of 2. The outlet must be located at a corner of the square.  
 
 ```{r, fig.width=7, fig.height=5}
-par(mfrow = c(2, 3))
-Peano0 <- create_peano(0)
-draw_simple_OCN(Peano0)
-title(main = "Iteration: 0 - Lattice size: 2x2")
+par(mfrow = c(2, 3), mai = c(0, 0, 0.2, 0))
+peano0 <- create_peano(0)
+draw_simple_OCN(peano0)
+title("Iteration: 0 - Lattice size: 2x2")
 
-Peano1 <- create_peano(1)
-draw_simple_OCN(Peano1)
-title(main = "Iteration: 1 - Lattice size: 4x4")
+peano1 <- create_peano(1)
+draw_simple_OCN(peano1)
+title("Iteration: 1 - Lattice size: 4x4")
 
-Peano2 <- create_peano(2)
-draw_simple_OCN(Peano2)
-title(main = "Iteration: 2 - Lattice size: 8x8")
+peano2 <- create_peano(2)
+draw_simple_OCN(peano2)
+title("Iteration: 2 - Lattice size: 8x8")
 
-Peano3 <- create_peano(3)
-draw_simple_OCN(Peano3)
-title(main = "Iteration: 3 - Lattice size: 16x16")
+peano3 <- create_peano(3)
+draw_simple_OCN(peano3)
+title("Iteration: 3 - Lattice size: 16x16")
 
-Peano4 <- create_peano(4)
-draw_simple_OCN(Peano4)
-title(main = "Iteration: 4 - Lattice size: 32x32")
+peano4 <- create_peano(4)
+draw_simple_OCN(peano4)
+title("Iteration: 4 - Lattice size: 32x32")
 
-Peano5 <- create_peano(5)
-draw_simple_OCN(Peano5)
-title(main = "Iteration: 5 - Lattice size: 64x64")
+peano5 <- create_peano(5)
+draw_simple_OCN(peano5)
+title("Iteration: 5 - Lattice size: 64x64")
 
 ```
 
 The output of `create_peano` is a list containing the same objects as those produced by `create_OCN`. As such, it can be used as input for all other complementary functions of the package.
 
-```{r, fig.width=5, fig.height=4}
-Peano5 <- landscape_OCN(Peano5)
-draw_elev2D_OCN(Peano5)
+```{r, fig.width=5, fig.height=3.5}
+par(mai = c(0, 0, 0, 0))
+peano5 <- landscape_OCN(peano5)
+draw_elev2D_OCN(peano5)
 
 ```
 
@@ -363,24 +392,24 @@ draw_elev2D_OCN(Peano5)
 
 # List of ready-made OCNs
 
-OCNet contains some ready-made large OCNs built via function `create_OCN`. Their features are summarized in the Table below. Note that:
+OCNet contains some ready-made large OCNs built via function `create_OCN`. Their features are summarized in the Table below. Refer to the documentation of `create_OCN` for the definition of column names. Note that:
 
 * If not specified otherwise, the position of outlet(s) was derived from default options. 
 * **Cooling schedule**: 
-  + *cold*: corresponds to `CoolingRate = 200`, `InitialNoCoolingPhase = 0`;
-  + *default*: corresponds to default values `CoolingRate = 50`, `InitialNoCoolingPhase = 0`;
-  + *hot*: corresponds to `CoolingRate = 20`, `InitialNoCoolingPhase = 0.15`.
-* **iter**: equal to `N_iter/dimX/dimY`.
+  + *cold*: corresponds to `coolingRate = 200`, `initialNoCoolingPhase = 0`;
+  + *default*: corresponds to default values `coolingRate = 50`, `initialNoCoolingPhase = 0`;
+  + *hot*: corresponds to `coolingRate = 20`, `initialNoCoolingPhase = 0.15`.
+* **iter**: equal to `nIter/dimX/dimY`.
 * **seed** is the value of the argument used in the call of `set.seed` prior to executing `create_OCN`.
-* **On CRAN?** identifies which OCNs are uploaded in the version of OCNet that can be downloaded from CRAN (owing to limitation in package size). Installation of package from [GitHub](https://github.com/lucarraro/OCNet) provides the complete set of OCNs hereafter described^[At this [GitHub link](https://github.com/lucarraro/OCNet-ExtendedData) it is possible to download the same OCNs generated by adding optional arguments `SaveEnergy = TRUE`, `SaveExitFlag = TRUE`, which substantially increases the size of the output of `create_OCN`.].
+* **On CRAN?** identifies which OCNs are uploaded in the version of OCNet that can be downloaded from CRAN (owing to limitation in package size). Installation of package from [GitHub](https://github.com/lucarraro/OCNet) provides the complete set of OCNs hereafter described^[At this [GitHub link](https://github.com/lucarraro/OCNet-ExtendedData) it is possible to download the same OCNs generated by adding optional arguments `saveEnergy = TRUE`, `saveExitFlag = TRUE`, which substantially increases the size of the output of `create_OCN`.].
 
 
 | name            | dimX | dimY | No. of outlets | Periodic Boundaries | Initial State | Cooling Schedule | Cellsize |iter | seed | On CRAN? |
 | ----------:|:------:|:------:|:----------:|:-------------------:|:-------------:|:----------------:|:--------:|:---:|:----:|:-----:|
 |`OCN_4`^[This is actually not an OCN, but was rather generated manually for illustration purposes.]     |   4    |   4    |    1       |      FALSE          |              |                   |  1       |     |      | Yes   |
 |`OCN_20`         |   20   |   20   |    1       |      FALSE          |   I           |  default         |  1       |  30 |  1   | Yes   |
-|`OCN_250`        |   250  |   250  |    1       |      FALSE          |   I           |  default         |  1       |  30 |  2   | Yes   |
-|`OCN_250_T`      |   250  |   250  |    1       |      FALSE          |   T           |  default         |  1       |  30 |  2   | No    |
+|`OCN_250`        |   250  |   250  |    1       |      FALSE          |   I           |  default         |  1       |  30 |  2   | No   |
+|`OCN_250_T`      |   250  |   250  |    1       |      FALSE          |   T           |  default         |  1       |  30 |  2   | Yes    |
 |`OCN_250_V`      |   250  |   250  |    1       |      FALSE          |   V           |  default         |  1       |  30 |  2   | No    |
 |`OCN_250_cold`   |   250  |   250  |    1       |      FALSE          |   I           |  cold            |  1       |  30 |  2   | No    |
 |`OCN_250_hot`    |   250  |   250  |    1       |      FALSE          |   I           |  hot             |  1       |  30 |  2   | No    |
@@ -410,18 +439,19 @@ For example, let's transform the previously obtained `OCN_we` at the AG level in
 
 ```{r, fig.width=5, fig.height=4}
 par(mai=c(0.1,0.1,0.1,0.1))
-g <- OCN_to_igraph(OCN_we, level = "AG")
-plot.igraph(g, vertex.color = rainbow(OCN_we$AG$Nnodes), 
-     layout = matrix(c(OCN_we$AG$X,OCN_we$AG$Y),ncol = 2,nrow = OCN_we$AG$Nnodes))
+g <- OCN_to_igraph(OCNwe, level = "AG")
+plot.igraph(g, vertex.color = rainbow(OCNwe$AG$nNodes), 
+     layout = matrix(c(OCNwe$AG$X,OCNwe$AG$Y),ncol = 2, nrow = OCNwe$AG$nNodes))
 ```
 
 The same network can be displayed as an OCN:
 
 ```{r, fig.width=5, fig.height=3}
-draw_thematic_OCN(c(1:OCN_we$AG$Nnodes), OCN_we, DrawNodes = TRUE, Node_cex = 3,
-                  ColPalette = rainbow, DiscreteLevels = TRUE, NaNColor = "#999999",
-                  add_colorbar = FALSE)
-text(OCN_we$AG$X, OCN_we$AG$Y)
+par(mai=c(0,0,0,0))
+draw_thematic_OCN(c(1:OCNwe$AG$nNodes), OCNwe, discreteLevels = TRUE, drawNodes = TRUE,
+                  colPalette = rainbow,  cex = 3, riverColor = "#999999",
+                  backgroundColor = "#00000000", addLegend = FALSE)
+text(OCNwe$AG$X, OCNwe$AG$Y)
 
 ```
 
@@ -430,9 +460,9 @@ text(OCN_we$AG$X, OCN_we$AG$Y)
 Function `OCN_to_SSN` transforms an OCN at a given aggregation level into an SSN [@verhoef2014] object. See the following example: 
 
 ```{r, fig.width=7, fig.height=4}
-ssn_OCN <- OCN_to_SSN(OCN_we, level = "RN", obsDesign = SSN::binomialDesign(50),
+ssnOCN <- OCN_to_SSN(OCNwe, level = "RN", obsDesign = SSN::binomialDesign(50),
                      path = paste(tempdir(), "/OCN.ssn", sep = ""), importToR = TRUE)
-plot.SpatialStreamNetwork(ssn_OCN, "upDist", breaktype = "user", brks = seq(0,14000,2000), 
+plot.SpatialStreamNetwork(ssnOCN, "upDist", breaktype = "user", brks = seq(0,14000,2000), 
                           xlab = "x [m]", ylab = "y [m]", asp = 1)
 title("Distance from outlet of observation points [m]")
 
@@ -479,6 +509,52 @@ references:
   type: article-journal
   issued:
     year: 2014
+
+- id: rodriguez2001
+  title: Fractal river basins. Chance and self-organization
+  author:
+  - family: Rodriguez-Iturbe
+    given: I.
+  - family: Rinaldo
+    given: A.
+  publisher: Cambridge University Press
+  type: book
+  issued:
+    year: 2001
+
+- id: campos2006
+  title: Transport on fractal river networks. Application to migration fronts
+  author:
+  - family: Campos
+    given: D.
+  - family: Fort
+    given: J. 
+  - family: Méndez
+    given: V.
+  container-title: Theoretical Population Biology
+  volume: 69(1)
+  URL: 'http://dx.doi.org/10.1016/j.tpb.2005.09.001'
+  page: 88-93
+  type: article-journal
+  issued:
+    year: 2006
+
+- id: marani1991
+  title: A note on fractal channel networks
+  author:
+  - family: Marani
+    given: A.
+  - family: Rigon
+    given: R. 
+  - family: Rinaldo
+    given: A.
+  container-title: Water Resources Research
+  volume: 27(12)
+  URL: 'http://dx.doi.org/10.1029/91WR02077'
+  page: 3041-3049
+  type: article-journal
+  issued:
+    year: 1991
 
 - id: rodriguez1992
   title: Energy dissipation, runoff production, and the three‐dimensional structure of river basins

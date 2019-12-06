@@ -1,11 +1,11 @@
 
 draw_elev3Drgl_OCN <- function(OCN,
-                               coarse_grain=c(1,1),
+                               coarseGrain=c(1,1),
                                chooseCM=FALSE,
-                               add_colorbar=FALSE,
-                               draw_river=FALSE,
-                               A_thr_draw=0.002*OCN$dimX*OCN$dimY*OCN$cellsize^2,
-                               river_color="#00CCFF",
+                               addColorbar=FALSE,
+                               drawRiver=FALSE,
+                               thrADraw=0.002*OCN$dimX*OCN$dimY*OCN$cellsize^2,
+                               riverColor="#00CCFF",
                                ...){
   #aspect=c(1,1,0.1),
   #ColPalette=terrain.colors(1000,alpha=1),
@@ -23,8 +23,8 @@ draw_elev3Drgl_OCN <- function(OCN,
     stop('Invalid choice for chooseCM.')
   }
   
-  if ((OCN$dimX %% coarse_grain[1] != 0) || (OCN$dimY %% coarse_grain[2] != 0)){
-    stop('coarse_grain[1] must be divisor of dimX; coarse_grain[2] must be divisor of dimY')
+  if ((OCN$dimX %% coarseGrain[1] != 0) || (OCN$dimY %% coarseGrain[2] != 0)){
+    stop('coarseGrain[1] must be divisor of dimX; coarseGrain[2] must be divisor of dimY')
   }   
   
   if ( !chooseCM || OCN$CM$A[chooseCM] == OCN$dimX*OCN$dimY*OCN$cellsize^2){ 
@@ -33,15 +33,15 @@ draw_elev3Drgl_OCN <- function(OCN,
     Xvec <- seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize)
     Yvec <- seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize)
     
-    Z_cg <- matrix(data=0,nrow=OCN$dimY/coarse_grain[2],ncol=OCN$dimX/coarse_grain[1])
-    X_cg <- rep(0,OCN$dimX/coarse_grain[1])
-    Y_cg <- rep(0,OCN$dimY/coarse_grain[2])
+    Z_cg <- matrix(data=0,nrow=OCN$dimY/coarseGrain[2],ncol=OCN$dimX/coarseGrain[1])
+    X_cg <- rep(0,OCN$dimX/coarseGrain[1])
+    Y_cg <- rep(0,OCN$dimY/coarseGrain[2])
     
-    for (i in 1:(OCN$dimX/coarse_grain[1])){
-      subX <- ((i-1)*coarse_grain[1]+1):(i*coarse_grain[1])
+    for (i in 1:(OCN$dimX/coarseGrain[1])){
+      subX <- ((i-1)*coarseGrain[1]+1):(i*coarseGrain[1])
       X_cg[i] <- mean(Xvec[subX])
-      for (j in 1:(OCN$dimY/coarse_grain[2])){
-        subY <- ((j-1)*coarse_grain[2]+1):(j*coarse_grain[2])
+      for (j in 1:(OCN$dimY/coarseGrain[2])){
+        subY <- ((j-1)*coarseGrain[2]+1):(j*coarseGrain[2])
         Z_cg[j,i] <- mean(Zmat[subY,subX])
         Y_cg[j] <- mean(Yvec[subY])
       }
@@ -74,19 +74,19 @@ draw_elev3Drgl_OCN <- function(OCN,
     
     offset <- 0.1*(zlim[2]-zlim[1])
     # draw river
-    if (draw_river==TRUE){
-      AvailableNodes <- setdiff(1:OCN$FD$Nnodes,OCN$FD$Outlet)
+    if (drawRiver==TRUE){
+      AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)
       for (i in AvailableNodes){
-        if (OCN$FD$A[i]>=A_thr_draw & 
-            abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$DownNode[i]]) <= OCN$cellsize & 
-            abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$DownNode[i]]) <= OCN$cellsize) {
-          lines3d(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$DownNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$DownNode[i]]),
-                  offset + c(OCN$FD$Z[i],OCN$FD$Z[OCN$FD$DownNode[i]]),
-                  lwd=1+7*(OCN$FD$A[i]/(OCN$FD$Nnodes*OCN$cellsize^2))^0.5,col=river_color)}
+        if (OCN$FD$A[i]>=thrADraw & 
+            abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]]) <= OCN$cellsize & 
+            abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]]) <= OCN$cellsize) {
+          lines3d(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$downNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$downNode[i]]),
+                  offset + c(OCN$FD$Z[i],OCN$FD$Z[OCN$FD$downNode[i]]),
+                  lwd=1+7*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=riverColor)}
       }
     }
     # add colorbar
-    if (add_colorbar==TRUE){  
+    if (addColorbar==TRUE){  
       bgplot3d(suppressWarnings(image.plot(legend.only=TRUE, zlim=zlim,col=colorlut)))
     }
     
@@ -96,9 +96,9 @@ draw_elev3Drgl_OCN <- function(OCN,
       chooseCM <- which(OCN$CM$A==max(OCN$CM$A))
     }
     
-    if (OCN$PeriodicBoundaries==FALSE){
+    if (OCN$periodicBoundaries==FALSE){
       
-      mask <- which(OCN$FD$to_CM!=chooseCM)
+      mask <- which(OCN$FD$toCM!=chooseCM)
       
       Xvec <- seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize)
       Yvec <- seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize)
@@ -116,24 +116,24 @@ draw_elev3Drgl_OCN <- function(OCN,
       
       persp3d(Xvec,Yvec,t(Zmat2), color = col, zlim=zlim,axes=FALSE,xlab="",ylab="",zlab="",aspect=c(1,1,0.1)) #
       
-      if (draw_river==TRUE){
+      if (drawRiver==TRUE){
         offset <- 0.1*(zlim[2]-zlim[1])
-        AvailableNodes <- setdiff(1:OCN$FD$Nnodes,OCN$FD$Outlet)
+        AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)
         for (i in AvailableNodes){
-          if (OCN$FD$A[i]>=A_thr_draw & OCN$FD$to_CM[i] == chooseCM &
-              abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$DownNode[i]]) <= OCN$cellsize & 
-              abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$DownNode[i]]) <= OCN$cellsize) {
-            lines3d(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$DownNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$DownNode[i]]),
-                    offset + c(OCN$FD$Z[i],OCN$FD$Z[OCN$FD$DownNode[i]]),
-                    lwd=0.5+7*(OCN$FD$A[i]/(OCN$FD$Nnodes*OCN$cellsize^2))^0.5,col="#00CCFF")}
+          if (OCN$FD$A[i]>=thrADraw & OCN$FD$toCM[i] == chooseCM &
+              abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]]) <= OCN$cellsize & 
+              abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]]) <= OCN$cellsize) {
+            lines3d(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$downNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$downNode[i]]),
+                    offset + c(OCN$FD$Z[i],OCN$FD$Z[OCN$FD$downNode[i]]),
+                    lwd=0.5+7*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col="#00CCFF")}
         }
       }
       
       index_border <- NULL
-      for (k in 1:length(OCN$CM$X_contour[[chooseCM]][[1]])){
+      for (k in 1:length(OCN$CM$XContour[[chooseCM]][[1]])){
         
-        x <- OCN$CM$X_contour[[chooseCM]][[1]][k] 
-        y <- OCN$CM$Y_contour[[chooseCM]][[1]][k]
+        x <- OCN$CM$XContour[[chooseCM]][[1]][k] 
+        y <- OCN$CM$YContour[[chooseCM]][[1]][k]
         
         ind <- which(abs(OCN$FD$X-x) < OCN$cellsize/2 & abs(OCN$FD$Y-y) < OCN$cellsize/2)
         index_border <- c(index_border,ind)
@@ -154,26 +154,26 @@ draw_elev3Drgl_OCN <- function(OCN,
       polygon3d(OCN$FD$X[index_border],OCN$FD$Y[index_border],numeric(length(index_border)),col="#997070")
       lines3d(c(OCN$FD$X[index_border],OCN$FD$X[index_border[1]]),c(OCN$FD$Y[index_border],OCN$FD$Y[index_border[1]]),numeric(length(index_border)+1),col="black")
       
-      if (add_colorbar==TRUE){  
+      if (addColorbar==TRUE){  
         bgplot3d(suppressWarnings(image.plot(legend.only=TRUE, zlim=zlim,col=colorlut)))
       }
       
       
-    } else { # use "draw" coordinates if PeriodicBoundaries = TRUE
+    } else { # use "draw" coordinates if periodicBoundaries = TRUE
       
-      subset_X <- OCN$FD$X_draw[OCN$FD$to_CM==chooseCM]
-      subset_Y <- OCN$FD$Y_draw[OCN$FD$to_CM==chooseCM]
+      subset_X <- OCN$FD$XDraw[OCN$FD$toCM==chooseCM]
+      subset_Y <- OCN$FD$YDraw[OCN$FD$toCM==chooseCM]
       X_mesh <- seq(min(subset_X)-OCN$cellsize,max(subset_X)+OCN$cellsize,OCN$cellsize)
       Y_mesh <- seq(min(subset_Y)-OCN$cellsize,max(subset_Y)+OCN$cellsize,OCN$cellsize)
       Z_mesh <- matrix(data=NaN,nrow=length(Y_mesh),ncol=length(X_mesh))
-      for (i in which(OCN$FD$to_CM==chooseCM)){
-        ind_x <- which(X_mesh==OCN$FD$X_draw[i])
-        ind_y <- which(Y_mesh==OCN$FD$Y_draw[i])
+      for (i in which(OCN$FD$toCM==chooseCM)){
+        ind_x <- which(X_mesh==OCN$FD$XDraw[i])
+        ind_y <- which(Y_mesh==OCN$FD$YDraw[i])
         Z_mesh[ind_y,ind_x] <- OCN$FD$Z[i]
       }
       
       par3d(windowRect = c(0, 30, 1000, 1000))
-      zlim <- range(OCN$FD$Z[OCN$FD$to_CM==chooseCM])
+      zlim <- range(OCN$FD$Z[OCN$FD$toCM==chooseCM])
       zlim[1] <- floor(zlim[1]); zlim[2] <- ceiling(zlim[2]) 
       zlen <- zlim[2] - zlim[1] + 1
       colorlut <- terrain.colors(zlen) # height color lookup table
@@ -181,39 +181,39 @@ draw_elev3Drgl_OCN <- function(OCN,
       persp3d(X_mesh,Y_mesh,t(Z_mesh), color = col, zlim=zlim,axes=FALSE,xlab="",ylab="",zlab="",aspect=c(1,1,0.1)) #
       
       index_border <- NULL
-      for (k in 1:length(OCN$CM$X_contour_draw[[chooseCM]][[1]])){
+      for (k in 1:length(OCN$CM$XContourDraw[[chooseCM]][[1]])){
         
-        x <- OCN$CM$X_contour_draw[[chooseCM]][[1]][k] 
-        y <- OCN$CM$Y_contour_draw[[chooseCM]][[1]][k]
+        x <- OCN$CM$XContourDraw[[chooseCM]][[1]][k] 
+        y <- OCN$CM$YContourDraw[[chooseCM]][[1]][k]
         
-        ind <- which(abs(OCN$FD$X_draw-x) < OCN$cellsize/2 & abs(OCN$FD$Y_draw-y) < OCN$cellsize/2)
+        ind <- which(abs(OCN$FD$XDraw-x) < OCN$cellsize/2 & abs(OCN$FD$YDraw-y) < OCN$cellsize/2)
         index_border <- c(index_border,ind)
       }
       index_border <- unique(index_border)
       
       for (i in 1:(length(index_border)-1)) {
-        quads3d(c(OCN$FD$X_draw[index_border[i]],OCN$FD$X_draw[index_border[i+1]],OCN$FD$X_draw[index_border[i+1]],OCN$FD$X_draw[index_border[i]]),
-                c(OCN$FD$Y_draw[index_border[i]],OCN$FD$Y_draw[index_border[i+1]],OCN$FD$Y_draw[index_border[i+1]],OCN$FD$Y_draw[index_border[i]]),
+        quads3d(c(OCN$FD$XDraw[index_border[i]],OCN$FD$XDraw[index_border[i+1]],OCN$FD$XDraw[index_border[i+1]],OCN$FD$XDraw[index_border[i]]),
+                c(OCN$FD$YDraw[index_border[i]],OCN$FD$YDraw[index_border[i+1]],OCN$FD$YDraw[index_border[i+1]],OCN$FD$YDraw[index_border[i]]),
                 c(0,0,OCN$FD$Z[index_border[i+1]],OCN$FD$Z[index_border[i]]),col="#997070")
       }
-      quads3d(c(OCN$FD$X_draw[index_border[length(index_border)]],OCN$FD$X_draw[index_border[1]],OCN$FD$X_draw[index_border[1]],OCN$FD$X_draw[index_border[length(index_border)]]),
-              c(OCN$FD$Y_draw[index_border[length(index_border)]],OCN$FD$Y_draw[index_border[1]],OCN$FD$Y_draw[index_border[1]],OCN$FD$Y_draw[index_border[length(index_border)]]),
+      quads3d(c(OCN$FD$XDraw[index_border[length(index_border)]],OCN$FD$XDraw[index_border[1]],OCN$FD$XDraw[index_border[1]],OCN$FD$XDraw[index_border[length(index_border)]]),
+              c(OCN$FD$YDraw[index_border[length(index_border)]],OCN$FD$YDraw[index_border[1]],OCN$FD$YDraw[index_border[1]],OCN$FD$YDraw[index_border[length(index_border)]]),
               c(0,0,OCN$FD$Z[index_border[1]],OCN$FD$Z[index_border[length(index_border)]]),col="#997070")
       
-      lines3d(OCN$FD$X_draw[index_border],OCN$FD$Y_draw[index_border],OCN$FD$Z[index_border],col="black")
-      polygon3d(OCN$FD$X_draw[index_border],OCN$FD$Y_draw[index_border],numeric(length(index_border)),col="#997070")
-      lines3d(c(OCN$FD$X_draw[index_border],OCN$FD$X_draw[index_border[1]]),c(OCN$FD$Y_draw[index_border],OCN$FD$Y_draw[index_border[1]]),numeric(length(index_border)+1),col="black")
+      lines3d(OCN$FD$XDraw[index_border],OCN$FD$YDraw[index_border],OCN$FD$Z[index_border],col="black")
+      polygon3d(OCN$FD$XDraw[index_border],OCN$FD$YDraw[index_border],numeric(length(index_border)),col="#997070")
+      lines3d(c(OCN$FD$XDraw[index_border],OCN$FD$XDraw[index_border[1]]),c(OCN$FD$YDraw[index_border],OCN$FD$YDraw[index_border[1]]),numeric(length(index_border)+1),col="black")
       
-      if (draw_river==TRUE){
+      if (drawRiver==TRUE){
         offset <- 0.1*(zlim[2]-zlim[1])
-        AvailableNodes <- setdiff(1:OCN$FD$Nnodes,OCN$FD$Outlet)
+        AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)
         for (i in AvailableNodes){
-          if (OCN$FD$A[i]>=A_thr_draw & OCN$FD$to_CM[i] == chooseCM &
-              abs(OCN$FD$X_draw[i]-OCN$FD$X_draw[OCN$FD$DownNode[i]]) <= OCN$cellsize & 
-              abs(OCN$FD$Y_draw[i]-OCN$FD$Y_draw[OCN$FD$DownNode[i]]) <= OCN$cellsize) {
-            lines3d(c(OCN$FD$X_draw[i],OCN$FD$X_draw[OCN$FD$DownNode[i]]),c(OCN$FD$Y_draw[i],OCN$FD$Y_draw[OCN$FD$DownNode[i]]),
-                    offset + c(OCN$FD$Z[i],OCN$FD$Z[OCN$FD$DownNode[i]]),
-                    lwd=0.5+7*(OCN$FD$A[i]/(OCN$FD$Nnodes*OCN$cellsize^2))^0.5,col="#00CCFF")}
+          if (OCN$FD$A[i]>=thrADraw & OCN$FD$toCM[i] == chooseCM &
+              abs(OCN$FD$XDraw[i]-OCN$FD$XDraw[OCN$FD$downNode[i]]) <= OCN$cellsize & 
+              abs(OCN$FD$YDraw[i]-OCN$FD$YDraw[OCN$FD$downNode[i]]) <= OCN$cellsize) {
+            lines3d(c(OCN$FD$XDraw[i],OCN$FD$XDraw[OCN$FD$downNode[i]]),c(OCN$FD$YDraw[i],OCN$FD$YDraw[OCN$FD$downNode[i]]),
+                    offset + c(OCN$FD$Z[i],OCN$FD$Z[OCN$FD$downNode[i]]),
+                    lwd=0.5+7*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col="#00CCFF")}
         }
       }
       

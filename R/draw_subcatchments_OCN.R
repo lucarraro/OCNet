@@ -1,6 +1,7 @@
 
 draw_subcatchments_OCN <- function(OCN,
-                                   draw_river=TRUE){
+                                   drawRiver = TRUE,
+                                   colPalette = NULL){
   
   if (!("SC" %in% names(OCN))){
     stop('Missing fields in OCN. You should run aggregate_OCN prior to draw_subcatchments_OCN.')
@@ -9,28 +10,28 @@ draw_subcatchments_OCN <- function(OCN,
   ## Greedy algorithm for coloring subcatchment map
   ## Create list of nodes for the greedy algorithm
   W <- OCN$SC$W
-  ListNodes <- numeric(OCN$SC$Nnodes)
-  for (i in 1:(OCN$SC$Nnodes)){
+  ListNodes <- numeric(OCN$SC$nNodes)
+  for (i in 1:(OCN$SC$nNodes)){
     degree <- colSums(W)
     degree <- degree[degree>0]
     if (length(degree)>0){
       MinDegree <- which(colSums(W)==min(degree))
       NodeRemoved <- MinDegree[1]
-      ListNodes[OCN$SC$Nnodes+1-i] <- NodeRemoved
+      ListNodes[OCN$SC$nNodes+1-i] <- NodeRemoved
       W[,NodeRemoved] <- 0
       W[NodeRemoved,] <- 0
     } else {
-      MissingNode <- setdiff(1:OCN$SC$Nnodes,ListNodes)[1]
-      ListNodes[OCN$SC$Nnodes+1-i] <- MissingNode
+      MissingNode <- setdiff(1:OCN$SC$nNodes,ListNodes)[1]
+      ListNodes[OCN$SC$nNodes+1-i] <- MissingNode
     }
   }
   
   
   ## Attribute colors
   ColorList <- 1
-  ColorID <- numeric(OCN$SC$Nnodes)
-  for (i in 1:OCN$SC$Nnodes){
-    connected_nodes <- which(OCN$SC$W[ListNodes[i],1:OCN$SC$Nnodes]==1)
+  ColorID <- numeric(OCN$SC$nNodes)
+  for (i in 1:OCN$SC$nNodes){
+    connected_nodes <- which(OCN$SC$W[ListNodes[i],1:OCN$SC$nNodes]==1)
     k <- setdiff(ColorList,ColorID[connected_nodes])[1]
     if (is.na(k)){
       ColorList <- c(ColorList,max(ColorList)+1)
@@ -40,12 +41,14 @@ draw_subcatchments_OCN <- function(OCN,
   }
   
   ## plot subcatchment map
-  Color_SC <- matrix(data=OCN$FD$to_SC,nrow=OCN$dimY,ncol=OCN$dimX)
-  for (k in 1:OCN$SC$Nnodes){
-    Color_SC[OCN$SC$to_FD[[k]]] <- ColorID[k]
+  Color_SC <- matrix(data=OCN$FD$toSC,nrow=OCN$dimY,ncol=OCN$dimX)
+  for (k in 1:OCN$SC$nNodes){
+    Color_SC[OCN$SC$toFD[[k]]] <- ColorID[k]
   }
   
-  ColPalette <- c("#009900", # green
+  
+  if (is.null(colPalette)){
+  colPalette <- c("#009900", # green
                   "#FFFF00", # yellow
                   "#FF9900", # orange
                   "#FF0000", # red
@@ -54,22 +57,27 @@ draw_subcatchments_OCN <- function(OCN,
                   "#555555", # grey 30%
                   "#BBBBBB") # grey 70%
   
-  ColPalette <- ColPalette[ColorList]
+  colPalette <- colPalette[ColorList]
+  } else if (typeof(colPalette)=="closure") {
+    colPalette <- colPalette(length(ColorList))
+  } else if (typeof(colPalette)=="character") {
+    colPalette <- colPalette[1:length(ColorList)]
+  }
   
-  par(pty="s",bty="n",mar=c(1,1,1,1))
+  par(bty="n")
   image(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),
         seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize),
-        t(Color_SC),col=ColPalette,xlab=" ",ylab=" ",asp=1,axes=FALSE)
+        t(Color_SC),col=colPalette,xlab=" ",ylab=" ",asp=1,axes=FALSE)
   # attributing colors in reverse order should increase overall contrast
   
-  if (draw_river==TRUE){
+  if (drawRiver==TRUE){
   ## plot OCN
-  AvailableNodes <- setdiff(1:OCN$FD$Nnodes,OCN$FD$Outlet)
-  #points(OCN$FD$X[OCN$FD$Outlet],OCN$FD$Y[OCN$FD$Outlet],pch=22,col="#000000",bg="#000000")
+  AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)
+  #points(OCN$FD$X[OCN$FD$outlet],OCN$FD$Y[OCN$FD$outlet],pch=22,col="#000000",bg="#000000")
 
   for (i in AvailableNodes){
-    if (OCN$FD$A[i]>=OCN$A_thr  & abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$DownNode[i]])<=OCN$cellsize & abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$DownNode[i]])<=OCN$cellsize  ) {
-      lines(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$DownNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$DownNode[i]]),lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$Nnodes*OCN$cellsize^2))^0.5,col="black")}
+    if (OCN$FD$A[i]>=OCN$thrA  & abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]])<=OCN$cellsize & abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]])<=OCN$cellsize  ) {
+      lines(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$downNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$downNode[i]]),lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col="black")}
   }
   }
 }

@@ -4,13 +4,13 @@ before_install:
     - sudo apt-get install -qq freeglut3-dev xorg openbox
 env:
     global:
-    - RGL_USE_NULL=TRUE   
+    - RGL_USE_NULL=TRUE 
 addons:
   apt:
     packages:
     - libgdal-dev 
     - libftgl2 
-    - libcgal-dev 
+    - libcgal-dev
     - libglu1-mesa-dev 
-    - libx11-dev 
+    - libx11-dev
     - libfreetype6-dev

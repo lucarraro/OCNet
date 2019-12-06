@@ -1,15 +1,15 @@
 
 aggregate_OCN <- function(OCN,
-                          A_thr=0.002*OCN$dimX*OCN$dimY*OCN$cellsize^2,
-                          StreamOrderType="Strahler",
-                          MaxReachLength=Inf){
+                          thrA=0.002*OCN$dimX*OCN$dimY*OCN$cellsize^2,
+                          streamOrderType="Strahler",
+                          maxReachLength=Inf){
   
-  if (!("Slope" %in% names(OCN$FD))){
+  if (!("slope" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to aggregate_OCN.')
   }
   
-  if (MaxReachLength < OCN$cellsize*sqrt(2)){
-    stop("MaxReachLength cannot be smaller than OCN$cellsize*sqrt(2).")
+  if (maxReachLength < OCN$cellsize*sqrt(2)){
+    stop("maxReachLength cannot be smaller than OCN$cellsize*sqrt(2).")
   }
   #t1 <- Sys.time()
   
@@ -18,7 +18,7 @@ aggregate_OCN <- function(OCN,
   ###############################
   
   #print('Crop data at FD level to RN level...',quote=FALSE); 
-  RN_mask <- as.vector(OCN$FD$A >= A_thr)# RN_mask allows to sample RN-level values from matrices/vectors at FD level   
+  RN_mask <- as.vector(OCN$FD$A >= thrA)# RN_mask allows to sample RN-level values from matrices/vectors at FD level   
   RN_to_FD <- which(RN_mask) # RN_to_FD[i] is the pixel ID at the FD level of the pixel whose ID at the RN level is i
   FD_to_RN <- RN_mask*cumsum(as.numeric(RN_mask)) # FD_to_RN[i] is the pixel ID at the RN level of the pixel whose ID at the FD level is i
   # if pixel i at FD level doesn't belong to RN, then FD_to_RN[i]=0
@@ -28,8 +28,8 @@ aggregate_OCN <- function(OCN,
   W_RN <- OCN$FD$W[RN_mask,,drop=FALSE]
   W_RN <- W_RN[,RN_mask,drop=FALSE]
   
-  Outlet_RN <- FD_to_RN[OCN$FD$Outlet]
-  Outlet_RN <- Outlet_RN[Outlet_RN!=0] # remove outlets if the corresponding catchment size is lower than A_threshold
+  Outlet_RN <- FD_to_RN[OCN$FD$outlet]
+  Outlet_RN <- Outlet_RN[Outlet_RN!=0] # remove outlets if the corresponding catchment size is lower than thrAeshold
   DownNode_RN <- numeric(Nnodes_RN)
   # for (i in 1:Nnodes_RN){
   #   if (!(i %in% Outlet_RN)){
@@ -43,7 +43,7 @@ aggregate_OCN <- function(OCN,
   X_RN <- OCN$FD$X[RN_mask]
   Y_RN <- OCN$FD$Y[RN_mask]
   Z_RN <- OCN$FD$Z[RN_mask]
-  Length_RN <- OCN$FD$Length[RN_mask]
+  Length_RN <- OCN$FD$leng[RN_mask]
   
   # Drainage density
   DrainageDensity_RN <- sum(Length_RN)/(OCN$dimX*OCN$dimY*OCN$cellsize^2)
@@ -62,7 +62,7 @@ aggregate_OCN <- function(OCN,
   whichNodeAG <- which(IsNodeAG)
   
   # Calculate slope for each pixel of the river network 
-  Slope_RN <- OCN$FD$Slope[RN_mask]
+  Slope_RN <- OCN$FD$slope[RN_mask]
   #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE)
   #t1 <- Sys.time()
   
@@ -82,7 +82,7 @@ aggregate_OCN <- function(OCN,
   }
   # RN_to_CM[i] indicates outlet to which reach i drains
   RN_to_CM <- numeric(Nnodes_RN)
-  for (i in 1:OCN$N_outlet){
+  for (i in 1:OCN$nOutlet){
     RN_to_CM[Upstream_RN[[Outlet_RN[i]]]] <- i
   }
   
@@ -109,12 +109,12 @@ aggregate_OCN <- function(OCN,
     Z_AG[reachID] <- Z_RN[i]
     A_AG[reachID] <- A_RN[i]
     Length_AG[reachID] <- Length_RN[i]
-    while (!IsNodeAG[j] && j!=0 && Length_AG[reachID] <= MaxReachLength) {
+    while (!IsNodeAG[j] && j!=0 && Length_AG[reachID] <= maxReachLength) {
       RN_to_AG[j] <- reachID 
       Length_AG[reachID] <-  Length_AG[reachID] + Length_RN[j]
       j_old <- j
       j <- DownNode_RN[j]} 
-    if (Length_AG[reachID] > MaxReachLength){
+    if (Length_AG[reachID] > maxReachLength){
       j <- j_old
       Length_AG[reachID] <-  Length_AG[reachID] - Length_RN[j]
       ChannelHeads[j] <- 1
@@ -127,24 +127,24 @@ aggregate_OCN <- function(OCN,
   # if (sum(OutletNotChannelHead)>0){
   #   Length_AG[reachID:Nnodes_AG] <- 0
   # }
-  # if A_thr=0, do not perform aggregation. Every pixel is a node 
-  # (note that with A_thr=1, reaches with more than one pixel can exist)
-  if (A_thr==0){
+  # if thrA=0, do not perform aggregation. Every pixel is a node 
+  # (note that with thrA=1, reaches with more than one pixel can exist)
+  if (thrA==0){
     Nnodes_AG <- Nnodes_RN
     RN_to_AG <- 1:Nnodes_RN
   }
   
-  # FD_to_SC: vector of length OCN$FD$Nnodes containing subcatchmentID for every pixel of the catchment
+  # FD_to_SC: vector of length OCN$FD$nNodes containing subcatchmentID for every pixel of the catchment
   # AG_to_FD: list containing FD indices of pixels belonging to a given reach 
   # SC_to_FD: list containing FD indices of pixels belonging to a given subcatchment 
-  FD_to_SC <- NaN*numeric(OCN$FD$Nnodes)
+  FD_to_SC <- NaN*numeric(OCN$FD$nNodes)
   
   # initialize FD_to_SC by attributing SC values to pixels belonging to AG level
   FD_to_SC[RN_mask] <- RN_to_AG 
   
-  # attribute new SC values to pixels corresponding to outlets of catchments without reaches (because the drained area of the catchment is < A_thr)
-  Nnodes_SC <- Nnodes_AG + sum(OCN$FD$A[OCN$FD$Outlet]<A_thr)
-  FD_to_SC[OCN$FD$Outlet[OCN$FD$A[OCN$FD$Outlet] < A_thr]] <- (Nnodes_AG+1):Nnodes_SC 
+  # attribute new SC values to pixels corresponding to outlets of catchments without reaches (because the drained area of the catchment is < thrA)
+  Nnodes_SC <- Nnodes_AG + sum(OCN$FD$A[OCN$FD$outlet]<thrA)
+  FD_to_SC[OCN$FD$outlet[OCN$FD$A[OCN$FD$outlet] < thrA]] <- (Nnodes_AG+1):Nnodes_SC 
   IndexHeadpixel <- which(OCN$FD$A==OCN$cellsize^2) # find FD pixels corresponding to headwaters
   
   
@@ -159,7 +159,7 @@ aggregate_OCN <- function(OCN,
   # add pixels corresponding to outlets of catchments without reaches
   if (Nnodes_SC > Nnodes_AG){
     for (i in (Nnodes_AG+1):Nnodes_SC){
-      SC_to_FD[[i]] <- OCN$FD$Outlet[OCN$FD$A[OCN$FD$Outlet]<A_thr][i-Nnodes_AG]
+      SC_to_FD[[i]] <- OCN$FD$outlet[OCN$FD$A[OCN$FD$outlet]<thrA][i-Nnodes_AG]
     }}
   
   for (i in 1:length(IndexHeadpixel)){ # i: index that spans all headwater pixels
@@ -171,7 +171,7 @@ aggregate_OCN <- function(OCN,
       k <- FD_to_SC[pNew]
       if (is.nan(k)){
         sub_p <- c(sub_p,pNew)
-        pNew <- OCN$FD$DownNode[pNew]
+        pNew <- OCN$FD$downNode[pNew]
       }}
     FD_to_SC[sub_p] <- k
     SC_to_FD[[k]] <- c(SC_to_FD[[k]],sub_p)
@@ -201,7 +201,7 @@ aggregate_OCN <- function(OCN,
   }
   ind <- ind[-which(ind[,1]==0),]
   W_AG[ind] <- 1
-  Outlet_AG <- which(DownNode_AG==0)
+  Outlet_AG <- RN_to_AG[Outlet_RN]
   
   # Upstream_AG : list containing IDs of all reaches upstream of each reach (plus reach itself)
   Upstream_AG <- vector("list",Nnodes_AG)
@@ -219,14 +219,14 @@ aggregate_OCN <- function(OCN,
   }
   # AG_to_CM[i] indicates outlet to which reach i drains
   AG_to_CM <- numeric(Nnodes_AG)
-  for (i in 1:OCN$N_outlet){
+  for (i in 1:OCN$nOutlet){
     AG_to_CM[Upstream_AG[[Outlet_AG[i]]]] <- i
   }
   #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE)
   #t1 <- Sys.time()
   
   #print('Stream order at AG level...',quote=FALSE)
-  if (StreamOrderType=="Strahler"){
+  if (streamOrderType=="Strahler"){
     # calculate Strahler stream order
     StreamOrder_AG <- numeric(Nnodes_AG)
     for (i in 1:Nnodes_AG){
@@ -239,7 +239,7 @@ aggregate_OCN <- function(OCN,
         } else {StreamOrder_AG[j] <- max(StreamOrder_AG[tmp])} # otherwise, keep previous stream order
       } else {StreamOrder_AG[j] <- 1} # if j is an headwater, impose StreamOrder = 1
     }
-  } else if (StreamOrderType=="Shreve"){
+  } else if (streamOrderType=="Shreve"){
     # calculate Shreve stream order
     StreamOrder_AG <- numeric(Nnodes_AG)
     for (i in 1:Nnodes_AG){
@@ -258,7 +258,7 @@ aggregate_OCN <- function(OCN,
   #Length_AG <- rep(0,Nnodes_AG)
   Slope_AG <- numeric(Nnodes_AG)
   for (i in 1:Nnodes_AG){
-    #Length_AG[i] <- sum(OCN$FD$Length[AG_to_FD[[i]]])
+    #Length_AG[i] <- sum(OCN$FD$leng[AG_to_FD[[i]]])
     Slope_AG[i] <- (Slope_RN[RN_to_AG==i] %*% Length_RN[RN_to_AG==i])/Length_AG[i] # scalar product between vector of slopes and lengths of nodes at RN level belonging to reach i 
   }
   
@@ -291,20 +291,20 @@ aggregate_OCN <- function(OCN,
   # build neighbouring nodes at FD level
   # find list of possible neighbouring pixels
   movement <- matrix(c(0,-1,-1,-1,0,1,1,1,1,1,0,-1,-1,-1,0,1),nrow=2,byrow=TRUE)
-  NeighbouringNodes <- vector("list", OCN$FD$Nnodes)
+  NeighbouringNodes <- vector("list", OCN$FD$nNodes)
   cont_node <- 0
   for (cc in 1:OCN$dimX) {
     for (rr in 1:OCN$dimY) {
       cont_node <- cont_node + 1
       neigh_r <- rep(rr,8)+movement[1,]
       neigh_c <- rep(cc,8)+movement[2,]
-      if (OCN$PeriodicBoundaries == TRUE){
+      if (OCN$periodicBoundaries == TRUE){
         neigh_r[neigh_r==0] <- OCN$dimY
         neigh_c[neigh_c==0] <- OCN$dimX
         neigh_r[neigh_r>OCN$dimY] <- 1
         neigh_c[neigh_c>OCN$dimX] <- 1
       }
-      NotAboundary <- neigh_r>0 & neigh_r<=OCN$dimY & neigh_c>0 & neigh_c<=OCN$dimX # only effective when PeriodicBoundaries=FALSE
+      NotAboundary <- neigh_r>0 & neigh_r<=OCN$dimY & neigh_c>0 & neigh_c<=OCN$dimX # only effective when periodicBoundaries=FALSE
       NeighbouringNodes[[cont_node]] <- neigh_r[NotAboundary] + (neigh_c[NotAboundary]-1)*OCN$dimY
     }
   } 
@@ -335,62 +335,81 @@ aggregate_OCN <- function(OCN,
     Y_SC[i] <- mean(OCN$FD$Y[SC_to_FD[[i]]])
   }
   
+  
   ######################
   ## EXPORT VARIABLES ##
   ######################
   
   #FD level
-  OCN$FD[["to_RN"]] <- FD_to_RN
-  OCN$FD[["to_SC"]] <- FD_to_SC
+  OCN$FD[["toRN"]] <- FD_to_RN
+  OCN$FD[["toSC"]] <- FD_to_SC
   
   # RN level
   OCN$RN[["A"]] <- A_RN
   OCN$RN[["W"]] <- W_RN
-  OCN$RN[["DownNode"]] <- DownNode_RN
-  OCN$RN[["DrainageDensity"]] <- DrainageDensity_RN
-  OCN$RN[["Length"]] <- Length_RN
-  OCN$RN[["Nnodes"]] <- Nnodes_RN
-  OCN$RN[["Nupstream"]] <- Nupstream_RN
-  OCN$RN[["Outlet"]] <- Outlet_RN
-  OCN$RN[["Slope"]] <- Slope_RN
-  OCN$RN[["to_FD"]] <- RN_to_FD
-  OCN$RN[["to_AG"]] <- RN_to_AG
-  OCN$RN[["to_CM"]] <- RN_to_CM
-  OCN$RN[["Upstream"]] <- Upstream_RN
+  OCN$RN[["downNode"]] <- DownNode_RN
+  OCN$RN[["drainageDensity"]] <- DrainageDensity_RN
+  OCN$RN[["leng"]] <- Length_RN
+  OCN$RN[["nNodes"]] <- Nnodes_RN
+  OCN$RN[["nUpstream"]] <- Nupstream_RN
+  OCN$RN[["outlet"]] <- Outlet_RN
+  OCN$RN[["slope"]] <- Slope_RN
+  OCN$RN[["toFD"]] <- RN_to_FD
+  OCN$RN[["toAGReach"]] <- RN_to_AG
+  OCN$RN[["toCM"]] <- RN_to_CM
+  OCN$RN[["upstream"]] <- Upstream_RN
   OCN$RN[["X"]] <- X_RN
   OCN$RN[["Y"]] <- Y_RN
   OCN$RN[["Z"]] <- Z_RN
   
   # AG level
   OCN$AG[["A"]] <- A_AG
-  OCN$AG[["Areach"]] <- Areach_AG
+  OCN$AG[["AReach"]] <- Areach_AG
   OCN$AG[["W"]] <- W_AG
-  OCN$AG[["DownNode"]] <- DownNode_AG
-  OCN$AG[["Length"]] <- Length_AG
-  OCN$AG[["Nnodes"]] <- Nnodes_AG
-  OCN$AG[["Nupstream"]] <- Nupstream_AG
-  OCN$AG[["Outlet"]] <- Outlet_AG
-  OCN$AG[["Slope"]] <- Slope_AG
-  OCN$AG[["StreamOrder"]] <- StreamOrder_AG
-  OCN$AG[["to_FD"]] <- AG_to_FD
-  OCN$AG[["to_RN"]] <- AG_to_RN
-  OCN$AG[["to_CM"]] <- AG_to_CM
-  OCN$AG[["Upstream"]] <- Upstream_AG
+  OCN$AG[["downNode"]] <- DownNode_AG
+  OCN$AG[["leng"]] <- Length_AG
+  OCN$AG[["nNodes"]] <- Nnodes_AG
+  OCN$AG[["nUpstream"]] <- Nupstream_AG
+  OCN$AG[["outlet"]] <- Outlet_AG
+  OCN$AG[["slope"]] <- Slope_AG
+  OCN$AG[["streamOrder"]] <- StreamOrder_AG
+  OCN$AG[["ReachToFD"]] <- AG_to_FD
+  OCN$AG[["ReachToRN"]] <- AG_to_RN
+  OCN$AG[["toCM"]] <- AG_to_CM
+  OCN$AG[["upstream"]] <- Upstream_AG
   OCN$AG[["X"]] <- X_AG
   OCN$AG[["Y"]] <- Y_AG
   OCN$AG[["Z"]] <- Z_AG
   
   # SC level
-  OCN$SC[["Alocal"]] <- Alocal_SC
+  OCN$SC[["ALocal"]] <- Alocal_SC
   OCN$SC[["W"]] <- W_SC
-  OCN$SC[["Nnodes"]] <- Nnodes_SC
-  OCN$SC[["to_FD"]] <- SC_to_FD
+  OCN$SC[["nNodes"]] <- Nnodes_SC
+  OCN$SC[["toFD"]] <- SC_to_FD
   OCN$SC[["X"]] <- X_SC
   OCN$SC[["Y"]] <- Y_SC  
   OCN$SC[["Z"]] <- Z_SC
   
   # other
-  OCN$A_thr <- A_thr
+  OCN$thrA <- thrA
+  
+  # re-define AG_to_RN, AG_to_FD, RN_to_AG considering AG nodes as pixels and not reaches
+  AG_to_FDnode <- numeric(Nnodes_AG)
+  AG_to_RNnode <- numeric(Nnodes_AG)
+  for (i in 1:Nnodes_AG){
+    tmpFD <- AG_to_FD[[i]]
+    AG_to_FDnode[i] <- tmpFD[OCN$FD$A[tmpFD]==min(OCN$FD$A[tmpFD])]
+    tmpRN <- AG_to_RN[[i]]
+    AG_to_RNnode[i] <- tmpRN[OCN$RN$A[tmpRN]==min(OCN$RN$A[tmpRN])]
+  }
+  RN_to_AGnode <- numeric(Nnodes_RN)
+  for (i in 1:Nnodes_AG){
+    RN_to_AGnode[AG_to_RNnode[i]] <- i
+  }
+ 
+  OCN$RN[["toAG"]] <- RN_to_AGnode
+  OCN$AG[["toFD"]] <- AG_to_FDnode
+  OCN$AG[["toRN"]] <- AG_to_RNnode
   
   return(OCN)
 }

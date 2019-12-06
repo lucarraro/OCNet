@@ -1,32 +1,32 @@
 
 create_OCN <- function(dimX,dimY,
-                       N_outlet=1,
-                       OutletSide="S", # vector of sides where outlets are located
-                       OutletPos=round(dimX/3),
-                       PeriodicBoundaries=FALSE, # if TRUE, reflecting boundaries are applied. If FALSE, boundaries are non-reflecting.
-                       type_initialstate=NULL,
-                       FlowDirStart=NULL,
-                       ExpEnergy=0.5, # energy \propto Q*deltaH, Q propto A, deltaH propto A^-0.5
+                       nOutlet=1,
+                       outletSide="S", # vector of sides where outlets are located
+                       outletPos=round(dimX/3),
+                       periodicBoundaries=FALSE, # if TRUE, reflecting boundaries are applied. If FALSE, boundaries are non-reflecting.
+                       typeInitialState=NULL,
+                       flowDirStart=NULL,
+                       expEnergy=0.5, # energy \propto Q*deltaH, Q propto A, deltaH propto A^-0.5
                        cellsize=1,
                        xllcorner=0.5*cellsize,
                        yllcorner=0.5*cellsize,
-                       N_iter=30*dimX*dimY,
-                       N_updates=50, # number of times an update is shown
-                       InitialNoCoolingPhase=0,
-                       CoolingRate=50,
-                       ShowIntermediatePlots=FALSE,
-                       A_thr_draw=0.002*dimX*dimY*cellsize^2,
-                       SaveEnergy=FALSE,
-                       SaveExitFlag=FALSE,
-                       SaveN8=FALSE,
-                       SaveN4=FALSE,
-                       DisplayUpdates=1){
+                       nIter=30*dimX*dimY,
+                       nUpdates=50, # number of times an update is shown
+                       initialNoCoolingPhase=0,
+                       coolingRate=50,
+                       showIntermediatePlots=FALSE,
+                       thrADraw=0.002*dimX*dimY*cellsize^2,
+                       saveEnergy=FALSE,
+                       saveExitFlag=FALSE,
+                       saveN8=FALSE,
+                       saveN4=FALSE,
+                       displayUpdates=1){
  
   
   if (dimX<2 | dimY<2) stop("Dimensions too small.")
   if (dimX*dimY > 1000) {
     dim <- sqrt(dimX*dimY)
-    estTime <- (7.988e-1 - 1.266e-1*dim + 7.198e-3*dim^2 - 6.807e-5*dim^3 +  1.372e-6*dim^4) / (30*dimX*dimY) * N_iter
+    estTime <- (7.988e-1 - 1.266e-1*dim + 7.198e-3*dim^2 - 6.807e-5*dim^3 +  1.372e-6*dim^4) / (30*dimX*dimY) * nIter
     unitTime <- "seconds"
     if (estTime >= 60 && estTime < 3600 ){
       estTime <- estTime/60
@@ -35,66 +35,66 @@ create_OCN <- function(dimX,dimY,
       estTime <- estTime/3600
     unitTime <- "hours"}
     
-    if (DisplayUpdates != 0){
+    if (displayUpdates != 0){
       cat("create_OCN is running...\n")
       cat(sprintf("Estimated duration: %.2f %s \n",estTime,unitTime))
-      cat("Note that the above estimate is only based on the choice of parameters dimX, dimY and N_iter, and not on processor performance.\n")
+      cat("Note that the above estimate is only based on the choice of parameters dimX, dimY and nIter, and not on processor performance.\n")
       cat("\n")
     }
   }
   
   t0 <- Sys.time()
-  if (DisplayUpdates==2){cat('Initializing...\n')}
+  if (displayUpdates==2){cat('Initializing...\n')}
   
   ################################## 
   ## DEFINE INITIAL NETWORK STATE ##  
   ##################################  
   
-  if ((N_outlet=="All")==TRUE && is.null(type_initialstate)==TRUE){
-    type_initialstate <- "H"
+  if ((nOutlet=="All")==TRUE && is.null(typeInitialState)==TRUE){
+    typeInitialState <- "H"
   } else {
-    if (is.null(type_initialstate)==TRUE){
-      type_initialstate <- "I"
+    if (is.null(typeInitialState)==TRUE){
+      typeInitialState <- "I"
     }
   }
   
-  # set OutletSide, OutletPos in accordance with the input given 
-  if ((N_outlet=="All")==TRUE){
-    OutletSide <- c(rep("S",dimX),rep("E",dimY-2),rep("N",dimX),rep("W",dimY-2))
-    OutletPos <- c(1:dimX,2:(dimY-1),seq(dimX,1,-1),seq((dimY-1),2,-1))
-    N_outlet <- 2*(dimX+dimY-2)
-  } else if (N_outlet>1 && length(OutletSide)==1 && length(OutletPos)==1 && all(OutletSide=="S") && all(OutletPos==round(dimX/3))) {
+  # set outletSide, outletPos in accordance with the input given 
+  if ((nOutlet=="All")==TRUE){
+    outletSide <- c(rep("S",dimX),rep("E",dimY-2),rep("N",dimX),rep("W",dimY-2))
+    outletPos <- c(1:dimX,2:(dimY-1),seq(dimX,1,-1),seq((dimY-1),2,-1))
+    nOutlet <- 2*(dimX+dimY-2)
+  } else if (nOutlet>1 && length(outletSide)==1 && length(outletPos)==1 && all(outletSide=="S") && all(outletPos==round(dimX/3))) {
     BorderPixels <- 1:(2*(dimX+dimY-2))
     AllSides <- c(rep("S",dimX),rep("E",dimY-2),rep("N",dimX),rep("W",dimY-2))
     AllPos <- c(1:dimX,2:(dimY-1),1:dimX,2:(dimY-1))
-    outlet_ID <- sample(BorderPixels,N_outlet)
-    OutletSide <- AllSides[outlet_ID]
-    OutletPos <- AllPos[outlet_ID]
-    # for (i in 1:N_outlet){
-    #   OutletSide[i] <- sample(AllSides,1)
-    #   if (OutletSide[i]=="N" || OutletSide[i]=="S"){
-    #     OutletPos[i] <- sample(1:dimX,1) 
-    #   } else {OutletPos[i] <- sample(1:dimY,1)}
+    outlet_ID <- sample(BorderPixels,nOutlet)
+    outletSide <- AllSides[outlet_ID]
+    outletPos <- AllPos[outlet_ID]
+    # for (i in 1:nOutlet){
+    #   outletSide[i] <- sample(AllSides,1)
+    #   if (outletSide[i]=="N" || outletSide[i]=="S"){
+    #     outletPos[i] <- sample(1:dimX,1) 
+    #   } else {outletPos[i] <- sample(1:dimY,1)}
     # }
   }
   
   # check whether input is correct
-  if(N_outlet != length(OutletSide) || N_outlet != length(OutletPos) ){
-    stop('Length of OutletSide and/or OutletPos is inconsistent with N_outlet')}
+  if(nOutlet != length(outletSide) || nOutlet != length(outletPos) ){
+    stop('Length of outletSide and/or outletPos is inconsistent with nOutlet')}
   
-  if (!all(OutletSide %in% c("N","W","S","E"))){
-    stop('Invalid OutletSide')}
+  if (!all(outletSide %in% c("N","W","S","E"))){
+    stop('Invalid outletSide')}
   
-  for (i in 1:N_outlet){
-    if (OutletSide[i] %in% c("N","S")){
-      if (!(OutletPos[i] %in% 1:dimX)){
-        stop('Invalid OutletPos')} 
-    } else if (!(OutletPos[i] %in% 1:dimY)){
-      stop('Invalid OutletPos')}
+  for (i in 1:nOutlet){
+    if (outletSide[i] %in% c("N","S")){
+      if (!(outletPos[i] %in% 1:dimX)){
+        stop('Invalid outletPos')} 
+    } else if (!(outletPos[i] %in% 1:dimY)){
+      stop('Invalid outletPos')}
   }
   
-  if (!(type_initialstate %in% c("I","T","V","H","R"))){
-    stop('Invalid type_initialstate')}
+  if (!(typeInitialState %in% c("I","T","V","H","R"))){
+    stop('Invalid typeInitialState')}
   
   
   # define domain coordinates
@@ -105,68 +105,68 @@ create_OCN <- function(dimX,dimY,
   Nnodes <- length(X)
   movement <- matrix(c(0,-1,-1,-1,0,1,1,1,1,1,0,-1,-1,-1,0,1),nrow=2,byrow=TRUE)
   NeighbouringNodes <- vector("list", Nnodes)
-  if (SaveN8) {W_N8 <- spam(0, Nnodes,Nnodes)}  # null matrices
-  if (SaveN4) {W_N4 <- spam(0, Nnodes,Nnodes)}  
+  if (saveN8) {W_N8 <- spam(0, Nnodes,Nnodes)}  # null matrices
+  if (saveN4) {W_N4 <- spam(0, Nnodes,Nnodes)}  
   cont_node <- 0
   for (cc in 1:dimX) {
     for (rr in 1:dimY) {
       cont_node <- cont_node + 1
       neigh_r <- rr+movement[1,]
       neigh_c <- cc+movement[2,]
-      if (PeriodicBoundaries==TRUE){
+      if (periodicBoundaries==TRUE){
         neigh_r[neigh_r==0] <- dimY
         neigh_c[neigh_c==0] <- dimX
         neigh_r[neigh_r>dimY] <- 1
         neigh_c[neigh_c>dimX] <- 1
       }
-      NotAboundary <- neigh_r>0 & neigh_r<=dimY & neigh_c>0 & neigh_c<=dimX # only effective when PeriodicBoundaries=FALSE
+      NotAboundary <- neigh_r>0 & neigh_r<=dimY & neigh_c>0 & neigh_c<=dimX # only effective when periodicBoundaries=FALSE
       NotAboundary_N4 <- neigh_r>0 & neigh_r<=dimY & neigh_c>0 & neigh_c<=dimX & (((1:8) %% 2)==1)
       NeighbouringNodes[[cont_node]] <- neigh_r[NotAboundary] + (neigh_c[NotAboundary]-1)*dimY
-      if (SaveN8){W_N8[cont_node,neigh_r[NotAboundary] + (neigh_c[NotAboundary]-1)*dimY]=1}
-      if (SaveN4){W_N4[cont_node,neigh_r[NotAboundary_N4] + (neigh_c[NotAboundary_N4]-1)*dimY]=1}
+      if (saveN8){W_N8[cont_node,neigh_r[NotAboundary] + (neigh_c[NotAboundary]-1)*dimY]=1}
+      if (saveN4){W_N4[cont_node,neigh_r[NotAboundary_N4] + (neigh_c[NotAboundary_N4]-1)*dimY]=1}
     }
   } 
   
   # find outlet position
-  Outlet_row <- numeric(N_outlet)
-  Outlet_col <- numeric(N_outlet)
-  for (i in 1:N_outlet){
-    if (OutletSide[i]=="N"){
+  Outlet_row <- numeric(nOutlet)
+  Outlet_col <- numeric(nOutlet)
+  for (i in 1:nOutlet){
+    if (outletSide[i]=="N"){
       Outlet_row[i] <- dimY
-      Outlet_col[i] <- OutletPos[i]
-    } else if (OutletSide[i]=="E") {
-      Outlet_row[i] <- OutletPos[i]
+      Outlet_col[i] <- outletPos[i]
+    } else if (outletSide[i]=="E") {
+      Outlet_row[i] <- outletPos[i]
       Outlet_col[i] <- dimX
-    } else if (OutletSide[i]=="S") {
+    } else if (outletSide[i]=="S") {
       Outlet_row[i] <- 1
-      Outlet_col[i] <- OutletPos[i]
-    } else if (OutletSide[i]=="W") {
-      Outlet_row[i] <- OutletPos[i]
+      Outlet_col[i] <- outletPos[i]
+    } else if (outletSide[i]=="W") {
+      Outlet_row[i] <- outletPos[i]
       Outlet_col[i] <- 1
     }
   }
   
   # find flow direction matrix given initial network state
-  if (is.null(FlowDirStart)==TRUE){
-    FlowDirStart <- initialstate_OCN(dimX,dimY,N_outlet,OutletSide,OutletPos,type_initialstate)}
+  if (is.null(flowDirStart)==TRUE){
+    flowDirStart <- initialstate_OCN(dimX,dimY,nOutlet,outletSide,outletPos,typeInitialState)}
   
   # attribute flow direction =0 to outlet pixels
-  for (i in 1:N_outlet){
-    if (OutletSide[i]=="N"){
-      FlowDirStart[dimY,OutletPos[i]] <- 0 
+  for (i in 1:nOutlet){
+    if (outletSide[i]=="N"){
+      flowDirStart[dimY,outletPos[i]] <- 0 
       Outlet_row[i] <- dimY
-      Outlet_col[i] <- OutletPos[i]
-    } else if (OutletSide[i]=="E") {
-      FlowDirStart[OutletPos[i],dimX] <- 0 
-      Outlet_row[i] <- OutletPos[i]
+      Outlet_col[i] <- outletPos[i]
+    } else if (outletSide[i]=="E") {
+      flowDirStart[outletPos[i],dimX] <- 0 
+      Outlet_row[i] <- outletPos[i]
       Outlet_col[i] <- dimX
-    } else if (OutletSide[i]=="S") {
-      FlowDirStart[1,OutletPos[i]] <- 0
+    } else if (outletSide[i]=="S") {
+      flowDirStart[1,outletPos[i]] <- 0
       Outlet_row[i] <- 1
-      Outlet_col[i] <- OutletPos[i]
-    } else if (OutletSide[i]=="W") {
-      FlowDirStart[OutletPos[i],1] <- 0
-      Outlet_row[i] <- OutletPos[i]
+      Outlet_col[i] <- outletPos[i]
+    } else if (outletSide[i]=="W") {
+      flowDirStart[outletPos[i],1] <- 0
+      Outlet_row[i] <- outletPos[i]
       Outlet_col[i] <- 1
     }
   }
@@ -179,11 +179,11 @@ create_OCN <- function(dimX,dimY,
   for (cc in 1:dimX) {
     for (rr in 1:dimY) {
       cont_node <- cont_node + 1
-      dir <- FlowDirStart[rr,cc]
+      dir <- flowDirStart[rr,cc]
       if (dir>0) {
         DownPixel <- c(rr,cc)+movement[,dir]
-        # if a custom FlowDirStart is provided, allow flow to cross boundaries
-        if (PeriodicBoundaries==TRUE){
+        # if a custom flowDirStart is provided, allow flow to cross boundaries
+        if (periodicBoundaries==TRUE){
           if (DownPixel[1]==0){DownPixel[1] <- dimY}
           if (DownPixel[1]>dimY){DownPixel[1] <- 1}
           if (DownPixel[2]==0){DownPixel[2] <- dimX}
@@ -213,7 +213,7 @@ create_OCN <- function(dimX,dimY,
   
   pl <- initial_permutation(DownNode)  # calculate permutation vector
   
-  pas <- permuteAddSolve(Wt, pl$perm, 1L, numeric(Nnodes), ExpEnergy)
+  pas <- permuteAddSolve(Wt, pl$perm, 1L, numeric(Nnodes), expEnergy)
   A <- pas[[1]]
   A <- A[invPerm(pl$perm)]
   
@@ -233,43 +233,43 @@ create_OCN <- function(dimX,dimY,
   ##########################  
   
   # initialize energy and temperatures
-  Energy <- numeric(N_iter)
+  Energy <- numeric(nIter)
   Energy_0 <- pas[[2]]
   Energy[1] <-Energy_0
-  Temperature <- c(Energy[1]+numeric(InitialNoCoolingPhase*N_iter),Energy[1]*exp(-CoolingRate*(1:(N_iter-InitialNoCoolingPhase*N_iter))/N_iter))
-  savetime <- numeric(N_iter)
-  ExitFlag <- numeric(N_iter)
+  Temperature <- c(Energy[1]+numeric(initialNoCoolingPhase*nIter),Energy[1]*exp(-coolingRate*(1:(nIter-initialNoCoolingPhase*nIter))/nIter))
+  savetime <- numeric(nIter)
+  ExitFlag <- numeric(nIter)
   
   # plot initial state
-  if (ShowIntermediatePlots==TRUE){
+  if (showIntermediatePlots==TRUE){
     AA <- A*cellsize^2
-    if (N_outlet > 1){
-      rnbw <- hcl.colors(N_outlet,palette="Dark 3")
-      rnbw <- c(rnbw[(round(N_outlet/2)+1):N_outlet],rnbw[1:(round(N_outlet/2)+1)])
+    if (nOutlet > 1){
+      rnbw <- hcl.colors(nOutlet,palette="Dark 3")
+      rnbw <- c(rnbw[(round(nOutlet/2)+1):nOutlet],rnbw[1:(round(nOutlet/2)+1)])
     } else {rnbw <- hcl.colors(3,palette="Dark 3")
     rnbw <- rnbw[3]}
     resort <- invPerm(pl$perm)
     catch <- numeric(Nnodes)
-    for (o in 1:N_outlet){
+    for (o in 1:nOutlet){
       catch[(resort[OutletPixel[o]]-AA[OutletPixel[o]]/cellsize^2+1):resort[OutletPixel[o]]] <- o
     }
     par(bty="n")
     plot(c(min(X),max(X)),c(min(Y),max(Y)),main=sprintf('OCN %dx%d (initial state)',dimX,dimY),
          type="n",asp=1,axes=FALSE,xlab="",ylab="") # 
-    points(X[OutletPixel],Y[OutletPixel],pch=22,col=rnbw[catch[resort[OutletPixel]]],bg=rnbw[catch[resort[OutletPixel]]])
+    points(X[OutletPixel],Y[OutletPixel],pch=15,col=rnbw[catch[resort[OutletPixel]]])
     for (i in AvailableNodes){
-      if (AA[i]<=A_thr_draw & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
+      if (AA[i]<=thrADraw & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
         lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5,col="#E0E0E0")}
     }
     for (i in 1:Nnodes){
       if (!(i %in% OutletPixel)){
-      if (AA[i]>A_thr_draw & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
+      if (AA[i]>thrADraw & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
         lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5+4.5*(AA[i]/Nnodes/cellsize^2)^0.5,col=rnbw[catch[resort[i]]])}
     }}
   }
   
   #Rprof("\\\\eawag/userdata/carrarlu/Desktop/Luca/OCN/R/spam_stuff/Rprof100.out")
-  if (DisplayUpdates == 2){
+  if (displayUpdates == 2){
     cat(sprintf('Initialization completed. Elapsed time is %.2f s \n',difftime(Sys.time(),t0,units='secs'))) 
     cat('Search algorithm has started.\n')
     cat('\n')}
@@ -278,7 +278,7 @@ create_OCN <- function(dimX,dimY,
   flag <- 0
   
   # simulated annealing algorithm
-  for (iter in 1:N_iter) {
+  for (iter in 2:nIter) {
     t2 <- Sys.time() 
     # pick random node (excluding the outlet)
     Energy_new <- 100*Energy_0
@@ -297,8 +297,8 @@ create_OCN <- function(dimX,dimY,
       flag <- 3 # skip iteration because of cross-flow
     } else {
       
-        pas <- allinoneF( as.integer(N_outlet), pl, Wt, DownNode, node,
-                        down_new, A[node], ExpEnergy)
+        pas <- allinoneF( as.integer(nOutlet), pl, Wt, DownNode, node,
+                        down_new, A[node], expEnergy)
         flag <- pas$flag
       if (flag==1){
         Anew <- pas$Anew
@@ -307,44 +307,44 @@ create_OCN <- function(dimX,dimY,
     }
     
     # accept change if energy is lower or owing to the simulated annealing rule
-    if (Energy_new <= Energy[iter] | runif(1)<exp(-(Energy_new-Energy[iter])/Temperature[iter])) {
+    if (Energy_new <= Energy[iter-1] | runif(1)<exp(-(Energy_new-Energy[iter-1])/Temperature[iter-1])) {
       # update network
       flag <- 0
       pl <- pas$perm
       Wt <- pas$Wt_new
       A <- Anew[invPerm(pl)] # re-permute to the original indexing
-      Energy[iter+1] <- Energy_new
+      Energy[iter] <- Energy_new
       DownNode[node] <- down_new
-    } else {Energy[iter+1] <- Energy[iter]} # recject change and keep previous W
+    } else {Energy[iter] <- Energy[iter-1]} # recject change and keep previous W
     
     # write update
-    if (DisplayUpdates==2){
-      if (iter %% round(N_iter/N_updates)==0){
+    if (displayUpdates==2){
+      if (iter %% round(nIter/nUpdates)==0){
         cat(sprintf('%.1f%% completed - Elapsed time: %.2f s - %11s - Energy; %0.f \n',
-                    iter/N_iter*100,difftime(Sys.time(),t0,units='secs'),format(Sys.time(),"%b%d %H:%M"),Energy[iter]))
+                    iter/nIter*100,difftime(Sys.time(),t0,units='secs'),format(Sys.time(),"%b%d %H:%M"),Energy[iter]))
         }}
     # plot update
-    #if (ShowIntermediatePlots==TRUE){
+    #if (showIntermediatePlots==TRUE){
     #par(bty="n")
     
-    if (iter %% round(N_iter/N_updates)==0){
-      if (ShowIntermediatePlots==TRUE){ 
+    if (iter %% round(nIter/nUpdates)==0){
+      if (showIntermediatePlots==TRUE){ 
         AA <- A*cellsize^2 
         resort <- invPerm(pl)
         catch <- numeric(Nnodes)
-        for (o in 1:N_outlet){
+        for (o in 1:nOutlet){
           catch[(resort[OutletPixel[o]]-AA[OutletPixel[o]]/cellsize^2+1):resort[OutletPixel[o]]] <- o
         }
-        plot(c(min(X),max(X)),c(min(Y),max(Y)),type="n",main=sprintf('OCN %dx%d (%.1f%% completed)',dimX,dimY,iter/N_iter*100),
+        plot(c(min(X),max(X)),c(min(Y),max(Y)),type="n",main=sprintf('OCN %dx%d (%.1f%% completed)',dimX,dimY,iter/nIter*100),
              asp=1,axes=FALSE,xlab=" ",ylab=" ") # 
-        points(X[OutletPixel],Y[OutletPixel],pch=22,col=rnbw[catch[resort[OutletPixel]]],bg=rnbw[catch[resort[OutletPixel]]])
+        points(X[OutletPixel],Y[OutletPixel],pch=15,col=rnbw[catch[resort[OutletPixel]]])
         for (i in AvailableNodes){
-          if (AA[i]<=(A_thr_draw)  & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
+          if (AA[i]<=(thrADraw)  & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
             lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5,col="#E0E0E0")}
         }
         for (i in 1:Nnodes){
           if (!(i %in% OutletPixel)){
-          if (AA[i]>(A_thr_draw)  & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
+          if (AA[i]>(thrADraw)  & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
             lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5+4.5*(AA[i]/Nnodes/cellsize^2)^0.5,col=rnbw[catch[resort[i]]])}
         }}
       }}
@@ -365,16 +365,16 @@ create_OCN <- function(dimX,dimY,
   #W <- as.dgCMatrix.spam(t(Wt)) # ensure compatibility with other functions
   W <- t(Wt)
   
-  FD <- list(A=A*cellsize^2,W=W,DownNode=DownNode,X=X,Y=Y,Nnodes=Nnodes,Outlet=OutletPixel)
-  OCN <- list(FD=FD,dimX=dimX,dimY=dimY,cellsize=cellsize,N_outlet=N_outlet,PeriodicBoundaries=PeriodicBoundaries,
-              ExpEnergy=ExpEnergy,CoolingRate=CoolingRate,type_initialstate=type_initialstate,N_iter=N_iter,InitialNoCoolingPhase=InitialNoCoolingPhase)
+  FD <- list(A=A*cellsize^2,W=W,downNode=DownNode,X=X,Y=Y,nNodes=Nnodes,outlet=OutletPixel)
+  OCN <- list(FD=FD,dimX=dimX,dimY=dimY,cellsize=cellsize,nOutlet=nOutlet,periodicBoundaries=periodicBoundaries,
+              expEnergy=expEnergy,coolingRate=coolingRate,typeInitialState=typeInitialState,nIter=nIter,initialNoCoolingPhase=initialNoCoolingPhase)
   
-  if (SaveEnergy==TRUE) {OCN[["Energy"]] <- Energy}
-  if (SaveExitFlag==TRUE) {OCN[["ExitFlag"]] <- ExitFlag}
-  if (SaveN8==TRUE) {
+  if (saveEnergy==TRUE) {OCN[["energy"]] <- Energy}
+  if (saveExitFlag==TRUE) {OCN[["exitFlag"]] <- ExitFlag}
+  if (saveN8==TRUE) {
     N8 <- list(W=W_N8)
     OCN[["N8"]] <- N8}
-  if (SaveN4==TRUE) {
+  if (saveN4==TRUE) {
     N4 <- list(W=W_N4)
     OCN[["N4"]] <- N4}
   
@@ -386,309 +386,309 @@ create_OCN <- function(dimX,dimY,
 ## AUXILIARY FUNCTION initialstate_OCN ##
 #########################################
 
-initialstate_OCN <- function(dimX,dimY,N_outlet,OutletSide,OutletPos,type_initialstate){
+initialstate_OCN <- function(dimX,dimY,nOutlet,outletSide,outletPos,typeInitialState){
 
   ## create initial state of the network
-  FlowDirStart <- matrix(data=0,nrow=dimY,ncol=dimX)
+  flowDirStart <- matrix(data=0,nrow=dimY,ncol=dimX)
   
-  if (type_initialstate=="H"){
+  if (typeInitialState=="H"){
     limit <- min(round(dimX/2),round(dimY/2))
     tmp <- matrix(c(1:limit,1:limit),limit,2)
-    FlowDirStart[tmp] <- 4
+    flowDirStart[tmp] <- 4
     tmp <- matrix(c(seq(limit,1,-1),(dimX-limit+1):dimX),limit,2)
-    FlowDirStart[tmp] <- 2
+    flowDirStart[tmp] <- 2
     tmp <- matrix(c((dimY-limit+1):dimY,seq(limit,1,-1)),limit,2)
-    FlowDirStart[tmp] <- 6
+    flowDirStart[tmp] <- 6
     tmp <- matrix(c((dimY-limit+1):dimY,(dimX-limit+1):dimX),limit,2)
-    FlowDirStart[tmp] <- 8
+    flowDirStart[tmp] <- 8
     for (i in (1:limit)){
       if ((dimX-i) >= (i+1)){
-        FlowDirStart[i,(i+1):(dimX-i)] <- 3
+        flowDirStart[i,(i+1):(dimX-i)] <- 3
       }
     }
     for (i in (1:limit)){
       if ((dimX-i) >= (i+1)){
-        FlowDirStart[dimY+1-i,(i+1):(dimX-i)] <- 7
+        flowDirStart[dimY+1-i,(i+1):(dimX-i)] <- 7
       }
     }
     for (i in (1:limit)){
       if ((dimY-i) >= (i+1)){
-        FlowDirStart[(i+1):(dimY-i),i] <- 5
+        flowDirStart[(i+1):(dimY-i),i] <- 5
       }
     }
     for (i in (1:limit)){
       if ((dimY-i) >= (i+1)){
-        FlowDirStart[(i+1):(dimY-i),dimX+1-i] <- 1
+        flowDirStart[(i+1):(dimY-i),dimX+1-i] <- 1
       }
     }
     #impose drains on the borders
-    FirstSide <- OutletSide[1]
+    FirstSide <- outletSide[1]
     if (FirstSide=="N"){
-      FlowDirStart[1,(dimX-OutletPos[1])] <- 5
-      FlowDirStart[1,(dimX-OutletPos[1]):dimX] <- 1
-      FlowDirStart[,1] <- 7
-      FlowDirStart[,dimX] <- 7
-      FlowDirStart[dimY,1:OutletPos[1]] <- 1
-      FlowDirStart[dimY,(OutletPos[1]):dimX] <- 5
+      flowDirStart[1,(dimX-outletPos[1])] <- 5
+      flowDirStart[1,(dimX-outletPos[1]):dimX] <- 1
+      flowDirStart[,1] <- 7
+      flowDirStart[,dimX] <- 7
+      flowDirStart[dimY,1:outletPos[1]] <- 1
+      flowDirStart[dimY,(outletPos[1]):dimX] <- 5
     } else if (FirstSide=="S"){
-      FlowDirStart[dimY,1:(dimX-OutletPos[1])] <- 5
-      FlowDirStart[dimY,(dimX-OutletPos[1]):dimX] <- 1
-      FlowDirStart[,1] <- 3
-      FlowDirStart[,dimX] <- 3
-      FlowDirStart[1,1:OutletPos[1]] <- 1
-      FlowDirStart[1,(OutletPos[1]):dimX] <- 5
+      flowDirStart[dimY,1:(dimX-outletPos[1])] <- 5
+      flowDirStart[dimY,(dimX-outletPos[1]):dimX] <- 1
+      flowDirStart[,1] <- 3
+      flowDirStart[,dimX] <- 3
+      flowDirStart[1,1:outletPos[1]] <- 1
+      flowDirStart[1,(outletPos[1]):dimX] <- 5
     } else if (FirstSide=="W"){
-      FlowDirStart[1:(dimY-OutletPos[1]),dimX] <- 3
-      FlowDirStart[(dimY-OutletPos[1]):dimY,dimX] <- 7
-      FlowDirStart[1,] <- 5
-      FlowDirStart[dimY,] <- 5
-      FlowDirStart[1:OutletPos[1],1] <- 7
-      FlowDirStart[(OutletPos[1]):dimY,1] <- 3
+      flowDirStart[1:(dimY-outletPos[1]),dimX] <- 3
+      flowDirStart[(dimY-outletPos[1]):dimY,dimX] <- 7
+      flowDirStart[1,] <- 5
+      flowDirStart[dimY,] <- 5
+      flowDirStart[1:outletPos[1],1] <- 7
+      flowDirStart[(outletPos[1]):dimY,1] <- 3
     } else if (FirstSide=="E"){
-      FlowDirStart[1:(dimY-OutletPos[1]),1] <- 3
-      FlowDirStart[(dimY-OutletPos[1]):dimY,1] <- 7
-      FlowDirStart[1,] <- 1
-      FlowDirStart[dimY,] <- 1
-      FlowDirStart[1:OutletPos[1],dimX] <- 7
-      FlowDirStart[(OutletPos[1]):dimY,dimX] <- 3}
+      flowDirStart[1:(dimY-outletPos[1]),1] <- 3
+      flowDirStart[(dimY-outletPos[1]):dimY,1] <- 7
+      flowDirStart[1,] <- 1
+      flowDirStart[dimY,] <- 1
+      flowDirStart[1:outletPos[1],dimX] <- 7
+      flowDirStart[(outletPos[1]):dimY,dimX] <- 3}
     
   }  else {
     
-    if (type_initialstate=="I"){
+    if (typeInitialState=="I"){
       # flow direction matrix (defining a valley)
-      FirstSide <-OutletSide[1]
+      FirstSide <-outletSide[1]
       if (FirstSide=="N"){
-        if (OutletPos[1]>1) {FlowDirStart[,1:(OutletPos[1]-1)] <- 1}
-        if (dimX>OutletPos[1]) {FlowDirStart[,(OutletPos[1]+1):dimX] <- 5}
-        FlowDirStart[,OutletPos[1]] <- 7
+        if (outletPos[1]>1) {flowDirStart[,1:(outletPos[1]-1)] <- 1}
+        if (dimX>outletPos[1]) {flowDirStart[,(outletPos[1]+1):dimX] <- 5}
+        flowDirStart[,outletPos[1]] <- 7
       } else if (FirstSide=="E"){
-        if (dimY>OutletPos[1]) {FlowDirStart[(OutletPos[1]+1):dimY,] <- 3}
-        if (OutletPos[1]>1) {FlowDirStart[1:(OutletPos[1]-1),] <- 7}
-        FlowDirStart[OutletPos[1],] <-1
+        if (dimY>outletPos[1]) {flowDirStart[(outletPos[1]+1):dimY,] <- 3}
+        if (outletPos[1]>1) {flowDirStart[1:(outletPos[1]-1),] <- 7}
+        flowDirStart[outletPos[1],] <-1
       } else if (FirstSide=="S"){
-        if (OutletPos[1]>1) {FlowDirStart[,1:(OutletPos[1]-1)] <- 1}
-        if (dimX>OutletPos[1]) {FlowDirStart[,(OutletPos[1]+1):dimX] <- 5}
-        FlowDirStart[,OutletPos[1]] <- 3
+        if (outletPos[1]>1) {flowDirStart[,1:(outletPos[1]-1)] <- 1}
+        if (dimX>outletPos[1]) {flowDirStart[,(outletPos[1]+1):dimX] <- 5}
+        flowDirStart[,outletPos[1]] <- 3
       } else if (FirstSide=="W"){
-        if (dimY>OutletPos[1]) {FlowDirStart[(OutletPos[1]+1):dimY,] <- 3}
-        if (OutletPos[1]>1) {FlowDirStart[1:(OutletPos[1]-1),] <- 7}
-        FlowDirStart[OutletPos[1],] <- 5
+        if (dimY>outletPos[1]) {flowDirStart[(outletPos[1]+1):dimY,] <- 3}
+        if (outletPos[1]>1) {flowDirStart[1:(outletPos[1]-1),] <- 7}
+        flowDirStart[outletPos[1],] <- 5
       }
       # impose drains perpendicular to outlets
-      # for (i in 1:N_outlet){
-      #   if (OutletSide[i]=="N"){
-      #     FlowDirStart[,OutletPos[i]] <- 7 
-      #   } else if (OutletSide[i]=="E") {
-      #     FlowDirStart[OutletPos[i],] <- 1 
-      #   } else if (OutletSide[i]=="S") {
-      #     FlowDirStart[,OutletPos[i]] <- 3 
-      #   } else if (OutletSide[i]=="W") {
-      #     FlowDirStart[OutletPos[i],] <- 5 
+      # for (i in 1:nOutlet){
+      #   if (outletSide[i]=="N"){
+      #     flowDirStart[,outletPos[i]] <- 7 
+      #   } else if (outletSide[i]=="E") {
+      #     flowDirStart[outletPos[i],] <- 1 
+      #   } else if (outletSide[i]=="S") {
+      #     flowDirStart[,outletPos[i]] <- 3 
+      #   } else if (outletSide[i]=="W") {
+      #     flowDirStart[outletPos[i],] <- 5 
       #   }
       # }
       tmpX <- round(0.15*dimX); tmpY <- round(0.15*dimY)
-      for (i in 1:N_outlet){
-         if (OutletSide[i]=="N"){
-           lowX <- max(1,OutletPos[i]-tmpX)
-           uppX <- min(OutletPos[i]+tmpX,dimX)
-           FlowDirStart[(dimY-tmpY+1):dimY,lowX:OutletPos[i]] <- 1
-           FlowDirStart[(dimY-tmpY+1):dimY,OutletPos[i]:uppX] <- 5
-         } else if (OutletSide[i]=="E") {
-           lowY <- max(1,OutletPos[i]-tmpY)
-           uppY <- min(OutletPos[i]+tmpY,dimY)
-           FlowDirStart[lowY:OutletPos[i],(dimX-tmpX+1):dimX] <- 7
-           FlowDirStart[OutletPos[i]:uppY,(dimX-tmpX+1):dimX] <- 3
-         } else if (OutletSide[i]=="S") {
-           lowX <- max(1,OutletPos[i]-tmpX)
-           uppX <- min(OutletPos[i]+tmpX,dimX)
-           FlowDirStart[1:tmpY,lowX:OutletPos[i]] <- 1
-           FlowDirStart[1:tmpY,OutletPos[i]:uppX] <- 5
-         } else if (OutletSide[i]=="W") {
-           lowY <- max(1,OutletPos[i]-tmpY)
-           uppY <- min(OutletPos[i]+tmpY,dimY)
-           FlowDirStart[lowY:OutletPos[i],1:tmpX] <- 7
-           FlowDirStart[OutletPos[i]:uppY,1:tmpX] <- 3
+      for (i in 1:nOutlet){
+         if (outletSide[i]=="N"){
+           lowX <- max(1,outletPos[i]-tmpX)
+           uppX <- min(outletPos[i]+tmpX,dimX)
+           flowDirStart[(dimY-tmpY+1):dimY,lowX:outletPos[i]] <- 1
+           flowDirStart[(dimY-tmpY+1):dimY,outletPos[i]:uppX] <- 5
+         } else if (outletSide[i]=="E") {
+           lowY <- max(1,outletPos[i]-tmpY)
+           uppY <- min(outletPos[i]+tmpY,dimY)
+           flowDirStart[lowY:outletPos[i],(dimX-tmpX+1):dimX] <- 7
+           flowDirStart[outletPos[i]:uppY,(dimX-tmpX+1):dimX] <- 3
+         } else if (outletSide[i]=="S") {
+           lowX <- max(1,outletPos[i]-tmpX)
+           uppX <- min(outletPos[i]+tmpX,dimX)
+           flowDirStart[1:tmpY,lowX:outletPos[i]] <- 1
+           flowDirStart[1:tmpY,outletPos[i]:uppX] <- 5
+         } else if (outletSide[i]=="W") {
+           lowY <- max(1,outletPos[i]-tmpY)
+           uppY <- min(outletPos[i]+tmpY,dimY)
+           flowDirStart[lowY:outletPos[i],1:tmpX] <- 7
+           flowDirStart[outletPos[i]:uppY,1:tmpX] <- 3
          }
        }
-      for (i in 1:N_outlet){
-        if (OutletSide[i]=="N"){
-          FlowDirStart[(dimY-tmpY+1):dimY,OutletPos[i]] <- 7 
-        } else if (OutletSide[i]=="E") {
-          FlowDirStart[OutletPos[i],(dimX-tmpX+1):dimX] <- 1 
-        } else if (OutletSide[i]=="S") {
-          FlowDirStart[1:tmpY,OutletPos[i]] <- 3 
-        } else if (OutletSide[i]=="W") {
-          FlowDirStart[OutletPos[i],1:tmpX] <- 5 
+      for (i in 1:nOutlet){
+        if (outletSide[i]=="N"){
+          flowDirStart[(dimY-tmpY+1):dimY,outletPos[i]] <- 7 
+        } else if (outletSide[i]=="E") {
+          flowDirStart[outletPos[i],(dimX-tmpX+1):dimX] <- 1 
+        } else if (outletSide[i]=="S") {
+          flowDirStart[1:tmpY,outletPos[i]] <- 3 
+        } else if (outletSide[i]=="W") {
+          flowDirStart[outletPos[i],1:tmpX] <- 5 
         }
       } 
       
-    } else if (type_initialstate=="T"){
-      FirstSide <- OutletSide[1]
+    } else if (typeInitialState=="T"){
+      FirstSide <- outletSide[1]
       if (FirstSide=="N"){
         Transept <- round(0.5*dimY)
-        if (OutletPos[1]>1) {FlowDirStart[(Transept+1):dimY,1:(OutletPos[1]-1)] <- 1}
-        if (dimX>OutletPos[1]) {FlowDirStart[(Transept+1):dimY,(OutletPos[1]+1):dimX] <- 5}
-        FlowDirStart[(Transept+1):dimY,OutletPos[1]] <- 7
-        FlowDirStart[1:Transept,] <- 7
+        if (outletPos[1]>1) {flowDirStart[(Transept+1):dimY,1:(outletPos[1]-1)] <- 1}
+        if (dimX>outletPos[1]) {flowDirStart[(Transept+1):dimY,(outletPos[1]+1):dimX] <- 5}
+        flowDirStart[(Transept+1):dimY,outletPos[1]] <- 7
+        flowDirStart[1:Transept,] <- 7
       } else if (FirstSide=="E"){
         Transept <- round(0.5*dimX)
-        if (dimY>OutletPos[1]) {FlowDirStart[(OutletPos[1]+1):dimY,(Transept+1):dimX] <- 3}
-        if (OutletPos[1]>1) {FlowDirStart[1:(OutletPos[1]-1),(Transept+1):dimX] <- 7}
-        FlowDirStart[OutletPos[1],(Transept+1):dimX] <- 1
-        FlowDirStart[,1:Transept] <- 1
+        if (dimY>outletPos[1]) {flowDirStart[(outletPos[1]+1):dimY,(Transept+1):dimX] <- 3}
+        if (outletPos[1]>1) {flowDirStart[1:(outletPos[1]-1),(Transept+1):dimX] <- 7}
+        flowDirStart[outletPos[1],(Transept+1):dimX] <- 1
+        flowDirStart[,1:Transept] <- 1
       } else if (FirstSide=="S"){
         Transept <- round(0.5*dimY)
-        if (OutletPos[1]>1) {FlowDirStart[1:Transept,1:(OutletPos[1]-1)] <- 1}
-        if (dimX>OutletPos[1]) {FlowDirStart[1:Transept,(OutletPos[1]+1):dimX] <- 5}
-        FlowDirStart[1:Transept,OutletPos[1]] <- 3
-        FlowDirStart[(Transept+1):dimY,] <- 3
+        if (outletPos[1]>1) {flowDirStart[1:Transept,1:(outletPos[1]-1)] <- 1}
+        if (dimX>outletPos[1]) {flowDirStart[1:Transept,(outletPos[1]+1):dimX] <- 5}
+        flowDirStart[1:Transept,outletPos[1]] <- 3
+        flowDirStart[(Transept+1):dimY,] <- 3
       } else if (FirstSide=="W"){
         Transept <- round(0.5*dimX)
-        if (dimY>OutletPos[1]) {FlowDirStart[(OutletPos[1]+1):dimY,1:Transept] <- 3}
-        if (OutletPos[1]>1) {FlowDirStart[1:(OutletPos[1]-1),1:Transept] <- 7}
-        FlowDirStart[OutletPos[1],1:Transept] <- 5
-        FlowDirStart[,(Transept+1):dimX] <- 5
+        if (dimY>outletPos[1]) {flowDirStart[(outletPos[1]+1):dimY,1:Transept] <- 3}
+        if (outletPos[1]>1) {flowDirStart[1:(outletPos[1]-1),1:Transept] <- 7}
+        flowDirStart[outletPos[1],1:Transept] <- 5
+        flowDirStart[,(Transept+1):dimX] <- 5
       }
       # impose drains perpendicular to outlets
       tmpX <- round(0.15*dimX); tmpY <- round(0.15*dimY)
-      for (i in 1:N_outlet){
-        if (OutletSide[i]=="N"){
-          lowX <- max(1,OutletPos[i]-tmpX)
-          uppX <- min(OutletPos[i]+tmpX,dimX)
-          FlowDirStart[(dimY-tmpY+1):dimY,lowX:OutletPos[i]] <- 1
-          FlowDirStart[(dimY-tmpY+1):dimY,OutletPos[i]:uppX] <- 5
-        } else if (OutletSide[i]=="E") {
-          lowY <- max(1,OutletPos[i]-tmpY)
-          uppY <- min(OutletPos[i]+tmpY,dimY)
-          FlowDirStart[lowY:OutletPos[i],(dimX-tmpX+1):dimX] <- 7
-          FlowDirStart[OutletPos[i]:uppY,(dimX-tmpX+1):dimX] <- 3
-        } else if (OutletSide[i]=="S") {
-          lowX <- max(1,OutletPos[i]-tmpX)
-          uppX <- min(OutletPos[i]+tmpX,dimX)
-          FlowDirStart[1:tmpY,lowX:OutletPos[i]] <- 1
-          FlowDirStart[1:tmpY,OutletPos[i]:uppX] <- 5
-        } else if (OutletSide[i]=="W") {
-          lowY <- max(1,OutletPos[i]-tmpY)
-          uppY <- min(OutletPos[i]+tmpY,dimY)
-          FlowDirStart[lowY:OutletPos[i],1:tmpX] <- 7
-          FlowDirStart[OutletPos[i]:uppY,1:tmpX] <- 3
+      for (i in 1:nOutlet){
+        if (outletSide[i]=="N"){
+          lowX <- max(1,outletPos[i]-tmpX)
+          uppX <- min(outletPos[i]+tmpX,dimX)
+          flowDirStart[(dimY-tmpY+1):dimY,lowX:outletPos[i]] <- 1
+          flowDirStart[(dimY-tmpY+1):dimY,outletPos[i]:uppX] <- 5
+        } else if (outletSide[i]=="E") {
+          lowY <- max(1,outletPos[i]-tmpY)
+          uppY <- min(outletPos[i]+tmpY,dimY)
+          flowDirStart[lowY:outletPos[i],(dimX-tmpX+1):dimX] <- 7
+          flowDirStart[outletPos[i]:uppY,(dimX-tmpX+1):dimX] <- 3
+        } else if (outletSide[i]=="S") {
+          lowX <- max(1,outletPos[i]-tmpX)
+          uppX <- min(outletPos[i]+tmpX,dimX)
+          flowDirStart[1:tmpY,lowX:outletPos[i]] <- 1
+          flowDirStart[1:tmpY,outletPos[i]:uppX] <- 5
+        } else if (outletSide[i]=="W") {
+          lowY <- max(1,outletPos[i]-tmpY)
+          uppY <- min(outletPos[i]+tmpY,dimY)
+          flowDirStart[lowY:outletPos[i],1:tmpX] <- 7
+          flowDirStart[outletPos[i]:uppY,1:tmpX] <- 3
         }
       }
-      for (i in 1:N_outlet){
-        if (OutletSide[i]=="N"){
-      FlowDirStart[(dimY-tmpY+1):dimY,OutletPos[i]] <- 7 
-        } else if (OutletSide[i]=="E") {
-      FlowDirStart[OutletPos[i],(dimX-tmpX+1):dimX] <- 1 
-        } else if (OutletSide[i]=="S") {
-      FlowDirStart[1:tmpY,OutletPos[i]] <- 3 
-        } else if (OutletSide[i]=="W") {
-      FlowDirStart[OutletPos[i],1:tmpX] <- 5 
+      for (i in 1:nOutlet){
+        if (outletSide[i]=="N"){
+      flowDirStart[(dimY-tmpY+1):dimY,outletPos[i]] <- 7 
+        } else if (outletSide[i]=="E") {
+      flowDirStart[outletPos[i],(dimX-tmpX+1):dimX] <- 1 
+        } else if (outletSide[i]=="S") {
+      flowDirStart[1:tmpY,outletPos[i]] <- 3 
+        } else if (outletSide[i]=="W") {
+      flowDirStart[outletPos[i],1:tmpX] <- 5 
         }
       }      
-    } else if (type_initialstate=="V") {
-      FirstSide <- OutletSide[1]
+    } else if (typeInitialState=="V") {
+      FirstSide <- outletSide[1]
       if (FirstSide=="N"){
-        for (i in 1:min(OutletPos[1],dimY)) {FlowDirStart[dimY+1-i,OutletPos[1]+1-i]=8}
-        if (dimX>OutletPos[1]) {for (i in 1:min(dimX-OutletPos[1],dimY-1)) {FlowDirStart[dimY-i,OutletPos[1]+i]=6}}
-        if (OutletPos[1]>1) {for (i in 1:min(OutletPos[1]-1,dimY)) {FlowDirStart[dimY+1-i,1:(OutletPos[1]-i)]=1}}
-        if (dimX>OutletPos[1]) {for (i in 1:min(dimY,dimX-OutletPos[1])) {FlowDirStart[dimY+1-i,(OutletPos[1]+i):dimX]=5}}
-        FlowDirStart[FlowDirStart==0]=7
+        for (i in 1:min(outletPos[1],dimY)) {flowDirStart[dimY+1-i,outletPos[1]+1-i]=8}
+        if (dimX>outletPos[1]) {for (i in 1:min(dimX-outletPos[1],dimY-1)) {flowDirStart[dimY-i,outletPos[1]+i]=6}}
+        if (outletPos[1]>1) {for (i in 1:min(outletPos[1]-1,dimY)) {flowDirStart[dimY+1-i,1:(outletPos[1]-i)]=1}}
+        if (dimX>outletPos[1]) {for (i in 1:min(dimY,dimX-outletPos[1])) {flowDirStart[dimY+1-i,(outletPos[1]+i):dimX]=5}}
+        flowDirStart[flowDirStart==0]=7
       }
       if (FirstSide=="E"){
-        for (i in 1:min(OutletPos[1],dimY)) {FlowDirStart[i,dimX-OutletPos[1]+i]=8}
-        if (dimY>OutletPos[1]) {for (i in 1:min(dimY-OutletPos[1],dimX-1)) {FlowDirStart[OutletPos[1]+i,dimX-i]=2}}
-        if (OutletPos[1]>1) {for (i in 1:min((OutletPos[1]-1),dimY)) {FlowDirStart[i,(dimX-OutletPos[1]+i+1):dimX]=7}}
-        if (dimY>OutletPos[1]) {for (i in 1:min(dimY-OutletPos[1],dimX)) {FlowDirStart[(OutletPos[1]+i):dimY,dimX+1-i]=3}}
-        FlowDirStart[FlowDirStart==0]=1
+        for (i in 1:min(outletPos[1],dimY)) {flowDirStart[i,dimX-outletPos[1]+i]=8}
+        if (dimY>outletPos[1]) {for (i in 1:min(dimY-outletPos[1],dimX-1)) {flowDirStart[outletPos[1]+i,dimX-i]=2}}
+        if (outletPos[1]>1) {for (i in 1:min((outletPos[1]-1),dimY)) {flowDirStart[i,(dimX-outletPos[1]+i+1):dimX]=7}}
+        if (dimY>outletPos[1]) {for (i in 1:min(dimY-outletPos[1],dimX)) {flowDirStart[(outletPos[1]+i):dimY,dimX+1-i]=3}}
+        flowDirStart[flowDirStart==0]=1
       }
       if (FirstSide=="S"){
-        for (i in 1:min(OutletPos[1],dimY)) {FlowDirStart[i,OutletPos[1]+1-i]=2}
-        if (dimX>OutletPos[1]) {for (i in 1:min(dimX-OutletPos[1],dimY-1)) {FlowDirStart[i+1,OutletPos[1]+i]=4}}
-        if (OutletPos[1]>1) {for (i in 1:min(OutletPos[1]-1,dimY)) {FlowDirStart[i,1:(OutletPos[1]-i)]=1}}
-        if (dimX>OutletPos[1]) {for (i in 1:min(dimX-OutletPos[1],dimY)) {FlowDirStart[i,(OutletPos[1]+i):dimX]=5}}
-        FlowDirStart[FlowDirStart==0]=3
+        for (i in 1:min(outletPos[1],dimY)) {flowDirStart[i,outletPos[1]+1-i]=2}
+        if (dimX>outletPos[1]) {for (i in 1:min(dimX-outletPos[1],dimY-1)) {flowDirStart[i+1,outletPos[1]+i]=4}}
+        if (outletPos[1]>1) {for (i in 1:min(outletPos[1]-1,dimY)) {flowDirStart[i,1:(outletPos[1]-i)]=1}}
+        if (dimX>outletPos[1]) {for (i in 1:min(dimX-outletPos[1],dimY)) {flowDirStart[i,(outletPos[1]+i):dimX]=5}}
+        flowDirStart[flowDirStart==0]=3
       }
       if (FirstSide=="W"){
-        for (i in 1:min(OutletPos[1],dimY)) {FlowDirStart[i,OutletPos[1]-i+1]=6}
-        if (dimY>OutletPos[1]) {for (i in 1:min(dimY-OutletPos[1],dimX-1)) {FlowDirStart[OutletPos[1]+i,i+1]=4}}
-        if (OutletPos[1]>1) {for (i in 1:min(OutletPos[1]-1,dimY)) {FlowDirStart[i,1:(OutletPos[1]-i)]=7}}
-        if (dimY>OutletPos[1]) {for (i in 1:min(dimY-OutletPos[1],dimX)) {FlowDirStart[(OutletPos[1]+i):dimY,i]=3}}
-        FlowDirStart[FlowDirStart==0]=5
+        for (i in 1:min(outletPos[1],dimY)) {flowDirStart[i,outletPos[1]-i+1]=6}
+        if (dimY>outletPos[1]) {for (i in 1:min(dimY-outletPos[1],dimX-1)) {flowDirStart[outletPos[1]+i,i+1]=4}}
+        if (outletPos[1]>1) {for (i in 1:min(outletPos[1]-1,dimY)) {flowDirStart[i,1:(outletPos[1]-i)]=7}}
+        if (dimY>outletPos[1]) {for (i in 1:min(dimY-outletPos[1],dimX)) {flowDirStart[(outletPos[1]+i):dimY,i]=3}}
+        flowDirStart[flowDirStart==0]=5
       }
       
       # impose drains with V shape
-      # for (i in 1:N_outlet){
-      #   if (OutletSide[i]=="N"){
-      #     for (j in 1:min(OutletPos[i],dimY)) {FlowDirStart[dimY+1-j,OutletPos[i]+1-j]=8}
-      #     if (dimX>OutletPos[i]) {for (j in 1:min(dimX-OutletPos[i],dimY-1)) {FlowDirStart[dimY-j,OutletPos[i]+j]=6}}
-      #   } else if (OutletSide[i]=="E") {
-      #     for (j in 1:OutletPos[i]) {FlowDirStart[j,dimX-OutletPos[i]+j]=8}
-      #     if (dimY>OutletPos[i]) {for (j in 1:min(dimY-OutletPos[i],dimX-1)) {FlowDirStart[OutletPos[i]+j,dimX-j]=2}}
-      #   } else if (OutletSide[i]=="S") {
-      #     for (j in 1:min(OutletPos[i],dimY)) {FlowDirStart[j,OutletPos[i]+1-j]=2}
-      #     if (dimX>OutletPos[i]) {for (j in 1:min(dimX-OutletPos[i],dimY-1)) {FlowDirStart[j+1,OutletPos[i]+j]=4}}
-      #   } else if (OutletSide[i]=="W") {
-      #     for (j in 1:OutletPos[i]) {FlowDirStart[j,OutletPos[i]-j+1]=6}
-      #     if (dimY>OutletPos[i]) {for (j in 1:min(dimY-OutletPos[i],dimX-1)) {FlowDirStart[OutletPos[i]+j,j+1]=4}}
+      # for (i in 1:nOutlet){
+      #   if (outletSide[i]=="N"){
+      #     for (j in 1:min(outletPos[i],dimY)) {flowDirStart[dimY+1-j,outletPos[i]+1-j]=8}
+      #     if (dimX>outletPos[i]) {for (j in 1:min(dimX-outletPos[i],dimY-1)) {flowDirStart[dimY-j,outletPos[i]+j]=6}}
+      #   } else if (outletSide[i]=="E") {
+      #     for (j in 1:outletPos[i]) {flowDirStart[j,dimX-outletPos[i]+j]=8}
+      #     if (dimY>outletPos[i]) {for (j in 1:min(dimY-outletPos[i],dimX-1)) {flowDirStart[outletPos[i]+j,dimX-j]=2}}
+      #   } else if (outletSide[i]=="S") {
+      #     for (j in 1:min(outletPos[i],dimY)) {flowDirStart[j,outletPos[i]+1-j]=2}
+      #     if (dimX>outletPos[i]) {for (j in 1:min(dimX-outletPos[i],dimY-1)) {flowDirStart[j+1,outletPos[i]+j]=4}}
+      #   } else if (outletSide[i]=="W") {
+      #     for (j in 1:outletPos[i]) {flowDirStart[j,outletPos[i]-j+1]=6}
+      #     if (dimY>outletPos[i]) {for (j in 1:min(dimY-outletPos[i],dimX-1)) {flowDirStart[outletPos[i]+j,j+1]=4}}
       #   }
       # }
       tmpX <- round(0.15*dimX); tmpY <- round(0.15*dimY)
-      for (i in 1:N_outlet){
-           if (OutletSide[i]=="N"){
-             lowX <- max(1,OutletPos[i]-tmpX)
-             uppX <- min(OutletPos[i]+tmpX,dimX)
-             FlowDirStart[(dimY-tmpY):dimY,lowX:uppX] <- 0
-             if (OutletPos[i]>1) {for (j in 1:(OutletPos[i]-lowX)) {FlowDirStart[dimY+1-j,lowX:(OutletPos[i]-j)]=1}}
-             if (dimX>OutletPos[i]) {for (j in 1:(uppX-OutletPos[i])) {FlowDirStart[dimY+1-j,(OutletPos[i]+j):uppX]=5}}
-             FlowDirStart[FlowDirStart==0]=7
+      for (i in 1:nOutlet){
+           if (outletSide[i]=="N"){
+             lowX <- max(1,outletPos[i]-tmpX)
+             uppX <- min(outletPos[i]+tmpX,dimX)
+             flowDirStart[(dimY-tmpY):dimY,lowX:uppX] <- 0
+             if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowX)) {flowDirStart[dimY+1-j,lowX:(outletPos[i]-j)]=1}}
+             if (dimX>outletPos[i]) {for (j in 1:(uppX-outletPos[i])) {flowDirStart[dimY+1-j,(outletPos[i]+j):uppX]=5}}
+             flowDirStart[flowDirStart==0]=7
              
-           } else if (OutletSide[i]=="S"){
-             lowX <- max(1,OutletPos[i]-tmpX)
-             uppX <- min(OutletPos[i]+tmpX,dimX)
-             FlowDirStart[1:(tmpY+1),lowX:uppX] <- 0
-             if (OutletPos[i]>1) {for (j in 1:(OutletPos[i]-lowX)) {FlowDirStart[j,lowX:(OutletPos[i]-j)]=1}}
-             if (dimX>OutletPos[i]) {for (j in 1:(uppX-OutletPos[i])) {FlowDirStart[j,(OutletPos[i]+j):uppX]=5}}
-             FlowDirStart[FlowDirStart==0]=3
+           } else if (outletSide[i]=="S"){
+             lowX <- max(1,outletPos[i]-tmpX)
+             uppX <- min(outletPos[i]+tmpX,dimX)
+             flowDirStart[1:(tmpY+1),lowX:uppX] <- 0
+             if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowX)) {flowDirStart[j,lowX:(outletPos[i]-j)]=1}}
+             if (dimX>outletPos[i]) {for (j in 1:(uppX-outletPos[i])) {flowDirStart[j,(outletPos[i]+j):uppX]=5}}
+             flowDirStart[flowDirStart==0]=3
              
-           } else if (OutletSide[i]=="E"){
-             lowY <- max(1,OutletPos[i]-tmpY)
-             uppY <- min(OutletPos[i]+tmpY,dimY)
-             FlowDirStart[lowY:uppY,(dimX-tmpX):dimX] <- 0
-             if (OutletPos[i]>1) {for (j in 1:(OutletPos[i]-lowY)) {FlowDirStart[lowY-1+j,(dimX-OutletPos[i]+lowY+j-1):dimX]=7}}
-             if (dimY>OutletPos[i]) {for (j in 1:(uppY-OutletPos[i])) {FlowDirStart[OutletPos[i]+j,(dimX+1-j):dimX]=3}}
-             FlowDirStart[FlowDirStart==0]=1
-           }  else if (OutletSide[i]=="W"){
-             lowY <- max(1,OutletPos[i]-tmpY)
-             uppY <- min(OutletPos[i]+tmpY,dimY)
-             FlowDirStart[lowY:uppY,1:(tmpX+1)] <- 0
-             if (OutletPos[i]>1) {for (j in 1:(OutletPos[i]-lowY)) {FlowDirStart[lowY-1+j,1:(OutletPos[i]-lowY-j+1)]=7}}
-             if (dimY>OutletPos[i]) {for (j in 1:(uppY-OutletPos[i])) {FlowDirStart[OutletPos[i]+j,1:j]=3}}
-             FlowDirStart[FlowDirStart==0]=5
+           } else if (outletSide[i]=="E"){
+             lowY <- max(1,outletPos[i]-tmpY)
+             uppY <- min(outletPos[i]+tmpY,dimY)
+             flowDirStart[lowY:uppY,(dimX-tmpX):dimX] <- 0
+             if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowY)) {flowDirStart[lowY-1+j,(dimX-outletPos[i]+lowY+j-1):dimX]=7}}
+             if (dimY>outletPos[i]) {for (j in 1:(uppY-outletPos[i])) {flowDirStart[outletPos[i]+j,(dimX+1-j):dimX]=3}}
+             flowDirStart[flowDirStart==0]=1
+           }  else if (outletSide[i]=="W"){
+             lowY <- max(1,outletPos[i]-tmpY)
+             uppY <- min(outletPos[i]+tmpY,dimY)
+             flowDirStart[lowY:uppY,1:(tmpX+1)] <- 0
+             if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowY)) {flowDirStart[lowY-1+j,1:(outletPos[i]-lowY-j+1)]=7}}
+             if (dimY>outletPos[i]) {for (j in 1:(uppY-outletPos[i])) {flowDirStart[outletPos[i]+j,1:j]=3}}
+             flowDirStart[flowDirStart==0]=5
            }
         }
-      for (i in 1:N_outlet){
-        if (OutletSide[i]=="N"){
-          lowX <- max(1,OutletPos[i]-tmpX)
-          uppX <- min(OutletPos[i]+tmpX,dimX)
-          if (OutletPos[i]>1) {for (j in 1:(OutletPos[i]-lowX+1)) {FlowDirStart[dimY+1-j,OutletPos[i]+1-j]=8}}
-          if (dimX>OutletPos[i]) {for (j in 1:(uppX-OutletPos[i])) {FlowDirStart[dimY-j,OutletPos[i]+j]=6}}
+      for (i in 1:nOutlet){
+        if (outletSide[i]=="N"){
+          lowX <- max(1,outletPos[i]-tmpX)
+          uppX <- min(outletPos[i]+tmpX,dimX)
+          if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowX+1)) {flowDirStart[dimY+1-j,outletPos[i]+1-j]=8}}
+          if (dimX>outletPos[i]) {for (j in 1:(uppX-outletPos[i])) {flowDirStart[dimY-j,outletPos[i]+j]=6}}
           
-        } else if (OutletSide[i]=="S"){
-          lowX <- max(1,OutletPos[i]-tmpX)
-          uppX <- min(OutletPos[i]+tmpX,dimX)
-          if (OutletPos[i]>1) {for (j in 1:(OutletPos[i]-lowX+1)) {FlowDirStart[j,OutletPos[i]+1-j]=2}}
-          if (dimX>OutletPos[i]) {for (j in 1:(uppX-OutletPos[i])) {FlowDirStart[j+1,OutletPos[i]+j]=4}}
+        } else if (outletSide[i]=="S"){
+          lowX <- max(1,outletPos[i]-tmpX)
+          uppX <- min(outletPos[i]+tmpX,dimX)
+          if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowX+1)) {flowDirStart[j,outletPos[i]+1-j]=2}}
+          if (dimX>outletPos[i]) {for (j in 1:(uppX-outletPos[i])) {flowDirStart[j+1,outletPos[i]+j]=4}}
           
-        } else if (OutletSide[i]=="E"){
-          lowY <- max(1,OutletPos[i]-tmpY)
-          uppY <- min(OutletPos[i]+tmpY,dimY)
-          if (OutletPos[i]>1) {for (j in 1:(OutletPos[i]-lowY)) {FlowDirStart[lowY-1+j,dimX-OutletPos[i]+lowY+j-1]=8}}
-          if (dimY>OutletPos[i]) {for (j in 1:(uppY-OutletPos[i])) {FlowDirStart[OutletPos[i]+j,dimX-j]=2}}
-        }  else if (OutletSide[i]=="W"){
-          lowY <- max(1,OutletPos[i]-tmpY)
-          uppY <- min(OutletPos[i]+tmpY,dimY)
-          if (OutletPos[i]>1) {for (j in 1:(OutletPos[i]-lowY)) {FlowDirStart[lowY-1+j,OutletPos[i]-lowY-j+2]=6}}
-          if (dimY>OutletPos[i]) {for (j in 1:(uppY-OutletPos[i])) {FlowDirStart[OutletPos[i]+j,j+1]=4}}
+        } else if (outletSide[i]=="E"){
+          lowY <- max(1,outletPos[i]-tmpY)
+          uppY <- min(outletPos[i]+tmpY,dimY)
+          if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowY)) {flowDirStart[lowY-1+j,dimX-outletPos[i]+lowY+j-1]=8}}
+          if (dimY>outletPos[i]) {for (j in 1:(uppY-outletPos[i])) {flowDirStart[outletPos[i]+j,dimX-j]=2}}
+        }  else if (outletSide[i]=="W"){
+          lowY <- max(1,outletPos[i]-tmpY)
+          uppY <- min(outletPos[i]+tmpY,dimY)
+          if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowY)) {flowDirStart[lowY-1+j,outletPos[i]-lowY-j+2]=6}}
+          if (dimY>outletPos[i]) {for (j in 1:(uppY-outletPos[i])) {flowDirStart[outletPos[i]+j,j+1]=4}}
         }
       }
       
@@ -696,7 +696,7 @@ initialstate_OCN <- function(dimX,dimY,N_outlet,OutletSide,OutletPos,type_initia
       stop("Invalid initial state")
     }
   }
-  return(FlowDirStart)
+  return(flowDirStart)
 }
 
 

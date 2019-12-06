@@ -2,14 +2,14 @@
 \alias{create_peano}
 \title{Create Peano network}
 \usage{
-create_peano(n_iter_peano, OutletPos = "NE", xllcorner = 1,
+create_peano(nIterPeano, outletPos = "NE", xllcorner = 1,
   yllcorner = 1, cellsize = 1)
 }
 \arguments{
-\item{n_iter_peano}{Number of iteration of the Peano scheme. The resulting network will span a domain 
-of size \code{2^(n_iter_peano + 1)} by \code{2^(n_iter_peano + 1)}.}
+\item{nIterPeano}{Number of iteration of the Peano scheme. The resulting network will span a domain 
+of size \code{2^(nIterPeano + 1)} by \code{2^(nIterPeano + 1)}.}
 
-\item{OutletPos}{Corner where the outlet is located, expressed as intercardinal direction. 
+\item{outletPos}{Corner where the outlet is located, expressed as intercardinal direction. 
 Possible values are \code{"NE"}, \code{"SE"}, \code{"SW"}, \code{"NW"}.}
 
 \item{xllcorner}{X coordinate of the lower-left pixel (expressed in planar units).}
@@ -26,6 +26,16 @@ As such, it can be used as input for all other complementary functions of the pa
 Function that creates Peano networks on a square lattice.
 }
 \examples{
+# 1) create a peano network in a 32x32 square,
+# use landscape_OCN, aggregate_OCN functions,
+# and display subcatchment map and map of drainage area
 peano <- create_peano(4)
-
+peano <- aggregate_OCN(landscape_OCN(peano), thrA = 4)
+par(mfrow=c(1,3))
+draw_simple_OCN(peano)
+title("Peano network")
+draw_subcatchments_OCN(peano)
+title("Subcatchments")
+draw_thematic_OCN(peano$RN$A, peano)
+title("Drainage area at RN level")
 }
