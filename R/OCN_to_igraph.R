@@ -17,6 +17,6 @@ OCN_to_igraph <- function (OCN,
   mm <- as.dgCMatrix.spam(sub_OCN$W)
   g <- graph_from_adjacency_matrix(mm)
   
-  return(g)
+  invisible(g)
 }
   

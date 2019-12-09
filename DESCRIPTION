@@ -34,7 +34,7 @@ Imports: fields, Matrix, spam, rgl, methods,
 License: GPL-3 
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.5)
+Depends: R (>= 3.6)
 Suggests: 
     knitr,
     rmarkdown

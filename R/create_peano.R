@@ -106,7 +106,7 @@ create_peano <- function(nIterPeano,
   # note: for peano networks, ExpEnergy only has the meaning of quantity related to the exponent of the slope-area relationship
   # s \propto A^(ExpEnergy-1)
   
-  return(peano)   
+  invisible(peano)   
 }
 
 # auxiliary functions
@@ -125,7 +125,7 @@ flip_lr_peano <- function(mat){
   mat[mat==8] <- 60
   mat <- mat/10 
   mat[dim,1] <- 7
-  return(mat)
+  invisible(mat)
 }
 
 flip_ud_peano <- function(mat){
@@ -142,37 +142,8 @@ flip_ud_peano <- function(mat){
   mat[mat==8] <- 20
   mat <- mat/10 
   mat[1,dim] <- 1
-  return(mat)
+  invisible(mat)
 }
 
-initial_permutation <- function(DownNode){
-  
-  Outlet <- which(DownNode==0)
-  NodesToExplore <- Outlet # start from outlets
-  reverse_perm <- numeric(length(DownNode)) # build permutation vector from outlets to headwaters, then flip it
-  
-  k <- 0
-  while (length(NodesToExplore)>0){ # continue until all the network has been explored
-    k <- k + 1
-    node <- NodesToExplore[1] # explore a node
-    reverse_perm[k] <- node # assign position in the permutation vector
-    NodesToExplore <- NodesToExplore[-1] # remove explored node
-    UpNodes <- which(DownNode==node) # find nodes upstream of node
-    while (length(UpNodes)>0){ # continue upstream until a headwater is found
-      k <- k + 1
-      node <- UpNodes[1] # explore first upstream node
-      reverse_perm[k] <- node
-      if (length(UpNodes)>1){ # if there is a bifurcation upstream, add the other upstream connections at the top of NodesToExplore
-        NodesToExplore <- c(UpNodes[2:length(UpNodes)],NodesToExplore)
-      }
-      UpNodes <- which(DownNode==node)
-    }
-  }
-  
-  perm <- reverse_perm[length(DownNode):1] # flip permutation
-  
-  OutList = list(perm=perm,noDAG=0)
-  
-  return(OutList)
-}
+
 
