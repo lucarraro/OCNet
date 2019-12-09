@@ -58,7 +58,15 @@ create_peano <- function(nIterPeano,
   }
   ind <- ind[-which(ind[,1]==0),]
   W[ind] <- 1
-  Wt <- t(W)
+  
+  # patch to correct for initial 0
+  newW <- new("spam")
+  slot(newW, "entries", check = FALSE) <- W@entries[-1]
+  slot(newW, "colindices", check = FALSE) <- W@colindices[-1]
+  slot(newW, "rowpointers", check = FALSE) <- c(W@rowpointers[1],W@rowpointers[-1]-W@rowpointers[1])
+  slot(newW, "dimension", check = FALSE) <- W@dimension 
+  
+  Wt <- t(newW)
   
   pl <- initial_permutation(DownNode)
   
