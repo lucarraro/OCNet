@@ -411,5 +411,5 @@ aggregate_OCN <- function(OCN,
   OCN$AG[["toFD"]] <- AG_to_FDnode
   OCN$AG[["toRN"]] <- AG_to_RNnode
   
-  return(OCN)
+  invisible(OCN)
 }

@@ -61,20 +61,24 @@ This function can be used to show how a certain spatial field varies along the r
 # 1a) Six different ways to display contributing area at the AG level
 OCN <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 4)
 par(mfrow=c(2,3), oma = c(0, 0, 3, 0))
-draw_thematic_OCN(OCN$AG$A, OCN) 
+draw_thematic_OCN(OCN$AG$A, OCN, colPalette = hcl.colors) 
 title("Continuous levels \n Colors on edges")
-draw_thematic_OCN(OCN$AG$A, OCN, discreteLevels = TRUE) 
+draw_thematic_OCN(OCN$AG$A, OCN, discreteLevels = TRUE,
+		colPalette = hcl.colors) 
 title("Discrete, unique levels \n Colors on edges")
 draw_thematic_OCN(OCN$AG$A, OCN, discreteLevels = TRUE, 
-		colLevels=c(1,10,50,100,500)) 
+		colLevels = c(1, 10, 50, 100, 500), 
+		colPalette = hcl.colors) 
 title("Discrete, user-defined levels \n Colors on edges")
-draw_thematic_OCN(OCN$AG$A, OCN, drawNodes = TRUE)
+draw_thematic_OCN(OCN$AG$A, OCN, drawNodes = TRUE, 
+		colPalette = hcl.colors)
 title("Continuous levels \n Colors on edges")
 draw_thematic_OCN(OCN$AG$A, OCN,  discreteLevels = TRUE, 
-		drawNodes = TRUE)
+		drawNodes = TRUE, colPalette = hcl.colors)
 title("Discrete, unique levels \n Colors on nodes")
-draw_thematic_OCN(OCN$AG$A, OCN, discreteLevels=TRUE, 
-		drawNodes = TRUE, colLevels=c(1,10,50,100,500))
+draw_thematic_OCN(OCN$AG$A, OCN, discreteLevels = TRUE, 
+		drawNodes = TRUE, colLevels = c(1, 10, 50, 100, 500), 
+		colPalette = hcl.colors)
 title("Discrete, user-defined levels \n Colors on nodes")
 mtext("Six different ways to display contributing area [no. pixels]", outer = TRUE, cex = 1.5)
 
@@ -82,12 +86,12 @@ mtext("Six different ways to display contributing area [no. pixels]", outer = TR
 # with DiscreteLevels = FALSE
 par(mfrow=c(1,2))
 draw_thematic_OCN(OCN$AG$A, OCN, drawNodes = TRUE,
-		 colLevels=c(0,200,1000))
-title("All nodes with A > 200 pixels are displayed in yellow")
+		 colLevels = c(0, 200, 1000), colPalette = hcl.colors)
+title("All nodes with A > 200 pixels \n are displayed in yellow")
 draw_thematic_OCN(OCN$AG$A, OCN, drawNodes = TRUE, 
-		nanColor = "#00000000", colLevels=c(0,200,1000),
-		cutoff = TRUE)
-title("All nodes with A > 200 pixels are treated as NaN")		
+		nanColor = "#00000000", colLevels = c(0, 200, 1000),
+		cutoff = TRUE, colPalette = hcl.colors)
+title("All nodes with A > 200 pixels \n are treated as NaN")		
 
 \dontrun{
 # 2) Display distance to outlet (at the RN level) along the main stem

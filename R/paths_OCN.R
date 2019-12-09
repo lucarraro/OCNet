@@ -147,7 +147,7 @@ paths_OCN <- function(OCN,
   OCN$AG$downstreamLengthUnconnected <- AG_DwnstrLength_unconnected
   
   
-  return(OCN)
+  invisible(OCN)
   
 }
 

@@ -182,5 +182,5 @@ find_area_threshold_OCN <- function(OCN,
   Thresholds[["drainageDensity"]] <- vec_DrainageDensity
   Thresholds[["streamOrder"]] <- vec_StreamOrder
   
-  return(Thresholds)
+  invisible(Thresholds)
 }

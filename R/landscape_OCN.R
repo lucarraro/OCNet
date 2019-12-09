@@ -271,5 +271,5 @@ landscape_OCN <- function(OCN,
   
   if (optimizeDZ==TRUE) {OCN$optList <- OptList}
   
-  return(OCN)
+  invisible(OCN)
 }
