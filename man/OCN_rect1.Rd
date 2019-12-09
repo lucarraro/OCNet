@@ -7,6 +7,6 @@
 data(OCN_rect1)
 }
 \description{
-A network built on a 450x150 lattice obtained by executing \code{set.seed(3); create_OCN(450,150)}.
+A network built on a 450x150 lattice obtained by executing \code{set.seed(3); create_OCN(450, 150)}.
 }
 \keyword{datasets}
