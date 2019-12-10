@@ -7,6 +7,6 @@
 data(OCN_400_Allout)
 }
 \description{
-A network built on a 400x400 lattice obtained by executing \code{set.seed(8); create_OCN(400,400,N_outlet = "All",cellsize = 50)}.
+A network built on a 400x400 lattice obtained by executing \code{set.seed(8); create_OCN(400, 400, nOutlet = "All", cellsize = 50)}.
 }
 \keyword{datasets}

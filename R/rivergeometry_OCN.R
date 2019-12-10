@@ -55,5 +55,5 @@ rivergeometry_OCN <- function(OCN,
   OCN$expDepth <- expDepth
   OCN$expVelocity  <- expVelocity 
 
-  return(OCN)
+  invisible(OCN)
 }

@@ -7,6 +7,6 @@
 data(OCN_250_hot)
 }
 \description{
-A network built on a 250x250 lattice obtained by executing \code{set.seed(2); create_OCN(250,250,CoolingRate = 20,InitialNoCoolingPhase = 0.15}.
+A network built on a 250x250 lattice obtained by executing \code{set.seed(2); create_OCN(250, 250, coolingRate = 20, initialNoCoolingPhase = 0.15)}.
 }
 \keyword{datasets}

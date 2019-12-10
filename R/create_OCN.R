@@ -378,7 +378,7 @@ create_OCN <- function(dimX,dimY,
     N4 <- list(W=W_N4)
     OCN[["N4"]] <- N4}
   
-  return(OCN)
+  invisible(OCN)
 }
 
 
@@ -696,7 +696,7 @@ initialstate_OCN <- function(dimX,dimY,nOutlet,outletSide,outletPos,typeInitialS
       stop("Invalid initial state")
     }
   }
-  return(flowDirStart)
+  invisible(flowDirStart)
 }
 
 
@@ -728,7 +728,7 @@ initial_permutation <- function(DownNode){
   
   OutList = list(perm=perm,noDAG=0)
   
-  return(OutList)
+  invisible(OutList)
 }
 
 

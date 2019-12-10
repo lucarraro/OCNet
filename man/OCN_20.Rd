@@ -7,6 +7,6 @@
 data(OCN_20)
 }
 \description{
-A network built on a 20x20 lattice obtained by executing \code{set.seed(1); create_OCN(20,20}.
+A network built on a 20x20 lattice obtained by executing \code{set.seed(1); create_OCN(20,20)}.
 }
 \keyword{datasets}
