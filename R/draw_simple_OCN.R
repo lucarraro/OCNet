@@ -12,7 +12,8 @@ draw_simple_OCN <- function(OCN,
   
   ## plot final state
   AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)
-  par(bty="n")
+  old.par <- par(bty="n")
+  on.exit(par(old.par))
   plot(c(min(OCN$FD$X),max(OCN$FD$X)),c(min(OCN$FD$Y),max(OCN$FD$Y)),
        type="n",asp=1,axes=FALSE,xlab=" ",ylab=" ")
   #points(OCN$FD$X[OCN$FD$outlet],OCN$FD$Y[OCN$FD$outlet],pch=22,col="#000000",bg="#000000")
@@ -27,5 +28,5 @@ draw_simple_OCN <- function(OCN,
     if (OCN$FD$A[i]>=thrADraw  & abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]]) <= OCN$cellsize & abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]]) <= OCN$cellsize) {
       lines(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$downNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$downNode[i]]),
             lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=riverColor)}}
-
+  invisible()
 }

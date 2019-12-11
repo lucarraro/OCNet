@@ -253,7 +253,8 @@ create_OCN <- function(dimX,dimY,
     for (o in 1:nOutlet){
       catch[(resort[OutletPixel[o]]-AA[OutletPixel[o]]/cellsize^2+1):resort[OutletPixel[o]]] <- o
     }
-    par(bty="n")
+    old.par <- par(bty="n")
+    on.exit(par(old.par))
     plot(c(min(X),max(X)),c(min(Y),max(Y)),main=sprintf('OCN %dx%d (initial state)',dimX,dimY),
          type="n",asp=1,axes=FALSE,xlab="",ylab="") # 
     points(X[OutletPixel],Y[OutletPixel],pch=15,col=rnbw[catch[resort[OutletPixel]]])
@@ -324,9 +325,7 @@ create_OCN <- function(dimX,dimY,
                     iter/nIter*100,difftime(Sys.time(),t0,units='secs'),format(Sys.time(),"%b%d %H:%M"),Energy[iter]))
         }}
     # plot update
-    #if (showIntermediatePlots==TRUE){
-    #par(bty="n")
-    
+   
     if (iter %% round(nIter/nUpdates)==0){
       if (showIntermediatePlots==TRUE){ 
         AA <- A*cellsize^2 

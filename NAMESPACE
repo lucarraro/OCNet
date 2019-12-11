@@ -16,12 +16,13 @@ export(rivergeometry_OCN)
 export(OCN_to_igraph)
 export(OCN_to_SSN)
 import(SSN)
-import(fields)
+# import(fields)
 import(rgl)
 import(spam)
-import(bookdown)
+# import(bookdown)
 import(igraph)
 
+importFrom("fields", "image.plot")
 importFrom("grDevices", "colorRampPalette", "contourLines", "rainbow",
              "terrain.colors", "trans3d", "hcl.colors")
 importFrom("graphics", "lines", "par", "persp", "plot", "points",

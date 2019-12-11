@@ -24,11 +24,11 @@ knitr::opts_chunk$set(
 ```{r lib, echo = FALSE}
 suppressPackageStartupMessages(library(OCNet))
 suppressPackageStartupMessages(library(spam))
-suppressPackageStartupMessages(library(Matrix))
 suppressPackageStartupMessages(library(igraph))
 suppressPackageStartupMessages(library(SSN))
 ```
 
+**Graphical abstract**
 ```{r, fig.width=7, fig.height=2}
 set.seed(1)
 OCN <- create_OCN(30, 20, outletPos = 1)
@@ -45,9 +45,9 @@ title("Strahler stream order")
 
 # Overview
 
-OCNet enables the creation and analysis of Optimal Channel Networks (OCNs). These are oriented spanning trees (built on rectangular lattices made up of square pixels) that reproduce all scaling features characteristic of real, natural river networks [@rodriguez1992; @rinaldo2014]. As such, they can be used in a variety of numerical and laboratory experiments in the fields of hydrology, ecology and epidemiology. Notable examples include studies on metapopulations and metacommunities (e.g. Carrara et al. -@carrara2012), scenarios of waterborne pathogen invasions (e.g. Gatto et al. -@gatto2013) and biogeochemichal processes in streams (e.g. Helton et al. -@helton2018).
+OCNet enables the creation and analysis of Optimal Channel Networks (OCNs). These are oriented spanning trees (built on rectangular lattices made up of square pixels) that reproduce all scaling features characteristic of real, natural river networks [@rodriguez1992; @rinaldo2014]. As such, they can be used in a variety of numerical and laboratory experiments in the fields of hydrology, ecology and epidemiology. Notable examples include studies on metapopulations and metacommunities [e.g. @carrara2012], scenarios of waterborne pathogen invasions [e.g. @gatto2013] and biogeochemichal processes in streams [e.g. @helton2018].
 
-OCNs are obtained by minimization of a functional which represents total energy dissipated by water flowing through the network spanning the lattice. Such a formulation embeds the evidence that morphological and hydrological characteristics of rivers (in particular, water discharge and slope) follow a power-law scaling with drainage area. For details on the theoretical foundation of the OCN concept, as well as for examples of their use, see Rinaldo et al. [-@rinaldo2014].^[A manuscript presenting the package is in preparation for Methods in Ecology and Evolution]
+OCNs are obtained by minimization of a functional which represents total energy dissipated by water flowing through the network spanning the lattice. Such a formulation embeds the evidence that morphological and hydrological characteristics of rivers (in particular, water discharge and slope) follow a power-law scaling with drainage area. For details on the theoretical foundation of the OCN concept, as well as for examples of their use, see @rinaldo2014.^[A manuscript presenting the package is in preparation for Methods in Ecology and Evolution]
 
 ***
 
@@ -65,7 +65,7 @@ Moreover, OCNs, just like real rivers, are constituted of nodes whose *indegree*
 
 OCNet also allows building multiple networks within a single lattice. Each of these networks is defined by its respective outlet, which represents the root of a subgraph; the union of all subgraphs contains all elements of $G$. For simplicity, we will still refer to "OCNs" with regards to these multiple-outlet entities. In this case, strictly speaking, OCNs are not trees but rather *forests*. 
 
-An OCN is defined by an *adjacency matrix* $\mathbf{W}$ with entries $w_{i,j}$ equal to 1 if node $i$ drains into $j$ and null otherwise. Owing to the previously described properties, all rows of $\mathbf{W}$ have a single non-zero entry, except those identifying the outlet nodes, whose entries are all null. Each adjacency matrix uniquely defines a vector of *contributing areas* (or *drainage areas*) $\mathbf{A}$, whose components $A_i$ are equal to the number of nodes upstream of node $i$ plus the node itself. Mathematically, this can be expressed as $(\mathbf{I}-\mathbf{W}^T)\mathbf{A}=\mathbf{1}$, where $\mathbf{I}$ is the identity matrix and $\mathbf{1}$ a vector of ones.
+An OCN is defined by an *adjacency matrix* $\mathbf{W}$ with entries $w_{ij}$ equal to 1 if node $i$ drains into $j$ and null otherwise. Owing to the previously described properties, all rows of $\mathbf{W}$ have a single non-zero entry, except those identifying the outlet nodes, whose entries are all null. Each adjacency matrix uniquely defines a vector of *contributing areas* (or *drainage areas*) $\mathbf{A}$, whose components $A_i$ are equal to the number of nodes upstream of node $i$ plus the node itself. Mathematically, this can be expressed as $(\mathbf{I}-\mathbf{W}^T)\mathbf{A}=\mathbf{1}$, where $\mathbf{I}$ is the identity matrix and $\mathbf{1}$ a vector of ones.
 
 ***
 
@@ -100,7 +100,7 @@ Adjacency matrices and contributing area vectors of an OCN can be defined at dif
 
 0. *Nearest neighbours* (**N4**, **N8**). Every pixel of the lattice constitutes a node of the network. Each node is connected to its four (pixels that share an edge) or eight (pixels that share an edge or a vertex) nearest neighbours. At this level, $\mathbf{W}$ is defined but $\mathbf{A}$ is not. Note that this level does not describe flow connectivity, but rather proximity among pixels. Hence, $\mathbf{W}$ does not describe an oriented spanning tree.
 1. *Flow direction* (**FD**). At this level, every pixel of the lattice is a node, but connectivity follows the flow directions that have been found by the OCN search algorithm (operated by function `create_OCN`). Edges' lengths are equal to either `cellsize` (the size of a pixel side, optional input in `create_OCN`) or `cellsize*sqrt(2)`, depending on whether flow direction is horizontal/vertical or diagonal.
-2. *River network* (**RN**). The set of nodes at this level is a subset of the nodes at the FD level, such that their contributing area is larger than a certain threshold (optional input `A_thr` in `aggregate_OCN`). Such a procedure is customary in the hydrological problem of extracting a river network based on digital elevation models of the terrain [@ocallaghan1984], and corresponds to the geomorphological concept of erosion threshold (associated to a threshold in landscape-forming runoff, of which drainage area represents a proxy [@rodriguez2001]). Edges' lengths are again equal to either `cellsize` or `cellsize*sqrt(2)`.
+2. *River network* (**RN**). The set of nodes at this level is a subset of the nodes at the FD level, such that their contributing area is larger than a certain threshold (optional input `A_thr` in `aggregate_OCN`). Such a procedure is customary in the hydrological problem of extracting a river network based on digital elevation models of the terrain [@ocallaghan1984], and corresponds to the geomorphological concept of erosion threshold [associated to a threshold in landscape-forming runoff, of which drainage area represents a proxy @rodriguez2001]. Edges' lengths are again equal to either `cellsize` or `cellsize*sqrt(2)`.
 3. *Aggregated* (or *reach* - **AG**). The set of nodes at this level is a subset of the nodes at the RN level (see details in the next section). Accordingly, vector $\mathbf{A}$ is a subset of the vector of the same name defined at the RN level. Edges can span several pixels and therefore have various lengths.    
 4. *Subcatchment* (**SC**). The number of nodes at this level is generally^[This might not be the case when there are many outlets. If the area drained by one of these outlets is lower than the threshold imposed, the cluster of pixels drained by that outlet constitutes a node at the SC level that does not have a correspondence at the AG level.] equal to that at the AG level. Each node is constituted by the cluster of pixels that directly drain into the edge departing from the corresponding node at the AG level. Here $\mathbf{W}$ does not represent flow connectivity but rather identifies terrestrial borders among subcatchments and is therefore symmetric. 
 5. *Catchment* (**CM**). In this level, the number of nodes is equal to the number of outlets. Every node represents the portion of the lattice drained by its relative outlet. $\mathbf{A}$ stores drainage area values for each of these catchments, while $\mathbf{W}$ identifies terrestrial borders among catchments. 
@@ -120,7 +120,7 @@ Nodes at the AG level correspond to a subset of nodes at the RN level. In partic
 
 Outlet nodes at the AG level might also be sources, confluences or breaking nodes. All AG nodes except outlet nodes have outdegree equal to 1. All RN nodes that do not correspond to AG nodes constitute the edges of the network at the AG level: more specifically, each edge is formed by an AG node and a sequence of RN nodes downstream of the AG node, until another AG node is found.
 
-Fig. \@ref(fig:ex3-net) shows an alternative aggregation scheme for the network showed in Fig. \@ref(fig:ex-net) when the optional input `maxReachLength` is set to a finite value.
+Figure \@ref(fig:ex3-net) shows an alternative aggregation scheme for the network showed in Figure \@ref(fig:ex-net) when the optional input `maxReachLength` is set to a finite value.
 
 ```{r ex3-net, echo=FALSE, fig.cap="Aggregation of the previous network with `A_thr` equal to 5 pixels and `maxReachLength` equal to 3 pixel sides. Note that the length of the diagonal segments of the edges is equal to `sqrt(2)`.", out.width = '70%'}
 knitr::include_graphics("example_networks3.png")
@@ -225,8 +225,8 @@ Let's build a simple discrete-time, deterministic metapopulation model on the pr
 Therefore, the model equation is:
 $$
 \begin{split}
-P_i(t+1) &= \frac{r P_i(t)}{1+ (r-1)P_i(t)/K_i} - (p_d D_i + p_u U_i)G(K_i,K_i)\frac{P_i(t)}{K_i} +\\
-& + p_d \left( \sum_{j=1} w_{ji} G(K_j,K_j)\frac{P_j(t)}{K_j}\right) + p_u \left( \sum_{j=1} w_{ij} Y_i G(K_j,K_j)\frac{P_j(t)}{K_j}\right)
+P_i(t+1) &= \frac{r P_i(t)}{1+ (r-1)P_i(t)/K_i} - (p_d D_i + p_u U_i)G(K_i,K_i)\frac{P_i(t)}{K_i} \\
+&\quad + p_d \left( \sum_{j=1} w_{ji} G(K_j,K_j)\frac{P_j(t)}{K_j}\right) + p_u \left( \sum_{j=1} w_{ij} Y_i G(K_j,K_j)\frac{P_j(t)}{K_j}\right)
 \end{split}
 $$
 where $D_i$ ($U_i$) is equal to one if there is a downstream (upstream) connection available from node $i$ and is null otherwise. Weights $Y_i$ are defined as:
@@ -349,7 +349,7 @@ title("Time = 100")
 
 # Peano networks
 
-Function `create_peano` can be used in lieu of `create_OCN` to generate Peano networks on square lattices. Peano networks are deterministic, plane-filling fractals whose topological measures (Horton's bifurcation and length ratios) are akin to those of real river networks [@marani1991] and can then be used in a variety of synthetic experiments, as it is the case for OCNs (e.g. Campos et al. [-@campos2006]). Peano networks are generated by means of an iterative algorithm: at each iteration, the size of the lattice side is doubled (see code below). As a result, Peano networks span squares of side equal to a power of 2. The outlet must be located at a corner of the square.  
+Function `create_peano` can be used in lieu of `create_OCN` to generate Peano networks on square lattices. Peano networks are deterministic, plane-filling fractals whose topological measures (Horton's bifurcation and length ratios) are akin to those of real river networks [@marani1991] and can then be used in a variety of synthetic experiments, as it is the case for OCNs [e.g. @campos2006]. Peano networks are generated by means of an iterative algorithm: at each iteration, the size of the lattice side is doubled (see code below). As a result, Peano networks span squares of side equal to a power of 2. The outlet must be located at a corner of the square.  
 
 ```{r, fig.width=7, fig.height=5}
 par(mfrow = c(2, 3), mai = c(0, 0, 0.2, 0))

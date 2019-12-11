@@ -77,7 +77,7 @@ c-----------------------------------------------------------------------
       logical eqZERO
       double precision a
 
-      eqZERO = (abs( a) .LE. 1.1*epsilon( 0.0))
+      eqZERO = (abs( a) .LE. 0d0)
       return
       end function
 

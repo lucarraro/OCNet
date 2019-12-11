@@ -91,10 +91,12 @@ c     &       kNotInOutlet(k, no, Outlet))
      &       (inv_perm(node) .gt. inv_perm(k)))
             k = DownNode(k)
          enddo
-         if (((inv_perm(node) .eq. inv_perm(k))) .and.
-     &       kNotInOutlet(k, no, Outlet)) then
-            noDAG = 1
-            return
+         if ((inv_perm(node) .eq. inv_perm(k))) then
+c change to address  Impure function might not be evaluated        
+            if (kNotInOutlet(k, no, Outlet)) then
+              noDAG = 1
+              return
+            endif
          endif
       endif
 

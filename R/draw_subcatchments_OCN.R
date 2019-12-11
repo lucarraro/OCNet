@@ -64,20 +64,22 @@ draw_subcatchments_OCN <- function(OCN,
     colPalette <- colPalette[1:length(ColorList)]
   }
   
-  par(bty="n")
+  old.par <- par(bty="n")
+  on.exit(par(old.par))
   image(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),
         seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize),
         t(Color_SC),col=colPalette,xlab=" ",ylab=" ",asp=1,axes=FALSE)
   # attributing colors in reverse order should increase overall contrast
   
   if (drawRiver==TRUE){
-  ## plot OCN
-  AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)
-  #points(OCN$FD$X[OCN$FD$outlet],OCN$FD$Y[OCN$FD$outlet],pch=22,col="#000000",bg="#000000")
+    ## plot OCN
+    AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)
+    #points(OCN$FD$X[OCN$FD$outlet],OCN$FD$Y[OCN$FD$outlet],pch=22,col="#000000",bg="#000000")
 
-  for (i in AvailableNodes){
-    if (OCN$FD$A[i]>=OCN$thrA  & abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]])<=OCN$cellsize & abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]])<=OCN$cellsize  ) {
-      lines(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$downNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$downNode[i]]),lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col="black")}
+    for (i in AvailableNodes){
+      if (OCN$FD$A[i]>=OCN$thrA  & abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]])<=OCN$cellsize & abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]])<=OCN$cellsize  ) {
+        lines(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$downNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$downNode[i]]),lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col="black")}
+    }
   }
-  }
+  invisible()
 }

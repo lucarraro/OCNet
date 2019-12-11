@@ -37,7 +37,8 @@ draw_elev3D_OCN <- function(OCN,
   }
   Zmat <- Z_cg
   
-  par(bty="n")
+  old.par <- par(bty="n")
+  on.exit(par(old.par))
   # draw 3D elevation map
   #Zmat<-matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
   zfacet <- Zmat[-1, -1] + Zmat[-1, -OCN$dimX/coarseGrain[1]] + Zmat[-OCN$dimY/coarseGrain[2], -1] + Zmat[-OCN$dimY/coarseGrain[2], -OCN$dimX/coarseGrain[1]]
@@ -60,5 +61,5 @@ draw_elev3D_OCN <- function(OCN,
               lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=riverColor)}
     }
   }
-  
+  invisible()
 }

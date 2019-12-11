@@ -97,7 +97,8 @@ draw_thematic_OCN <- function(theme,OCN,
   } else {pch_vec <- pch}
   
   AvailableNodes <- setdiff(which(OCN$FD$toCM %in% chooseCM),OCN$FD$outlet)
-  par(bty="n")
+  old.par <- par(bty="n")
+  on.exit(par(old.par))
   plot(c(min(X[OCN$FD$toCM %in% chooseCM]),max(X[OCN$FD$toCM %in% chooseCM])),
        c(min(Y[OCN$FD$toCM %in% chooseCM]),max(Y[OCN$FD$toCM %in% chooseCM])),
        type="n",xlab=" ",ylab=" ",axes=FALSE,asp=1)
@@ -216,4 +217,5 @@ draw_thematic_OCN <- function(theme,OCN,
              str,fill=colPalette,ncol=ceiling(N_colLevels/20), xpd=TRUE, cex=0.8, bty="n")
     }
   }
+  invisible()
 }
