@@ -35,9 +35,11 @@ rivergeometry_OCN <- function(OCN,
   depth_RN <- depthMax*(OCN$RN$A/(OCN$FD$nNodes*OCN$cellsize^2))^expDepth
   velocity_RN <- velocityMax*(OCN$RN$A/(OCN$FD$nNodes*OCN$cellsize^2))^expVelocity
   
-  width_AG <- widthMax*(OCN$AG$A/(OCN$FD$nNodes*OCN$cellsize^2))^expWidth
-  depth_AG <- depthMax*(OCN$AG$A/(OCN$FD$nNodes*OCN$cellsize^2))^expDepth
-  velocity_AG <- velocityMax*(OCN$AG$A/(OCN$FD$nNodes*OCN$cellsize^2))^expVelocity
+  A_AG <- 0.5*(OCN$AG$A + OCN$AG$AReach)
+  
+  width_AG <- widthMax*(A_AG/(OCN$FD$nNodes*OCN$cellsize^2))^expWidth
+  depth_AG <- depthMax*(A_AG/(OCN$FD$nNodes*OCN$cellsize^2))^expDepth
+  velocity_AG <- velocityMax*(A_AG/(OCN$FD$nNodes*OCN$cellsize^2))^expVelocity
 
   # copy variables into OCN list
   OCN$RN[["width"]] <- width_RN

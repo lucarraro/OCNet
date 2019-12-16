@@ -36,6 +36,8 @@ Finally, \code{widthMax}, \code{depthMax}, \code{velocityMax}, \code{expWidth}, 
 Function that calculates river width, depth and water velocity by applying Leopold's scaling relationships to nodes at the RN and AG levels.
 }
 \details{
+The values of contributing area used to evaluate river geometry at the AG level are equal to \code{0.5*(OCN$AG$A + OCN$AG$AReach)}. See also \code{\link{aggregate_OCN}}.
+
 See also Leopold, L. B., & Maddock, T. (1953). \emph{The hydraulic geometry of stream channels and some physiographic implications}
  (Vol. 252). US Government Printing Office.
 }
