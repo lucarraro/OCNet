@@ -153,26 +153,26 @@ The default temperature schedule for the simulated annealing process is generall
 \examples{
 # 1) creates and displays a single outlet 20x20 OCN with default options
 set.seed(1)
-par(mfrow=c(1,1))
 OCN_a <- create_OCN(20, 20)
 draw_simple_OCN(OCN_a)
 
-\dontrun{
+\donttest{
 # 2) creates and displays a 2-outlet OCNs with manually set outlet location, 
 # and a 4-outlet OCNs with random outlet position.
 set.seed(1)
+old.par <- par(no.readonly = TRUE)
 par(mfrow=c(1,2))
 OCN_b1 <- create_OCN(30, 30, nOutlet = 2, outletSide = c("N", "W"), outletPos = c(15, 12))
 OCN_b2 <- create_OCN(30, 30, nOutlet = 4)
 draw_simple_OCN(OCN_b1,plot_title = "2-outlet OCN")
 draw_simple_OCN(OCN_b2,plot_title = "4-outlet OCN")
+par(old.par)
 }
 
-\dontrun{
+\donttest{
 # 3) generate 3 single-outlet OCNs on the same (100x100) domain starting from different 
 # initial states, and show 20 intermediate plots and console updates.
 set.seed(1)
-par(mfrow=c(1,1))
 OCN_V <- create_OCN(100, 100, typeInitialState = "V", showIntermediatePlots = TRUE, 
 		nUpdates = 20, displayUpdates = 2)
 OCN_T <- create_OCN(100, 100, typeInitialState = "T", showIntermediatePlots = TRUE, 
@@ -181,7 +181,7 @@ OCN_I <- create_OCN(100, 100, typeInitialState = "I", showIntermediatePlots = TR
 		nUpdates = 20, displayUpdates = 2)
 }
 
-\dontrun{
+\donttest{
 # 4) generate a 2-outlet OCN and show intermediate plots. Note that different colors are used 
 # to identify the two networks  (all pixels are colored because thrADraw = 0).
 set.seed(1)

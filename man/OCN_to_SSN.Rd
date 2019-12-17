@@ -46,7 +46,7 @@ ssn1 <- OCN_to_SSN(OCN, "AG", obsDesign = SSN::poissonDesign(10),
 path=paste(tempdir(),"/OCN.ssn", sep = ""), importToR = TRUE)
 plot(ssn1)
 
-\dontrun{
+\donttest{
 # 1) create a 50x50 OCN with two outlets and periodic boundaries; 
 set.seed(1)
 OCN <- create_OCN(50, 50, nOutlet = 2, outletSide = c("S", "N"),
@@ -58,8 +58,10 @@ ssn2 <- OCN_to_SSN(OCN, "RN", obsDesign = SSN::binomialDesign(c(10, 10)),
 		path = paste(tempdir(),"/OCN2.ssn", sep = ""), importToR = TRUE)
 # and plot the SSN object; it is constituted by two networks,
 # and nodes' coordinates are the "real" ones  
+old.par <- par(no.readonly = TRUE)
 par(mai = c(1, 1, 1, 1))
 plot(ssn2, xlab = "X", ylab = "Y")
+par(old.par)
 }
 
 }

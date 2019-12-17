@@ -36,15 +36,15 @@ create_OCN <- function(dimX,dimY,
     unitTime <- "hours"}
     
     if (displayUpdates != 0){
-      cat("create_OCN is running...\n")
-      cat(sprintf("Estimated duration: %.2f %s \n",estTime,unitTime))
-      cat("Note that the above estimate is only based on the choice of parameters dimX, dimY and nIter, and not on processor performance.\n")
-      cat("\n")
+      message("create_OCN is running...\n")
+      message(sprintf("Estimated duration: %.2f %s \n",estTime,unitTime))
+      message("Note that the above estimate is only based on the choice of parameters dimX, dimY and nIter, and not on processor performance.\n")
+      message("\n")
     }
   }
   
   t0 <- Sys.time()
-  if (displayUpdates==2){cat('Initializing...\n')}
+  if (displayUpdates==2){message('Initializing...\n')}
   
   ################################## 
   ## DEFINE INITIAL NETWORK STATE ##  
@@ -271,9 +271,9 @@ create_OCN <- function(dimX,dimY,
   
   #Rprof("\\\\eawag/userdata/carrarlu/Desktop/Luca/OCN/R/spam_stuff/Rprof100.out")
   if (displayUpdates == 2){
-    cat(sprintf('Initialization completed. Elapsed time is %.2f s \n',difftime(Sys.time(),t0,units='secs'))) 
-    cat('Search algorithm has started.\n')
-    cat('\n')}
+    message(sprintf('Initialization completed. Elapsed time is %.2f s \n',difftime(Sys.time(),t0,units='secs'))) 
+    message('Search algorithm has started.\n')
+    message('\n')}
   
   pl <- as.integer(pl$perm)
   flag <- 0
@@ -321,7 +321,7 @@ create_OCN <- function(dimX,dimY,
     # write update
     if (displayUpdates==2){
       if (iter %% round(nIter/nUpdates)==0){
-        cat(sprintf('%.1f%% completed - Elapsed time: %.2f s - %11s - Energy; %0.f \n',
+        message(sprintf('%.1f%% completed - Elapsed time: %.2f s - %11s - Energy; %0.f \n',
                     iter/nIter*100,difftime(Sys.time(),t0,units='secs'),format(Sys.time(),"%b%d %H:%M"),Energy[iter]))
         }}
     # plot update

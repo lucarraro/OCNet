@@ -44,8 +44,10 @@ OCN <- landscape_OCN(OCN_20)
 thr <- find_area_threshold_OCN(OCN)
 # log-log plot of number of nodes at the AG level versus 
 # relative threshold area (as fraction of total drainage area) 
-par(mai=c(1,1,1,1))  
+old.par <- par(no.readonly = TRUE)
+par(mai = c(1,1,1,1))  
 plot(thr$thrValues[thr$nNodesAG > 0]/OCN$CM$A,
 		thr$nNodesAG[thr$nNodesAG > 0], log = "xy",
 		xlab = "Relative area threshold", ylab = "Number of AG nodes")
+par(old.par)
 }

@@ -25,7 +25,7 @@ Function that plots the non-aggregated OCN as calculated by \code{create_OCN}.
 draw_simple_OCN(OCN_250_T)
 # 1b) same as above, but with decreased thrADraw
 draw_simple_OCN(OCN_250_T, thrADraw = 0.001 * OCN_250_T$dimX * OCN_250_T$dimY)
-\dontrun{
+\donttest{
 # 1c) same as the first example, but include the portion of network  
 # with drainage area lower than thrADraw 
 draw_simple_OCN(OCN_250_T, easyDraw = FALSE) # this will take some seconds

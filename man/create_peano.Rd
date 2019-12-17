@@ -31,6 +31,7 @@ Function that creates Peano networks on a square lattice.
 # and display subcatchment map and map of drainage area
 peano <- create_peano(4)
 peano <- aggregate_OCN(landscape_OCN(peano), thrA = 4)
+old.par <- par(no.readonly = TRUE)
 par(mfrow=c(1,3))
 draw_simple_OCN(peano)
 title("Peano network")
@@ -38,4 +39,5 @@ draw_subcatchments_OCN(peano)
 title("Subcatchments")
 draw_thematic_OCN(peano$RN$A, peano)
 title("Drainage area at RN level")
+par(old.par)
 }

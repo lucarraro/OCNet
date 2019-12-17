@@ -37,8 +37,9 @@ draw_elev3D_OCN <- function(OCN,
   }
   Zmat <- Z_cg
   
-  old.par <- par(bty="n")
+  old.par <- par(no.readonly = TRUE)
   on.exit(par(old.par))
+  par(bty="n")
   # draw 3D elevation map
   #Zmat<-matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
   zfacet <- Zmat[-1, -1] + Zmat[-1, -OCN$dimX/coarseGrain[1]] + Zmat[-OCN$dimY/coarseGrain[2], -1] + Zmat[-OCN$dimY/coarseGrain[2], -OCN$dimX/coarseGrain[1]]

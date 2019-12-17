@@ -49,7 +49,7 @@ the RN node \code{i} belongs to the edge departing from from the AG node \code{j
 \code{i} drains into the outlet whose location is defined by \code{outletSide[j]}, \code{outletPos[j]}.}
 \item{\code{RN$upstream}}{List (of length \code{RN$nNodes}) whose object \code{i} is a vector (of length \code{RN$nUpstream[i]}) containing 
 the indices of nodes upstream of a node \code{i} (including \code{i}).}
-\item{\code{RN$X}, \code{RN$Y}}{Vector (of length \code{RN$nNodes}) of X, Y coordinates of nodes at RN level.}
+\item{\code{RN$X}, \code{RN$Y}}{Vectors (of length \code{RN$nNodes}) of X, Y coordinates of nodes at RN level.}
 \item{\code{RN$Z}}{Vector (of length \code{RN$nNodes}) of Z coordinates of nodes at RN level.}
 \item{\code{AG$A}}{Vector (of length \code{AG$nNodes}) containing drainage area values for all nodes at AG level. 
 If \code{i} is a channel head, then \code{AG$A[RN$toAG[i]] = RN$A[i]}.} 
@@ -78,7 +78,7 @@ departing from node \code{i}.}
 departing from node \code{i}.}
 \item{\code{AG$toCM}}{Vector (of length \code{AG$nNodes}) with catchment index values for each AG node. Example: \code{AG$toCM[i] = j} if node
 \code{i} drains into the outlet whose location is defined by \code{outletSide[j]}, \code{outletPos[j]}.}
-\item{\code{AG$X}, \code{AG$Y}}{Vector (of length \code{AG$nNodes}) of X, Y coordinates (in planar units) of nodes at the AG level. 
+\item{\code{AG$X}, \code{AG$Y}}{Vectors (of length \code{AG$nNodes}) of X, Y coordinates (in planar units) of nodes at the AG level. 
 These correspond to the X, Y coordinates of the nodes constituting the upstream tips of the reaches. 
 If \code{i} and \code{j} are such that \code{AG$X[i] == RN$X[j]} and \code{AG$Y[i] == RN$Y[j]}, then \code{AG$A[i] = RN$A[j]}.}
 \item{\code{AG$XReach}, \code{AG$YReach}}{Vector (of length \code{AG$nNodes}) of X, Y coordinates (in planar units) of the downstream tips of the reaches. 
@@ -95,8 +95,8 @@ If \code{o} is an outlet node, then \code{SC$W[o,]} and \code{SC$W[,o]} only con
 If multiple outlets are present, \code{SC$nNodes} might be greater than \code{AG$nNodes} in the case when some catchments have drainage area lower than \code{thrA}. 
 In this case, the indices from \code{AG$nNodes + 1} to \code{SC$nNodes} identify subcatchment that do not have a corresponding AG node.}
 \item{\code{SC$toFD}}{List (of length \code{SC$nNodes}) whose object \code{i} is a vector of indices of FD pixels constituting the subcatchment \code{i}.}
-\item{\code{SC$X}, \code{SC$Y}}{Vector (of length \code{SC$nNodes}) of X, Y coordinates (in planar units) of subcatchment centroids.}
-\item{\code{SC$Z}}{vector (of length \code{SC$nNodes}) of average subcatchment elevation (in elevational units).}
+\item{\code{SC$X}, \code{SC$Y}}{Vectors (of length \code{SC$nNodes}) of X, Y coordinates (in planar units) of subcatchment centroids.}
+\item{\code{SC$Z}}{Vector (of length \code{SC$nNodes}) of average subcatchment elevation (in elevational units).}
 Finally, \code{thrA} is added to the list.
 }
 \description{
@@ -112,13 +112,14 @@ are also part of subcatchment \code{i}).
 # 1) aggregate a 20x20 OCN by imposting thrA = 4
 OCN <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 4)
 
-\dontrun{
+\donttest{
 # 2) explore the effects of thrA and maxReachLength on a large OCN
 OCN <- landscape_OCN(OCN_250_T) # it takes some seconds
 OCN_a <- aggregate_OCN(OCN, thrA = 200) # it takes some seconds
 OCN_b <- aggregate_OCN(OCN, thrA = 1000) # it takes some seconds
 OCN_c <- aggregate_OCN(OCN, thrA = 1000, maxReachLength = 20) # it takes some seconds
 
+old.par <- par(no.readonly=TRUE)
 par(mfrow=c(1,3))
 draw_subcatchments_OCN(OCN_a)
 points(OCN_a$AG$X, OCN_a$AG$Y, pch = 19, col = "#0044bb") 
@@ -129,5 +130,6 @@ title(sprintf("No. AG nodes = %d", OCN_b$AG$nNodes))
 draw_subcatchments_OCN(OCN_c)
 points(OCN_c$AG$X, OCN_c$AG$Y, pch = 19, col = "#0044bb") 
 title(sprintf("No. AG nodes = %d", OCN_c$AG$nNodes))
+par(old.par)
 }
 }
