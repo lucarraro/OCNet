@@ -13,8 +13,8 @@ find_area_threshold_OCN <- function(OCN,
     stop('max(thrValues) cannot be larger than min(OCN$CM$A)')
   }
   if (length(thrValues)>5000 && OCN$FD$nNodes>5000){
-    message('Running...\n')
-    message('To reduce computational time, reduce the length of thrValues.\n')
+    message('Running...\n', appendLF = FALSE)
+    message('To reduce computational time, reduce the length of thrValues.\n', appendLF = FALSE)
   }
   
   vec_nNodesRN <- numeric(length(thrValues))
@@ -23,7 +23,7 @@ find_area_threshold_OCN <- function(OCN,
   vec_StreamOrder <- numeric(length(thrValues))
   
   for (thr in 1:(length(thrValues))){
-    if (displayUpdates==1) {message(sprintf('\r%.2f%% completed',100*thr/length(thrValues)))}
+    if (displayUpdates==1) {message(sprintf('\r%.2f%% completed',100*thr/length(thrValues)), appendLF = FALSE)}
     # print(sprintf('Evaluating A_thr = %.0f m2',thrValues[thr]))
     
     RN_mask <- as.vector(OCN$FD$A >= thrValues[thr]) 

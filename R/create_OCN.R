@@ -38,8 +38,7 @@ create_OCN <- function(dimX,dimY,
     if (displayUpdates != 0){
       message("create_OCN is running...\n", appendLF = FALSE)
       message(sprintf("Estimated duration: %.2f %s \n",estTime,unitTime), appendLF = FALSE)
-      message("Note that the above estimate is only based on the choice of 
-              parameters dimX, dimY and nIter, and not on processor performance.\n", appendLF = FALSE)
+      message("Note that the above estimate is only based on the choice of parameters dimX, dimY and nIter, and not on processor performance.\n", appendLF = FALSE)
       message("\n", appendLF = FALSE)
     }
   }
