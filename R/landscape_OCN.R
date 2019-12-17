@@ -9,7 +9,7 @@ landscape_OCN <- function(OCN,
   
   if (!(displayUpdates %in% c(0,1,2))) {stop("Invalid displayUpdates")}
   
-  if (displayUpdates>0){cat("Calculating lengths and slopes... \r")}
+  if (displayUpdates>0){message("Calculating lengths and slopes... \r")}
   
   AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)  
   # calculate elevation gain through each pixel
@@ -20,7 +20,7 @@ landscape_OCN <- function(OCN,
     Length[i] <- sqrt((abs(OCN$FD$X[OCN$FD$downNode[i]]-OCN$FD$X[i]) %% ((OCN$dimX-1)*OCN$cellsize-2*min(OCN$FD$X)))^2 + 
                         (abs(OCN$FD$Y[OCN$FD$downNode[i]]-OCN$FD$Y[i]) %% ((OCN$dimY-1)*OCN$cellsize-2*min(OCN$FD$Y)))^2)
     kount <- kount + 1
-    if (displayUpdates==2){cat(sprintf("Calculating lengths and slopes... %.1f%%\r",kount/length(AvailableNodes)*100))}
+    if (displayUpdates==2){message(sprintf("Calculating lengths and slopes... %.1f%%\r",kount/length(AvailableNodes)*100))}
   }
   DeltaZ <- Slope*Length
   
@@ -44,10 +44,10 @@ landscape_OCN <- function(OCN,
       NeighbouringNodes[[cont_node]] <- neigh_r[NotAboundary] + (neigh_c[NotAboundary]-1)*OCN$dimY
     }
   } 
-  if (displayUpdates>0){cat("Calculating lengths and slopes...   100%\n")}
+  if (displayUpdates>0){message("Calculating lengths and slopes...   100%\n")}
   
   # find elevation pattern with respect to main outlet
-  if (displayUpdates>0){cat("Determining elevation... \r")}
+  if (displayUpdates>0){message("Determining elevation... \r")}
   kount <- 0
   Z <- numeric(OCN$FD$nNodes)
   FD_to_CM <- numeric(OCN$FD$nNodes)
@@ -68,7 +68,7 @@ landscape_OCN <- function(OCN,
         CM_to_FD[[outlet]] <- c(CM_to_FD[[outlet]],neighbours)
         next_nodes <- c(next_nodes,neighbours)
       }
-      if (displayUpdates==2){cat(sprintf("Determining elevation... %.1f%%\r",kount/OCN$FD$nNodes*100))}
+      if (displayUpdates==2){message(sprintf("Determining elevation... %.1f%%\r",kount/OCN$FD$nNodes*100))}
     }
   }
   
@@ -94,14 +94,14 @@ landscape_OCN <- function(OCN,
       }
     }
   }else {W_CM <- 0}
-  if (displayUpdates>0){cat("Determining elevation...   100%\n")}
+  if (displayUpdates>0){message("Determining elevation...   100%\n")}
   
   
   # find altitude of secondary outlets with respect to altitude of the main outlet
   if (optimizeDZ==TRUE){
-    if (displayUpdates==1){cat("Optimizing elevations... \r")}
+    if (displayUpdates==1){message("Optimizing elevations... \r")}
     if (length(OCN$FD$outlet)>1){ 
-      if (optimControl$trace>0) {cat("Optimizing elevations...\n")}
+      if (optimControl$trace>0) {message("Optimizing elevations...\n")}
       CatchmentMat <- matrix(data=FD_to_CM,nrow=OCN$dimY,ncol=OCN$dimX)
       # find border pixels between catchments
       # BorderMat <- sparseMatrix(i=1,j=1,x=0,dims=c(OCN$FD$nNodes,OCN$FD$nNodes))
@@ -154,7 +154,7 @@ landscape_OCN <- function(OCN,
         #print(sprintf("Outlet of main catchment has been lifted by %.2f elevation units",- min(Z_lifts)))
       }
     }
-    if (displayUpdates>0){cat("Optimizing outlet elevations... 100%\n")}
+    if (displayUpdates>0){message("Optimizing outlet elevations... 100%\n")}
   }
   Z <- Z + zMin
   
@@ -164,7 +164,7 @@ landscape_OCN <- function(OCN,
   Y_draw <- OCN$FD$Y # new vector of Y coordinates
   
   if(OCN$periodicBoundaries==TRUE){
-    if (displayUpdates>0){cat("Calculating real X, Y coordinates... \r")}
+    if (displayUpdates>0){message("Calculating real X, Y coordinates... \r")}
     kount <- 0
     CurrentPath <- OCN$FD$outlet # start reattributing coordinates from outlet(s)
     while (length(CurrentPath)>0){ # iterate until all pixels have been explored
@@ -197,12 +197,12 @@ landscape_OCN <- function(OCN,
       }
       CurrentPath <- ContinuePath # move to next iteration
       kount <- kount + length(CurrentPath)
-      if (displayUpdates==2){cat(sprintf("Calculating real X, Y coordinates... %.1f%%\r",kount/OCN$FD$nNodes*100))}
+      if (displayUpdates==2){message(sprintf("Calculating real X, Y coordinates... %.1f%%\r",kount/OCN$FD$nNodes*100))}
     }
   }
-  if (displayUpdates>0){cat("Calculating real coordinates...   100%\n")}
+  if (displayUpdates>0){message("Calculating real coordinates...   100%\n")}
   
-  if (displayUpdates>0){cat("Calculating catchment contour(s)... ")}
+  if (displayUpdates>0){message("Calculating catchment contour(s)... ")}
   # determine contour of catchments (with original coordinates)
   X_contour <- vector("list", length = OCN$nOutlet)
   Y_contour <- vector("list", length = OCN$nOutlet)
@@ -249,7 +249,7 @@ landscape_OCN <- function(OCN,
       Y_contour_draw[[j]][[k]] <- count[[k]]$y
     }  
   }
-  if (displayUpdates>0){cat(" 100%\n")}
+  if (displayUpdates>0){message(" 100%\n")}
   
   # add results to OCN list
   OCN$FD[["slope"]] <- Slope

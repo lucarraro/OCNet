@@ -64,8 +64,9 @@ draw_subcatchments_OCN <- function(OCN,
     colPalette <- colPalette[1:length(ColorList)]
   }
   
-  old.par <- par(bty="n")
+  old.par <- par(no.readonly = TRUE)
   on.exit(par(old.par))
+  par(bty="n")
   image(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),
         seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize),
         t(Color_SC),col=colPalette,xlab=" ",ylab=" ",asp=1,axes=FALSE)
