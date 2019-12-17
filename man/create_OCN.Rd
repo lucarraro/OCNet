@@ -164,8 +164,10 @@ old.par <- par(no.readonly = TRUE)
 par(mfrow=c(1,2))
 OCN_b1 <- create_OCN(30, 30, nOutlet = 2, outletSide = c("N", "W"), outletPos = c(15, 12))
 OCN_b2 <- create_OCN(30, 30, nOutlet = 4)
-draw_simple_OCN(OCN_b1,plot_title = "2-outlet OCN")
-draw_simple_OCN(OCN_b2,plot_title = "4-outlet OCN")
+draw_simple_OCN(OCN_b1)
+title("2-outlet OCN")
+draw_simple_OCN(OCN_b2)
+title("4-outlet OCN")
 par(old.par)
 }
 
@@ -189,6 +191,7 @@ OCN <- create_OCN(150, 70, nOutlet = 2, outletPos = c(1, 150), outletSide = c("S
 		typeInitialState = "V", periodicBoundaries = TRUE, 
 		showIntermediatePlots = TRUE, thrADraw = 0)
 # The resulting networks have an irregular contour, and their outlets are located on the contour:
-draw_contour_OCN(landscape_OCN(OCN))}
+draw_contour_OCN(landscape_OCN(OCN))
+}
 }
 

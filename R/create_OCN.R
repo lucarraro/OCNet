@@ -321,7 +321,7 @@ create_OCN <- function(dimX,dimY,
     # write update
     if (displayUpdates==2){
       if (iter %% round(nIter/nUpdates)==0){
-        message(sprintf('%.1f%% completed - Elapsed time: %.2f s - %11s - Energy; %0.f \n',
+        message(sprintf('%.1f%% completed - Elapsed time: %.2f s - %11s - Energy: %0.f \n',
                     iter/nIter*100,difftime(Sys.time(),t0,units='secs'),format(Sys.time(),"%b%d %H:%M"),Energy[iter]), appendLF = FALSE)
         }}
     # plot update
