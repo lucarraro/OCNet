@@ -20,7 +20,7 @@ Draw the so-obtained OCN:
 ```
 draw_simple_OCN(OCN)
 ````
-![OCN 30x20](/inst/OCN_3020.png)
+![OCN 30x20](/inst/extdata/OCN_3020.png)
 
 ## Installation
 
