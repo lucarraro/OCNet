@@ -36,15 +36,16 @@ create_OCN <- function(dimX,dimY,
     unitTime <- "hours"}
     
     if (displayUpdates != 0){
-      message("create_OCN is running...\n")
-      message(sprintf("Estimated duration: %.2f %s \n",estTime,unitTime))
-      message("Note that the above estimate is only based on the choice of parameters dimX, dimY and nIter, and not on processor performance.\n")
-      message("\n")
+      message("create_OCN is running...\n", appendLF = FALSE)
+      message(sprintf("Estimated duration: %.2f %s \n",estTime,unitTime), appendLF = FALSE)
+      message("Note that the above estimate is only based on the choice of 
+              parameters dimX, dimY and nIter, and not on processor performance.\n", appendLF = FALSE)
+      message("\n", appendLF = FALSE)
     }
   }
   
   t0 <- Sys.time()
-  if (displayUpdates==2){message('Initializing...\n')}
+  if (displayUpdates==2){message('Initializing...\n', appendLF = FALSE)}
   
   ################################## 
   ## DEFINE INITIAL NETWORK STATE ##  
@@ -271,9 +272,9 @@ create_OCN <- function(dimX,dimY,
   
   #Rprof("\\\\eawag/userdata/carrarlu/Desktop/Luca/OCN/R/spam_stuff/Rprof100.out")
   if (displayUpdates == 2){
-    message(sprintf('Initialization completed. Elapsed time is %.2f s \n',difftime(Sys.time(),t0,units='secs'))) 
-    message('Search algorithm has started.\n')
-    message('\n')}
+    message(sprintf('Initialization completed. Elapsed time is %.2f s \n',difftime(Sys.time(),t0,units='secs')), appendLF = FALSE) 
+    message('Search algorithm has started.\n', appendLF = FALSE)
+    message('\n', appendLF = FALSE)}
   
   pl <- as.integer(pl$perm)
   flag <- 0
@@ -322,7 +323,7 @@ create_OCN <- function(dimX,dimY,
     if (displayUpdates==2){
       if (iter %% round(nIter/nUpdates)==0){
         message(sprintf('%.1f%% completed - Elapsed time: %.2f s - %11s - Energy; %0.f \n',
-                    iter/nIter*100,difftime(Sys.time(),t0,units='secs'),format(Sys.time(),"%b%d %H:%M"),Energy[iter]))
+                    iter/nIter*100,difftime(Sys.time(),t0,units='secs'),format(Sys.time(),"%b%d %H:%M"),Energy[iter]), appendLF = FALSE)
         }}
     # plot update
    
