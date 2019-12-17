@@ -42,14 +42,14 @@ node is an outlet), \code{OCN$cellsize} (if the corresponding flow direction is 
 \item{\code{RN$toAG}}{Vector (of length \code{RN$nNodes}) whose values are equal to 0 if the RN node is not a node at the AG level. 
 If \code{RN$toAG[i] != 0}, then \code{RN$toAG[i]} is the index at the AG level of the node whose index at the RN level is \code{i}. Thereby, 
 \code{RN$toAG[i] = j} implies \code{AG$toRN[j] = i}.}
-\item{\code{RN$toAGReach}}{Vector (of length \code{RN$nNodes}) identifying to which edge (reach) the RN nodes belong. If \code{RN$toAGReach[i] = j}, the RN node \code{i} belongs to the edge departing from from the AG node \code{j} (which implies that it may correspond to the AG node \code{j} itself.)}
+\item{\code{RN$toAGReach}}{Vector (of length \code{RN$nNodes}) identifying to which edge (reach) the RN nodes belong. If \code{RN$toAGReach[i] = j}, 
+the RN node \code{i} belongs to the edge departing from from the AG node \code{j} (which implies that it may correspond to the AG node \code{j} itself.)}
 \item{\code{RN$toFD}}{Vector (of length \code{RN$nNodes}) with indices at FD level of nodes belonging to RN level. \code{RN$toFD[i] = j} implies \code{OCN$FD$toRN[j] = i}.}
 \item{\code{RN$toCM}}{Vector (of length \code{RN$nNodes}) with catchment index values for each RN node. Example: \code{RN$toCM[i] = j} if node
 \code{i} drains into the outlet whose location is defined by \code{outletSide[j]}, \code{outletPos[j]}.}
 \item{\code{RN$upstream}}{List (of length \code{RN$nNodes}) whose object \code{i} is a vector (of length \code{RN$nUpstream[i]}) containing 
 the indices of nodes upstream of a node \code{i} (including \code{i}).}
-\item{\code{RN$X}}{Vector (of length \code{RN$nNodes}) of X coordinates of nodes at RN level.}
-\item{\code{RN$Y}}{Vector (of length \code{RN$nNodes}) of Y coordinates of nodes at RN level.}
+\item{\code{RN$X}, \code{RN$Y}}{Vector (of length \code{RN$nNodes}) of X, Y coordinates of nodes at RN level.}
 \item{\code{RN$Z}}{Vector (of length \code{RN$nNodes}) of Z coordinates of nodes at RN level.}
 \item{\code{AG$A}}{Vector (of length \code{AG$nNodes}) containing drainage area values for all nodes at AG level. 
 If \code{i} is a channel head, then \code{AG$A[RN$toAG[i]] = RN$A[i]}.} 
@@ -78,12 +78,14 @@ departing from node \code{i}.}
 departing from node \code{i}.}
 \item{\code{AG$toCM}}{Vector (of length \code{AG$nNodes}) with catchment index values for each AG node. Example: \code{AG$toCM[i] = j} if node
 \code{i} drains into the outlet whose location is defined by \code{outletSide[j]}, \code{outletPos[j]}.}
-\item{\code{AG$X}}{Vector (of length \code{AG$nNodes}) of X coordinates (in planar units) of nodes at the AG level. 
-These correspond to the X coordinates of the nodes constituting the channel heads.}
-\item{\code{AG$Y}}{Vector (of length \code{AG$nNodes}) of Y coordinates (in planar units) of nodes at the AG level. 
-These correspond to the Y coordinates of the nodes constituting the channel heads.}
+\item{\code{AG$X}, \code{AG$Y}}{Vector (of length \code{AG$nNodes}) of X, Y coordinates (in planar units) of nodes at the AG level. 
+These correspond to the X, Y coordinates of the nodes constituting the upstream tips of the reaches. 
+If \code{i} and \code{j} are such that \code{AG$X[i] == RN$X[j]} and \code{AG$Y[i] == RN$Y[j]}, then \code{AG$A[i] = RN$A[j]}.}
+\item{\code{AG$XReach}, \code{AG$YReach}}{Vector (of length \code{AG$nNodes}) of X, Y coordinates (in planar units) of the downstream tips of the reaches. 
+If \code{i} and \code{j} are such that \code{AG$XReach[i] == RN$X[j]} and \code{AG$YReach[i] == RN$Y[j]}, then \code{AG$AReach[i] = RN$A[j]}. }
 \item{\code{AG$Z}}{Vector (of length \code{AG$nNodes}) of elevation values (in elevational units) of nodes at the AG level. 
-These correspond to the elevations of the nodes constituting the channel heads.}
+These correspond to the elevations of the nodes constituting the upstream tips of the reaches.}
+\item{\code{AG$ZReach}}{Vector (of length \code{AG$nNodes}) of Z coordinates (in elevational units) of the downstream tips of the reaches.}
 \item{\code{SC$ALocal}}{Vector (of length \code{SC$nNodes}) with values of subcatchment area, that is the number of FD pixels 
 (multiplied by \code{OCN$FD$cellsize^2}) that constitutes a subcatchment. If \code{o} is an outlet node, then \code{ALocal[o] = 0}.}
 \item{\code{SC$W}}{Adjacency matrix (\code{SC$nNodes} by \code{SC$nNodes}) at the subcatchment level. Two subcatchments are connected if they share a border. 
@@ -93,9 +95,8 @@ If \code{o} is an outlet node, then \code{SC$W[o,]} and \code{SC$W[,o]} only con
 If multiple outlets are present, \code{SC$nNodes} might be greater than \code{AG$nNodes} in the case when some catchments have drainage area lower than \code{thrA}. 
 In this case, the indices from \code{AG$nNodes + 1} to \code{SC$nNodes} identify subcatchment that do not have a corresponding AG node.}
 \item{\code{SC$toFD}}{List (of length \code{SC$nNodes}) whose object \code{i} is a vector of indices of FD pixels constituting the subcatchment \code{i}.}
-\item{\code{SC$X}}{Vector (of length \code{SC$nNodes}) of X coordinates of subcatchment centroids.}
-\item{\code{SC$Y}}{vector (of length \code{SC$nNodes}) of Y coordinates of subcatchment centroids.}
-\item{\code{SC$Z}}{vector (of length \code{SC$nNodes}) of average subcatchment elevation.}
+\item{\code{SC$X}, \code{SC$Y}}{Vector (of length \code{SC$nNodes}) of X, Y coordinates (in planar units) of subcatchment centroids.}
+\item{\code{SC$Z}}{vector (of length \code{SC$nNodes}) of average subcatchment elevation (in elevational units).}
 Finally, \code{thrA} is added to the list.
 }
 \description{

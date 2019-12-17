@@ -285,8 +285,22 @@ aggregate_OCN <- function(OCN,
   for (i in 1:Nnodes_AG) {
     Areach_AG[i] <- sum(Alocal_SC[Upstream_AG[[i]]])  
   }
-  #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE); 
-  #t1 <- Sys.time()
+
+  # coordinates of AG nodes considered at the downstream end of the respective edge
+  XReach <- numeric(Nnodes_AG)
+  YReach <- numeric(Nnodes_AG)
+  ZReach <- numeric(Nnodes_AG)
+  for (i in 1:Nnodes_AG){
+    tmp <- AG_to_RN[[i]]
+    ind <- which(A_RN[tmp]==max(A_RN[tmp]))
+    node <- tmp[ind]
+    XReach[i] <- X_RN[node]
+    YReach[i] <- Y_RN[node]
+    ZReach[i] <- Z_RN[node]
+  }
+  XReach[Outlet_AG]=NaN
+  YReach[Outlet_AG]=NaN
+  ZReach[Outlet_AG]=NaN
   
   # build neighbouring nodes at FD level
   # find list of possible neighbouring pixels
@@ -378,8 +392,11 @@ aggregate_OCN <- function(OCN,
   OCN$AG[["toCM"]] <- AG_to_CM
   OCN$AG[["upstream"]] <- Upstream_AG
   OCN$AG[["X"]] <- X_AG
+  OCN$AG[["XReach"]] <- XReach
   OCN$AG[["Y"]] <- Y_AG
+  OCN$AG[["YReach"]] <- YReach
   OCN$AG[["Z"]] <- Z_AG
+  OCN$AG[["ZReach"]] <- ZReach
   
   # SC level
   OCN$SC[["ALocal"]] <- Alocal_SC
