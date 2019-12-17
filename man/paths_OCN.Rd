@@ -15,14 +15,14 @@ A list that contains all objects contained in \code{OCN}, in addition to the obj
 \item{\code{RN$downstreamPath}}{(only present if \code{pathsRN = TRUE}) List (of length \code{OCN$RN$nNodes}) whose object \code{i} is a list (of length \code{OCN$RN$nNodes}). 
 If nodes \code{i} and \code{j} are connected by a downstream path, then \code{RN$downstreamPath[[i]][[j]]} is a vector 
 containing the indices of the nodes constituting such path (\code{i} and \code{j} are included). If \code{i} and \code{j} are not connected 
-by a downstream path, then \code{RN$downstreamPath[[i]][[j]] = NULL}.}
+by a downstream path, then \code{RN$downstreamPath[[i]][[j]] = 0}.}
 \item{\code{RN$downstreamPathLength}}{Sparse matrix (\code{OCN$RN$nNodes} by \code{OCN$RN$nNodes}) containing length of paths between nodes 
 that are connected by a downstream path; if \code{i} and \code{j} are not connected by a downstream path, then \code{RN$downstreamPathLength[i,j] = 0}. 
 Note that \code{RN$downstreamPathLength[i,i] = OCN$RN$leng[i]}. It is a \code{\link{spam}} object.}
 \item{\code{AG$downstreamPath}}{List (of length \code{OCN$AG$nNodes}) whose object \code{i} is a list (of length \code{OCN$AG$nNodes}). 
 If nodes \code{i} and \code{j} are connected by a downstream path, then \code{AG$downstreamPath[[i]][[j]]} is a vector 
 containing the indices of the nodes constituting such path (\code{i} and \code{j} are included). If \code{i} and \code{j} are not connected 
-by a downstream path, then \code{AG$downstreamPath[[i]][[j]] = NULL}.}
+by a downstream path, then \code{AG$downstreamPath[[i]][[j]] = 0}.}
 \item{\code{AG$downstreamPathLength}}{Sparse matrix (\code{OCN$AG$nNodes} by \code{OCN$AG$nNodes}) containing length of paths between nodes 
 that are connected by a downstream path; if \code{i} and \code{j} are not connected by a downstream path, then \code{AG$downstreamPathLength[i,j] = 0}. 
 Note that \code{AG$downstreamPathLength[i,i] = OCN$AG$leng[i]}. It is a \code{\link{spam}} object.}

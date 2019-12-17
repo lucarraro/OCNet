@@ -55,7 +55,7 @@ draw_elev3Drgl_OCN(OCN, chooseCM = TRUE)
 
 # 1c) draw the 3D representation of the whole OCN
 # and enhance the aspect ratio of Z coordinates 
-with respect to the default value (the final result will be ugly):  
+# with respect to the default value (the final result will be ugly):  
 draw_elev3Drgl_OCN(OCN, aspect = c(1, 1, 0.2))
 
 # 1d) same as above, but operate coarse graining for better aesthetics: 

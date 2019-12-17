@@ -24,7 +24,7 @@ paths_OCN <- function(OCN,
       }
       RN_DownstreamPath[[Ups[j]]][[i]] <- Path
       indices[counter, ] <- c(Ups[j],i)
-      values[counter] <- sum(OCN$RN$leng[Path])
+      values[counter] <- sum(OCN$RN$leng[Path]) - OCN$RN$leng[k]
       counter <- counter + 1
       #RN_DownstreamPathLength[Ups[j],i] <- sum(OCN$RN$leng[Path])
     }
@@ -97,7 +97,7 @@ paths_OCN <- function(OCN,
       AG_DownstreamPath[[Ups[j]]][[i]] <- Path
       #AG_DownstreamPathLength[Ups[j],i] <- sum(OCN$AG$leng[Path])
       indices[counter, ] <- c(Ups[j],i)
-      values[counter] <- sum(OCN$AG$leng[Path])
+      values[counter] <- sum(OCN$AG$leng[Path]) - OCN$AG$leng[k]
       counter <- counter + 1
     }
   }
