@@ -69,9 +69,9 @@ draw_contour_OCN <- function(OCN,
   }
   
   AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)
-  old.par <- par(no.readonly =TRUE) 
-  on.exit(par(old.par))
-  par(bty="n")
+  #old.par <- par(no.readonly =TRUE) 
+  #on.exit(par(old.par))
+  #par(bty="n")
   plot(c(min(XDraw),max(XDraw)),c(min(YDraw),max(YDraw)),type="n",xlab=" ",ylab=" ",axes=FALSE,asp=1)
   
   if (drawOutlets==1) {

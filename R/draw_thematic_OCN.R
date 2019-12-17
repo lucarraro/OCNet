@@ -97,9 +97,9 @@ draw_thematic_OCN <- function(theme,OCN,
   } else {pch_vec <- pch}
   
   AvailableNodes <- setdiff(which(OCN$FD$toCM %in% chooseCM),OCN$FD$outlet)
-  old.par <- par(no.readonly = TRUE)
-  on.exit(par(old.par))
-  par(bty="n")
+  #old.par <- par(no.readonly = TRUE)
+  #on.exit(par(old.par))
+  #par(bty="n")
   plot(c(min(X[OCN$FD$toCM %in% chooseCM]),max(X[OCN$FD$toCM %in% chooseCM])),
        c(min(Y[OCN$FD$toCM %in% chooseCM]),max(Y[OCN$FD$toCM %in% chooseCM])),
        type="n",xlab=" ",ylab=" ",axes=FALSE,asp=1)

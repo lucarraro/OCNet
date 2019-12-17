@@ -7,9 +7,9 @@ draw_elev2D_OCN <- function(OCN,
   }
   
   # plot elevation map
-  old.par <- par(no.readonly =TRUE) 
-  on.exit(par(old.par))
-  par(bty="n")
+  #old.par <- par(no.readonly =TRUE) 
+  #on.exit(par(old.par))
+  #par(bty="n")
   Zmat<-matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
   image.plot(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),
              seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize),

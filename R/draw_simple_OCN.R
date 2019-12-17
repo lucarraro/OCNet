@@ -12,9 +12,9 @@ draw_simple_OCN <- function(OCN,
   
   ## plot final state
   AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)
-  old.par <- par(no.readonly = TRUE)
-  on.exit(par(old.par))
-  par(bty="n")
+  #old.par <- par(no.readonly = TRUE)
+  #on.exit(par(old.par))
+  #par(bty="n")
   plot(c(min(OCN$FD$X),max(OCN$FD$X)),c(min(OCN$FD$Y),max(OCN$FD$Y)),
        type="n",asp=1,axes=FALSE,xlab=" ",ylab=" ")
   #points(OCN$FD$X[OCN$FD$outlet],OCN$FD$Y[OCN$FD$outlet],pch=22,col="#000000",bg="#000000")
