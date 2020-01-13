@@ -256,7 +256,7 @@ K <- 10*OCNwe$RN$width                             # calculate carrying capacity
 pop0 <- 2*mean(K)*runif(OCNwe$RN$nNodes)           # initial random population vector
 nTimestep <- 100                                   # number of timesteps
 r <- 1.05                                          # proliferation rate
-pd <- 0.6                                          # probability to move downstream
+pd <- 0.5                                          # probability to move downstream
 pu <- 1 - pd                                       # probability to move upstream
 Go <- 5                                            # parameter controlling mobility 
 # (no. individuals exiting from outlet node at carrying capacity is pu*Go) 
@@ -281,7 +281,7 @@ for (i in (1:OCNwe$RN$nNodes)){
   path <- OCNwe$RN$downstreamPath[[i]][[OCNwe$RN$outlet]] # select path
   prod <- Go                                                # initialize product of Y 
   for (j in path){
-    prod <- prod*Y[i]
+    prod <- prod*Y[j]
   }
   GKK[i] <- (pu/pd)^(length(path))*prod  
 }
@@ -296,12 +296,12 @@ for (t in 2:nTimestep){
   for (i in 1:OCNwe$RN$nNodes){
     pop[i, t] <- 
       # Beverton-Holt growth model
-      r*pop[i, t-1]/(1 + pop[i, t-1]*(r-1)/K[i]) 
+      r*pop[i, t-1]/(1 + pop[i, t-1]*(r-1)/K[i]) +
       # individuals exiting from node i
                 - (pu*(sum(OCNwe$RN$W[ , i])>0) + pd*(sum(OCNwe$RN$W[i, ])>0)) * 
-      GKK[i] * (pop[i,t-1]/K[i]) 
+      GKK[i] * (pop[i,t-1]/K[i]) +
       # individuals entering in i from the upstream nodes
-                + pd * OCNwe$RN$W[ , i] %*% (GKK*pop[ , t-1]/K) 
+                + pd * OCNwe$RN$W[ , i] %*% (GKK*pop[ , t-1]/K) +
       # individuals entering in i from the downstream node
                 + pu * Y[i] * OCNwe$RN$W[i, ] %*% (GKK*pop[ , t-1]/K) 
     

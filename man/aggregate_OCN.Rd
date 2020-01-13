@@ -82,10 +82,12 @@ departing from node \code{i}.}
 These correspond to the X, Y coordinates of the nodes constituting the upstream tips of the reaches. 
 If \code{i} and \code{j} are such that \code{AG$X[i] == RN$X[j]} and \code{AG$Y[i] == RN$Y[j]}, then \code{AG$A[i] = RN$A[j]}.}
 \item{\code{AG$XReach}, \code{AG$YReach}}{Vector (of length \code{AG$nNodes}) of X, Y coordinates (in planar units) of the downstream tips of the reaches. 
-If \code{i} and \code{j} are such that \code{AG$XReach[i] == RN$X[j]} and \code{AG$YReach[i] == RN$Y[j]}, then \code{AG$AReach[i] = RN$A[j]}. }
+If \code{i} and \code{j} are such that \code{AG$XReach[i] == RN$X[j]} and \code{AG$YReach[i] == RN$Y[j]}, then \code{AG$AReach[i] = RN$A[j]}. 
+If \code{o} is an outlet node, then \code{AG$XReach = NaN}, \code{AG$YReach = NaN}.}
 \item{\code{AG$Z}}{Vector (of length \code{AG$nNodes}) of elevation values (in elevational units) of nodes at the AG level. 
 These correspond to the elevations of the nodes constituting the upstream tips of the reaches.}
-\item{\code{AG$ZReach}}{Vector (of length \code{AG$nNodes}) of Z coordinates (in elevational units) of the downstream tips of the reaches.}
+\item{\code{AG$ZReach}}{Vector (of length \code{AG$nNodes}) of Z coordinates (in elevational units) of the downstream tips of the reaches.
+If \code{o} is an outlet node, then \code{AG$ZReach = NaN}.}
 \item{\code{SC$ALocal}}{Vector (of length \code{SC$nNodes}) with values of subcatchment area, that is the number of FD pixels 
 (multiplied by \code{OCN$FD$cellsize^2}) that constitutes a subcatchment. If \code{o} is an outlet node, then \code{ALocal[o] = 0}.}
 \item{\code{SC$W}}{Adjacency matrix (\code{SC$nNodes} by \code{SC$nNodes}) at the subcatchment level. Two subcatchments are connected if they share a border. 

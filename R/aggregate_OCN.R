@@ -298,9 +298,9 @@ aggregate_OCN <- function(OCN,
     YReach[i] <- Y_RN[node]
     ZReach[i] <- Z_RN[node]
   }
-  XReach[Outlet_AG]=NaN
-  YReach[Outlet_AG]=NaN
-  ZReach[Outlet_AG]=NaN
+  XReach[Outlet_AG] <- NaN
+  YReach[Outlet_AG] <- NaN
+  ZReach[Outlet_AG] <- NaN
   
   # build neighbouring nodes at FD level
   # find list of possible neighbouring pixels
