@@ -1,6 +1,7 @@
 
 paths_OCN <- function(OCN,
-                      pathsRN=FALSE){
+                      pathsRN=FALSE,
+                      includeDownstreamNode=FALSE){
   
   if (!("RN" %in% names(OCN))){
     stop('Missing fields in OCN. You should run aggregate_OCN prior to paths_OCN.')
@@ -24,7 +25,10 @@ paths_OCN <- function(OCN,
       }
       RN_DownstreamPath[[Ups[j]]][[i]] <- Path
       indices[counter, ] <- c(Ups[j],i)
-      values[counter] <- sum(OCN$RN$leng[Path]) - OCN$RN$leng[k]
+      values[counter] <- sum(OCN$RN$leng[Path]) 
+      if (includeDownstreamNode==FALSE){
+        values[counter] <- values[counter] - OCN$RN$leng[k]
+      }
       counter <- counter + 1
       #RN_DownstreamPathLength[Ups[j],i] <- sum(OCN$RN$leng[Path])
     }
@@ -97,7 +101,10 @@ paths_OCN <- function(OCN,
       AG_DownstreamPath[[Ups[j]]][[i]] <- Path
       #AG_DownstreamPathLength[Ups[j],i] <- sum(OCN$AG$leng[Path])
       indices[counter, ] <- c(Ups[j],i)
-      values[counter] <- sum(OCN$AG$leng[Path]) - OCN$AG$leng[k]
+      values[counter] <- sum(OCN$AG$leng[Path]) 
+      if (includeDownstreamNode==FALSE){
+        values[counter] <- values[counter]  - OCN$AG$leng[k]
+      }
       counter <- counter + 1
     }
   }
