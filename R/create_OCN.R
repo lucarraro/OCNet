@@ -279,6 +279,7 @@ create_OCN <- function(dimX,dimY,
   flag <- 0
   
   # simulated annealing algorithm
+  if (nIter > 1){
   for (iter in 2:nIter) {
     t2 <- Sys.time() 
     # pick random node (excluding the outlet)
@@ -356,7 +357,7 @@ create_OCN <- function(dimX,dimY,
       stop('Error: sum(A[OutletPixel]) is not equal to the total lattice area')
     }
   }
-  
+  }
   ######################
   ## EXPORT VARIABLES ##
   ######################
