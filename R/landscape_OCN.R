@@ -99,9 +99,9 @@ landscape_OCN <- function(OCN,
   
   # find altitude of secondary outlets with respect to altitude of the main outlet
   if (optimizeDZ==TRUE){
-    if (displayUpdates==1){message("Optimizing elevations... \r", appendLF = FALSE)}
+    if (displayUpdates==1){message("Optimizing outlet elevations... \r", appendLF = FALSE)}
     if (length(OCN$FD$outlet)>1){ 
-      if (optimControl$trace>0) {message("Optimizing elevations...\n", appendLF = FALSE)}
+      if (optimControl$trace>0) {message("Optimizing outlet elevations...\n", appendLF = FALSE)}
       CatchmentMat <- matrix(data=FD_to_CM,nrow=OCN$dimY,ncol=OCN$dimX)
       # find border pixels between catchments
       # BorderMat <- sparseMatrix(i=1,j=1,x=0,dims=c(OCN$FD$nNodes,OCN$FD$nNodes))
@@ -200,7 +200,7 @@ landscape_OCN <- function(OCN,
       if (displayUpdates==2){message(sprintf("Calculating real X, Y coordinates... %.1f%%\r",kount/OCN$FD$nNodes*100), appendLF = FALSE)}
     }
   }
-  if (displayUpdates>0){message("Calculating real coordinates...   100%\n", appendLF = FALSE)}
+  if (displayUpdates>0){message("Calculating real X, Y coordinates...   100%\n", appendLF = FALSE)}
   
   if (displayUpdates>0){message("Calculating catchment contour(s)... ", appendLF = FALSE)}
   # determine contour of catchments (with original coordinates)
