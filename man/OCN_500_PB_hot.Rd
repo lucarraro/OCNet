@@ -7,6 +7,6 @@
 data(OCN_500_PB_hot)
 }
 \description{
-A network built on a 500x500 lattice obtained by executing \code{set.seed(10); create_OCN(500, 500, periodicBoundaries = TRUE, coolingRate = 20, initialNoCoolingPhase = 0.15, cellsize = 50, nIter = 40*500*500)}.
+A network built on a 500x500 lattice obtained by executing \code{set.seed(10); create_OCN(500, 500, periodicBoundaries = TRUE, coolingRate = 0.5, initialNoCoolingPhase = 0.1, cellsize = 50)}.
 }
 \keyword{datasets}

@@ -6,8 +6,8 @@ create_OCN(dimX, dimY, nOutlet = 1, outletSide = "S",
   outletPos = round(dimX/3), periodicBoundaries = FALSE,
   typeInitialState = NULL, flowDirStart = NULL, expEnergy = 0.5,
   cellsize = 1, xllcorner = 0.5 * cellsize, yllcorner = 0.5 *
-  cellsize, nIter = 30 * dimX * dimY, nUpdates = 50,
-  initialNoCoolingPhase = 0, coolingRate = 50,
+  cellsize, nIter = 40 * dimX * dimY, nUpdates = 50,
+  initialNoCoolingPhase = 0, coolingRate = 1,
   showIntermediatePlots = FALSE, thrADraw = 0.002 * dimX * dimY *
   cellsize^2, saveEnergy = FALSE, saveExitFlag = FALSE,
   saveN8 = FALSE, saveN4 = FALSE, displayUpdates = 1)
@@ -31,7 +31,7 @@ If \code{nOutlet > 1} is specified by the user and \code{outletSide}, \code{outl
 
 \item{periodicBoundaries}{If \code{TRUE}, periodic boundaries are applied. In this case, the lattice is the planar equivalent of a torus.}
 
-\item{typeInitialState}{Configuration of the initial state of the network. Possible values: \code{"I"} (representsting a valley); 
+\item{typeInitialState}{Configuration of the initial state of the network. Possible values: \code{"I"} (representing a valley); 
 \code{"T"} (T-shaped drainage pattern); \code{"V"} (V-shaped drainage pattern); \code{"H"} (hip roof). Default value is set to \code{"I"}, unless when \code{nOutlet = "All"}, where default is \code{"H"}. 
 See Details for explanation on initial network state in the multiple outlet case.}
 
@@ -121,34 +121,34 @@ Function that performs the OCN search algorithm on a rectangular lattice and cre
 The function that expresses the temperature of the simulated annealing process is as follows: 
 \describe{
  \item{if \code{i <= initialNoCoolingPhase*nIter}:}{\code{Temperature[i] = Energy[1]}}
-\item{if \code{initialNoCoolingPhase*nIter < i <= nIter}:}{\code{Temperature[i] = Energy[1]*(-coolingRate*(i - InitialNocoolingPhase*nIter)/nIter)}}
+\item{if \code{initialNoCoolingPhase*nIter < i <= nIter}:}{\code{Temperature[i] = Energy[1]*(-coolingRate*(i - InitialNocoolingPhase*nIter)/nNodes)}}
  }
  where \code{i} is the index of the current iteration and \code{Energy[1] = sum(A^expEnergy)}, with \code{A} denoting 
  the vector of drainage areas corresponding to the initial state of the network. According to the simulated annealing 
  principle, a new network configuration obtained at iteration \code{i} is accepted with probability equal to 
  \code{exp((Energy[i] - Energy[i-1])/Temperature[i])} if \code{Energy[i] < Energy[i-1]}. 
- To ensure convergence, it is recommended to use \code{coolingRate} values between 20 and 200 and \code{initialNoCoolingPhase <= 0.3}. 
+ To ensure convergence, it is recommended to use \code{coolingRate} values between 0.5 and 10 and \code{initialNoCoolingPhase <= 0.3}. 
  Low \code{coolingRate} and high \code{initialNoCoolingPhase} values cause the network configuration to depart more significantly from the initial state.
- If \code{coolingRate < 20} is used, it is suggested to increase \code{nIter} with respect to the default value in order to guarantee convergence.
+ If \code{coolingRate < 0.5} and \code{initialNoCoolingPhase > 0.1} are used, it is suggested to increase \code{nIter} with respect to the default value in order to guarantee convergence.
 
 \emph{Initial network state.} 
 If \code{nOutlet > 1}, the initial state is applied with regards to the outlet located at \code{outletSide[1]}, \code{outletPos[1]}. 
-Subsequently, for each of the other outlets, the drainage pattern is altered within a region of maximum size \code{0.3*dimX} by \code{0.15*dimY} for outlets located at the eastern and western borders of the lattice, 
-and \code{0.15*dimX} by \code{0.3*dimY} for outlets located at the southern and northern borders of the lattice. The midpoint of the long size of the regions coincides with the outlet at stake.
+Subsequently, for each of the other outlets, the drainage pattern is altered within a region of maximum size \code{0.5*dimX} by \code{0.25*dimY} for outlets located at the eastern and western borders of the lattice, 
+and \code{0.25*dimX} by \code{0.5*dimY} for outlets located at the southern and northern borders of the lattice. The midpoint of the long size of the regions coincides with the outlet at stake.
 Within these regions, an \code{"I"}-type drainage pattern is produced if \code{typeInitialState = "I"} or \code{"T"}; a \code{"V"}-type drainage pattern is produced if \code{typeInitialState = "V"}; 
 no action is performed if \code{typeInitialState = "H"}. Note that \code{typeInitialState = "H"} is the recommended choice only for large \code{nOutlet}.
 
 \emph{Suggestions for creating "fancy" OCNs.} 
 In order to generate networks spanning a realistic, non-rectangular catchment domain (in the "real-shape" view provided by \code{\link{draw_contour_OCN}}), it is convenient 
 to use the option \code{periodicBoundaries = TRUE} and impose at least a couple of diagonally adjacent outlets on two opposite sides, for example \code{nOutlet = 2}, \code{outletSide = c("S", "N")}, \code{outletPos = c(1, 2)}. 
-See also \code{\link{OCN_300_4out_PB}}. Note that, because the OCN search algorithm is a stochastic process, the successful generation of a "fancy" OCN is not guaranteed: indeed, it is possible that the final outcome is a 
-network where most (if not all) pixels drain towards one of the two outlets, and hence such outlet is surrounded (in the "real-shape" view) by the pixels that it drains. 
+See also \code{\link{OCN_300_4out_PB_hot}}. Note that, because the OCN search algorithm is a stochastic process, the successful generation of a "fancy" OCN is not guaranteed: indeed, it is possible that the final outcome is a 
+network where most (if not all) pixels drain towards one of the two outlets, and hence such outlet is surrounded (in the "real-shape" view) by the pixels that it drains. Note that, in order to hinder such occurrence, the two pixels along the lattice perimeter next to each outlet are bound to drain towards such outlet.
 
 In order to create a network spanning a "pear-shaped" catchment (namely where the width of the area spanned in the direction orthogonal to the main stem diminishes downstream, until it coincides with the river width at the outlet),
 it is convenient to use the option \code{nOutlet = "All"} (here the value of \code{periodicBoundaries} is irrelevant) and then pick a single catchment (presumably one with rather large catchment area, see value \code{OCN$CM$A} generated by \code{\link{landscape_OCN}}) among the many generated. Note that it is not possible to predict the area spanned by such catchment \emph{a priori}. To obtain a catchment whose size is rather large compared to the size of the lattice where the 
 OCN was generated, it is convenient to set \code{typeInitialState = "I"} and then pick the catchment with largest area (\code{\link{landscape_OCN}} must be run).
   
-The default temperature schedule for the simulated annealing process is generally adequate for generating an OCN that does not resemble the initial network state if the size of the lattice is not too large (say, until \code{dimX*dimY <= 40000}). When \code{dimX*dimY > 40000}, it might be convenient to make use of a "warmer" temperature schedule (for example, by setting \code{coolingRate = 20} and \code{initialNoCoolingPhase = 0.15}; see also the package vignette) and/or increase \code{nIter} with respect to its default value. Note that these suggestions only pertain to the aesthetics of the final OCN; the default temperature schedule and \code{nIter} are calibrated to ensure convergence of the OCN (i.e. achievement of a local minimum of \code{Energy}, save for a reasonable threshold) also for lattices larger than \code{dimX*dimY = 40000}.
+The default temperature schedule for the simulated annealing process is generally adequate for generating an OCN that does not resemble the initial network state if the size of the lattice is not too large (say, until \code{dimX*dimY <= 40000}). When \code{dimX*dimY > 40000}, it might be convenient to make use of a "warmer" temperature schedule (for example, by setting \code{coolingRate = 0.5} and \code{initialNoCoolingPhase = 0.1}; see also the package vignette) and/or increase \code{nIter} with respect to its default value. Note that these suggestions only pertain to the aesthetics of the final OCN; the default temperature schedule and \code{nIter} are calibrated to ensure convergence of the OCN (i.e. achievement of a local minimum of \code{Energy}, save for a reasonable threshold) also for lattices larger than \code{dimX*dimY = 40000}.
 }
 \examples{
 # 1) creates and displays a single outlet 20x20 OCN with default options

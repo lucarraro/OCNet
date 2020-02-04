@@ -1,27 +1,25 @@
-
 create_OCN <- function(dimX,dimY,
-                       nOutlet=1,
-                       outletSide="S", # vector of sides where outlets are located
-                       outletPos=round(dimX/3),
-                       periodicBoundaries=FALSE, # if TRUE, reflecting boundaries are applied. If FALSE, boundaries are non-reflecting.
-                       typeInitialState=NULL,
-                       flowDirStart=NULL,
-                       expEnergy=0.5, # energy \propto Q*deltaH, Q propto A, deltaH propto A^-0.5
-                       cellsize=1,
-                       xllcorner=0.5*cellsize,
-                       yllcorner=0.5*cellsize,
-                       nIter=30*dimX*dimY,
-                       nUpdates=50, # number of times an update is shown
-                       initialNoCoolingPhase=0,
-                       coolingRate=50,
-                       showIntermediatePlots=FALSE,
-                       thrADraw=0.002*dimX*dimY*cellsize^2,
-                       saveEnergy=FALSE,
-                       saveExitFlag=FALSE,
-                       saveN8=FALSE,
-                       saveN4=FALSE,
-                       displayUpdates=1){
- 
+                        nOutlet=1,
+                        outletSide="S", # vector of sides where outlets are located
+                        outletPos=round(dimX/3),
+                        periodicBoundaries=FALSE, # if TRUE, reflecting boundaries are applied. If FALSE, boundaries are non-reflecting.
+                        typeInitialState=NULL,
+                        flowDirStart=NULL,
+                        expEnergy=0.5, # energy \propto Q*deltaH, Q propto A, deltaH propto A^-0.5
+                        cellsize=1,
+                        xllcorner=0.5*cellsize,
+                        yllcorner=0.5*cellsize,
+                        nIter=40*dimX*dimY,
+                        nUpdates=50, # number of times an update is shown
+                        initialNoCoolingPhase=0,
+                        coolingRate=1,
+                        showIntermediatePlots=FALSE,
+                        thrADraw=0.002*dimX*dimY*cellsize^2,
+                        saveEnergy=FALSE,
+                        saveExitFlag=FALSE,
+                        saveN8=FALSE,
+                        saveN4=FALSE,
+                        displayUpdates=1){
   
   if (dimX<2 | dimY<2) stop("Dimensions too small.")
   if (dimX*dimY > 1000) {
@@ -57,16 +55,16 @@ create_OCN <- function(dimX,dimY,
       typeInitialState <- "I"
     }
   }
-  
+ 
   # set outletSide, outletPos in accordance with the input given 
   if ((nOutlet=="All")==TRUE){
     outletSide <- c(rep("S",dimX),rep("E",dimY-2),rep("N",dimX),rep("W",dimY-2))
     outletPos <- c(1:dimX,2:(dimY-1),seq(dimX,1,-1),seq((dimY-1),2,-1))
     nOutlet <- 2*(dimX+dimY-2)
   } else if (nOutlet>1 && length(outletSide)==1 && length(outletPos)==1 && all(outletSide=="S") && all(outletPos==round(dimX/3))) {
-    BorderPixels <- 1:(2*(dimX+dimY-2))
     AllSides <- c(rep("S",dimX),rep("E",dimY-2),rep("N",dimX),rep("W",dimY-2))
     AllPos <- c(1:dimX,2:(dimY-1),1:dimX,2:(dimY-1))
+    BorderPixels <- 1:(2*(dimX+dimY-2))
     outlet_ID <- sample(BorderPixels,nOutlet)
     outletSide <- AllSides[outlet_ID]
     outletPos <- AllPos[outlet_ID]
@@ -209,7 +207,19 @@ create_OCN <- function(dimX,dimY,
   rm(W,newW)
   
   OutletPixel <- (Outlet_col-1)*dimY+Outlet_row # this doesn't keep the order
-  AvailableNodes <- setdiff(1:Nnodes,OutletPixel)
+  
+  perimeter <- c(1:dimY, dimY*c(2:(dimX-1)), (dimX-1)*dimY+c(dimY:1), dimY*c((dimX-2):1)+1)
+  perimeter <- rep(perimeter, 3)
+  
+  semiOutlet <- NULL
+  if (dimX*dimY >= 1000){
+    for (i in 1:nOutlet){
+      tmp <- which(perimeter[(length(perimeter)/3+1):(length(perimeter)*2/3)] == OutletPixel[i])
+      semiOutlet <- c(semiOutlet, perimeter[tmp - 1], perimeter[tmp + 1])  
+    }
+  }
+  
+  AvailableNodes <- setdiff(1:Nnodes, union(OutletPixel,semiOutlet))
   
   pl <- initial_permutation(DownNode)  # calculate permutation vector
   
@@ -236,7 +246,7 @@ create_OCN <- function(dimX,dimY,
   Energy <- numeric(nIter)
   Energy_0 <- pas[[2]]
   Energy[1] <-Energy_0
-  Temperature <- c(Energy[1]+numeric(initialNoCoolingPhase*nIter),Energy[1]*exp(-coolingRate*(1:(nIter-initialNoCoolingPhase*nIter))/nIter))
+  Temperature <- c(Energy[1]+numeric(initialNoCoolingPhase*nIter),Energy[1]*exp(-coolingRate*(1:(nIter-initialNoCoolingPhase*nIter))/(dimX*dimY)))
   savetime <- numeric(nIter)
   ExitFlag <- numeric(nIter)
   
@@ -486,7 +496,7 @@ initialstate_OCN <- function(dimX,dimY,nOutlet,outletSide,outletPos,typeInitialS
       #     flowDirStart[outletPos[i],] <- 5 
       #   }
       # }
-      tmpX <- round(0.15*dimX); tmpY <- round(0.15*dimY)
+      tmpX <- round(0.25*dimX); tmpY <- round(0.25*dimY)
       for (i in 1:nOutlet){
          if (outletSide[i]=="N"){
            lowX <- max(1,outletPos[i]-tmpX)
@@ -550,7 +560,7 @@ initialstate_OCN <- function(dimX,dimY,nOutlet,outletSide,outletPos,typeInitialS
         flowDirStart[,(Transept+1):dimX] <- 5
       }
       # impose drains perpendicular to outlets
-      tmpX <- round(0.15*dimX); tmpY <- round(0.15*dimY)
+      tmpX <- round(0.25*dimX); tmpY <- round(0.25*dimY)
       for (i in 1:nOutlet){
         if (outletSide[i]=="N"){
           lowX <- max(1,outletPos[i]-tmpX)
@@ -632,7 +642,7 @@ initialstate_OCN <- function(dimX,dimY,nOutlet,outletSide,outletPos,typeInitialS
       #     if (dimY>outletPos[i]) {for (j in 1:min(dimY-outletPos[i],dimX-1)) {flowDirStart[outletPos[i]+j,j+1]=4}}
       #   }
       # }
-      tmpX <- round(0.15*dimX); tmpY <- round(0.15*dimY)
+      tmpX <- round(0.25*dimX); tmpY <- round(0.25*dimY)
       for (i in 1:nOutlet){
            if (outletSide[i]=="N"){
              lowX <- max(1,outletPos[i]-tmpX)
