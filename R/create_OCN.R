@@ -15,6 +15,7 @@ create_OCN <- function(dimX,dimY,
                         coolingRate=1,
                         showIntermediatePlots=FALSE,
                         thrADraw=0.002*dimX*dimY*cellsize^2,
+                        easyDraw=NULL,
                         saveEnergy=FALSE,
                         saveExitFlag=FALSE,
                         saveN8=FALSE,
@@ -91,9 +92,14 @@ create_OCN <- function(dimX,dimY,
       stop('Invalid outletPos')}
   }
   
-  if (!(typeInitialState %in% c("I","T","V","H","R"))){
+  if (!(typeInitialState %in% c("I","T","V","H"))){
     stop('Invalid typeInitialState')}
   
+  if (is.null(easyDraw)){
+    if (dimX*dimY>4e4) {
+      easyDraw=TRUE
+    } else {easyDraw=FALSE}
+  }
   
   # define domain coordinates
   X <- rep(seq(xllcorner,xllcorner+(dimX-1)*cellsize,cellsize), each = dimY)  
@@ -220,6 +226,7 @@ create_OCN <- function(dimX,dimY,
   }
   
   AvailableNodes <- setdiff(1:Nnodes, union(OutletPixel,semiOutlet))
+  AvailableNodesPlot <- setdiff(1:Nnodes, OutletPixel)
   
   pl <- initial_permutation(DownNode)  # calculate permutation vector
   
@@ -268,9 +275,11 @@ create_OCN <- function(dimX,dimY,
     plot(c(min(X),max(X)),c(min(Y),max(Y)),main=sprintf('OCN %dx%d (initial state)',dimX,dimY),
          type="n",asp=1,axes=FALSE,xlab="",ylab="") # 
     points(X[OutletPixel],Y[OutletPixel],pch=15,col=rnbw[catch[resort[OutletPixel]]])
-    for (i in AvailableNodes){
+    if (easyDraw == FALSE){
+    for (i in AvailableNodesPlot){
       if (AA[i]<=thrADraw & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
         lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5,col="#E0E0E0")}
+    }
     }
     for (i in 1:Nnodes){
       if (!(i %in% OutletPixel)){
@@ -348,9 +357,11 @@ create_OCN <- function(dimX,dimY,
         plot(c(min(X),max(X)),c(min(Y),max(Y)),type="n",main=sprintf('OCN %dx%d (%.1f%% completed)',dimX,dimY,iter/nIter*100),
              asp=1,axes=FALSE,xlab=" ",ylab=" ") # 
         points(X[OutletPixel],Y[OutletPixel],pch=15,col=rnbw[catch[resort[OutletPixel]]])
-        for (i in AvailableNodes){
+        if (easyDraw == FALSE){
+        for (i in AvailableNodesPlot){
           if (AA[i]<=(thrADraw)  & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
             lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5,col="#E0E0E0")}
+        }
         }
         for (i in 1:Nnodes){
           if (!(i %in% OutletPixel)){

@@ -9,7 +9,7 @@ create_OCN(dimX, dimY, nOutlet = 1, outletSide = "S",
   cellsize, nIter = 40 * dimX * dimY, nUpdates = 50,
   initialNoCoolingPhase = 0, coolingRate = 1,
   showIntermediatePlots = FALSE, thrADraw = 0.002 * dimX * dimY *
-  cellsize^2, saveEnergy = FALSE, saveExitFlag = FALSE,
+  cellsize^2, easyDraw = NULL, saveEnergy = FALSE, saveExitFlag = FALSE,
   saveN8 = FALSE, saveN4 = FALSE, displayUpdates = 1)
 }
 \arguments{
@@ -63,13 +63,15 @@ Key is as follows (capital letters indicate cardinal directions)
 \item{initialNoCoolingPhase, coolingRate}{Parameters of the function used to describe the temperature of the simulated annealing algorithm. See details.}
 
 \item{showIntermediatePlots}{If \code{TRUE}, the OCN plot is updated \code{nUpdates} times during the OCN search process.
-Note that, for large lattices, \code{showIntermediatePlots = TRUE} might slow down the search process considerably.}
+Note that, for large lattices, \code{showIntermediatePlots = TRUE} might slow down the search process considerably (especially when \code{easyDraw = FALSE}).}
 
 \item{thrADraw}{Threshold drainage area value used to display the network (only effective when \code{showIntermediatePlots = TRUE}).}
 
-\item{saveEnergy}{If \code{TRUE}, \code{Energy} is saved (see Value for its definition).}
+\item{easyDraw}{Logical. If \code{TRUE}, the whole network is displayed (when \code{showIntermediatePlots = TRUE}), and pixels with drainage area lower than \code{thrADraw} are displayed in light gray. If \code{FALSE}, only pixels with drainage area greater or equal to \code{thrADraw} are displayed. Default is \code{FALSE} if \code{dimX*dimY <= 40000}, and \code{TRUE} otherwise. Note that setting \code{easyDraw = FALSE} for large networks might slow down the process considerably.}
 
-\item{saveExitFlag}{If \code{TRUE}, \code{ExitFlag} is saved (see Value for its definition).}
+\item{saveEnergy}{If \code{TRUE}, \code{energy} is saved (see Value for its definition).}
+
+\item{saveExitFlag}{If \code{TRUE}, \code{exitFlag} is saved (see Value for its definition).}
 
 \item{saveN8}{If \code{TRUE}, the adjacency matrix relative to 8-nearest-neighbours connectivity is saved.}
 

@@ -15,5 +15,7 @@
 * `landscape_OCN`: fixed `displayUpdates` issue
 * `paths_OCN`: added option `includeDownstreamNode` 
 * vignette: metapopulation model updated
+* `find_area_theshold_OCN`: allowed `nNodesRN < 2`
+* `create_OCN`: added option `easyDraw`
 
 

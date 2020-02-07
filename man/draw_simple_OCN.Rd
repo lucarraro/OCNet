@@ -12,7 +12,7 @@ draw_simple_OCN(OCN, thrADraw = 0.002 * OCN$dimX * OCN$dimY *
 
 \item{riverColor}{Color used to plot the river.}
 
-\item{easyDraw}{Logical variable. If \code{TRUE}, the whole network is displayed, and pixels with drainage area lower than \code{thrADraw} are displayed in light gray. If \code{FALSE}, only pixels with drainage area greater or equal to \code{thrADraw} are displayed. Default is \code{FALSE} if \code{OCN$nNodes <= 40000}, and \code{TRUE} otherwise. Note that setting \code{easyDraw = FALSE} for large networks might slow down the process considerably.}
+\item{easyDraw}{Logical. If \code{TRUE}, the whole network is displayed, and pixels with drainage area lower than \code{thrADraw} are displayed in light gray. If \code{FALSE}, only pixels with drainage area greater or equal to \code{thrADraw} are displayed. Default is \code{FALSE} if \code{OCN$nNodes <= 40000}, and \code{TRUE} otherwise. Note that setting \code{easyDraw = FALSE} for large networks might slow down the process considerably.}
 }
 \value{
 No output is returned.
