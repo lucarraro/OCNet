@@ -23,7 +23,12 @@ find_area_threshold_OCN <- function(OCN,
   vec_StreamOrder <- numeric(length(thrValues))
   
   for (thr in 1:(length(thrValues))){
+    
+    if (thr < length(thrValues)){
     if (displayUpdates==1) {message(sprintf('\r%.2f%% completed',100*thr/length(thrValues)), appendLF = FALSE)}
+    } else {
+      if (displayUpdates==1) {message(sprintf('\r%.2f%% completed',100*thr/length(thrValues)))}  
+    }
     # print(sprintf('Evaluating A_thr = %.0f m2',thrValues[thr]))
     
     RN_mask <- as.vector(OCN$FD$A >= thrValues[thr]) 
