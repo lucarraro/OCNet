@@ -2,7 +2,9 @@
 \alias{draw_thematic_OCN}
 \title{Draw thematic map on an Optimal Channel Network}
 \usage{
-draw_thematic_OCN(theme, OCN, discreteLevels = FALSE, 
+draw_thematic_OCN(theme, OCN, 
+  chooseAggregation = NULL,
+  discreteLevels = FALSE, 
   colLevels = NULL, cutoff = FALSE,
   colPalette = colorRampPalette(c("yellow","red","black")),
   exactDraw = FALSE, chooseCM = FALSE, drawNodes = FALSE,  
@@ -15,6 +17,8 @@ draw_thematic_OCN(theme, OCN, discreteLevels = FALSE,
 The vector can contain \code{NA} and \code{NaN} values to identify RN or AG nodes where the theme is not defined.}
 
 \item{OCN}{List as produced by \code{\link{aggregate_OCN}}.}
+
+\item{chooseAggregation}{Only effective if \code{OCN$RN$nNodes == OCN$AG$nNodes}. In such case, it must be equal to either \code{"RN"} or \code{"AG"}; as a result, \code{theme} will be interpreted as a spatial field in the corresponding aggregation level.}
 
 \item{discreteLevels}{Logical. If \code{FALSE}, a continuous color scheme is used. If \code{TRUE}, discrete color levels are applied. See also \code{colLevels} and examples.}
 

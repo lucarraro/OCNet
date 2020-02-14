@@ -1,5 +1,6 @@
 
 draw_thematic_OCN <- function(theme,OCN,
+                              chooseAggregation=NULL,
                               discreteLevels=FALSE,
                               colLevels=NULL,
                               cutoff=FALSE,
@@ -41,26 +42,37 @@ draw_thematic_OCN <- function(theme,OCN,
   } else if (typeof(colPalette)=="character") {
     colPalette <- colPalette[1:N_colLevels] }
   
-  tmp <- "TMP"
   if (length(theme)==OCN$RN$nNodes && (length(theme)==OCN$AG$nNodes)){
-    while ((tmp != "RN") && (tmp != "AG"))
-      tmp <- readline(prompt="theme can be interpreted as a vector both at the RN and AG levels. Choose desired level by typing RN or AG: ")
-    if (tmp == "RN"){
+    if (chooseAggregation == "RN"){
       byRN = TRUE
-    } else if (tmp == "AG"){
+    } else if (chooseAggregation == "AG"){
       byRN = FALSE
     } else {
-      print('Wrong input!')
+      stop('RN$nNodes = AG$nNodes, and chooseAggregation has not been specified.')
     }
-  } 
-  
-  if (length(theme)==OCN$RN$nNodes){
+  } else if (length(theme)==OCN$RN$nNodes){
     byRN = TRUE
   } else if (length(theme)==OCN$AG$nNodes){
     byRN = FALSE
   } else {
     stop('theme has invalid length')
   }
+  
+  
+#  tmp <- "TMP"
+#  if (length(theme)==OCN$RN$nNodes && (length(theme)==OCN$AG$nNodes)){
+#    while ((tmp != "RN") && (tmp != "AG"))
+#      tmp <- readline(prompt="theme can be interpreted as a vector both at the RN and AG levels. Choose desired level by typing RN or AG: ")
+#    if (tmp == "RN"){
+#      byRN = TRUE
+#    } else if (tmp == "AG"){
+#      byRN = FALSE
+#    } else {
+#      print('Wrong input!')
+#    }
+#  } 
+  
+
   
   if (length(cex)>1 && length(cex) != length(theme)){
     stop('cex has invalid length')
