@@ -35,6 +35,10 @@ devtools::install_github("lucarraro/OCNet", build_vignettes = TRUE)
 
 ## Installation issues and workarounds
 
+### Windows
+
+An error might occur when version `0.100.47` of package `rgl` is installed. Installation with `rgl_0.100.30` works fine. 
+
 ### Linux
 
 Installing packages `rgdal` and `rgl` (imported by OCNet) gives rise to errors. This can be solved by running 
