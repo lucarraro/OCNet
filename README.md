@@ -3,6 +3,7 @@ An R-package to generate and analyze Optimal Channel Networks
 
 [![Linux Build Status](https://travis-ci.com/lucarraro/OCNet.svg?branch=master)](https://travis-ci.com/lucarraro/OCNet.svg?branch=master)
 [![CRAN](http://www.r-pkg.org/badges/version/OCNet)](http://CRAN.R-project.org/package=OCNet) 
+[![DOI](https://zenodo.org/badge/219014909.svg)](https://zenodo.org/badge/latestdoi/219014909)
 
 ## Overview
 
