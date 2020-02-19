@@ -14,9 +14,11 @@
 * `draw_thematic_OCN`: fixed `backgroundColor` issue when `chooseCM = TRUE`
 * `landscape_OCN`: fixed `displayUpdates` issue
 * `paths_OCN`: added option `includeDownstreamNode` 
-* vignette: metapopulation model updated
 * `find_area_theshold_OCN`: allowed `nNodesRN < 2`
 * `create_OCN`: added option `easyDraw`
 * `draw_thematic_OCN`: added option `chooseAggregation`
 
+## Others
 
+* CITATION added
+* vignette: metapopulation model updated
