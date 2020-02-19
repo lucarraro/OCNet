@@ -47,7 +47,7 @@ title("Strahler stream order")
 
 OCNet enables the creation and analysis of Optimal Channel Networks (OCNs). These are oriented spanning trees (built on rectangular lattices made up of square pixels) that reproduce all scaling features characteristic of real, natural river networks [@rodriguez1992; @rinaldo2014]. As such, they can be used in a variety of numerical and laboratory experiments in the fields of hydrology, ecology and epidemiology. Notable examples include studies on metapopulations and metacommunities [e.g. @carrara2012], scenarios of waterborne pathogen invasions [e.g. @gatto2013] and biogeochemichal processes in streams [e.g. @helton2018].
 
-OCNs are obtained by minimization of a functional which represents total energy dissipated by water flowing through the network spanning the lattice. Such a formulation embeds the evidence that morphological and hydrological characteristics of rivers (in particular, water discharge and slope) follow a power-law scaling with drainage area. For details on the theoretical foundation of the OCN concept, as well as for examples of their use, see @rinaldo2014.^[A manuscript presenting the package is in preparation for Methods in Ecology and Evolution]
+OCNs are obtained by minimization of a functional which represents total energy dissipated by water flowing through the network spanning the lattice. Such a formulation embeds the evidence that morphological and hydrological characteristics of rivers (in particular, water discharge and slope) follow a power-law scaling with drainage area. For an overview of the functionalities of the package, see @carraro2020. For details on the theoretical foundation of the OCN concept, see @rinaldo2014.
 
 ***
 
@@ -473,6 +473,30 @@ title("Distance from outlet of observation points [m]")
 
 ---
 references:
+
+- id: carraro2020
+  title: Generation and application of river network analogues for use in ecology and evolution
+  author:
+  - family: Carraro
+    given: L.
+  - family: Bertuzzo
+    given: E.
+  - family: Fronhofer
+    given: E. A.
+  - family: Furrer
+    given: R.
+  - family: Gounand
+    given: I.
+  - family: Rinaldo
+    given: A.
+  - family: Altermatt
+    given: F. 
+  container-title: bioRxiv
+  URL: 'http://dx.doi.org/10.1101/2020.02.17.948851'
+  type: article-journal
+  issued:
+    year: 2020
+
 - id: ocallaghan1984
   title: The Extraction of the Drainage Networks from Digital Elevation Data
   author:
