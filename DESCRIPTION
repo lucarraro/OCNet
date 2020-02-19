@@ -28,9 +28,11 @@ Description: Generate and analyze Optimal Channel Networks (OCNs):
 	oriented spanning trees reproducing all scaling features characteristic 
 	of real, natural river networks. As such, they can be used in a variety 
 	of numerical experiments in the fields of hydrology, ecology and 
-	epidemiology. See Rinaldo et al. (2014) <doi:10.1073/pnas.1322700111> 
-	for an overview on the OCN concept; Furrer and Sain (2010) 
-	<doi:10.18637/jss.v036.i10> for the construct used.
+	epidemiology. See Carraro et al. (2020) <doi:10.1101/2020.02.17.948851> 
+	for a presentation of the package; Rinaldo et al. (2014) 
+	<doi:10.1073/pnas.1322700111> for a theoretical overview on the OCN 
+	concept; Furrer and Sain (2010) <doi:10.18637/jss.v036.i10> for the 
+	construct used.
 Imports: fields, spam, rgl, methods, igraph, SSN, rgdal, sp
 License: GPL-3 
 Encoding: UTF-8
