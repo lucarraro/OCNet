@@ -83,7 +83,7 @@ aggregate_OCN <- function(OCN,
   # RN_to_CM[i] indicates outlet to which reach i drains
   RN_to_CM <- numeric(Nnodes_RN)
   for (i in 1:OCN$nOutlet){
-    RN_to_CM[Upstream_RN[[Outlet_RN[i]]]] <- i
+    RN_to_CM[Upstream_RN[[Outlet_RN[i]]]] <- OCN$FD$toCM[RN_to_FD[Outlet_RN[i]]]
   }
   
   
@@ -220,7 +220,7 @@ aggregate_OCN <- function(OCN,
   # AG_to_CM[i] indicates outlet to which reach i drains
   AG_to_CM <- numeric(Nnodes_AG)
   for (i in 1:OCN$nOutlet){
-    AG_to_CM[Upstream_AG[[Outlet_AG[i]]]] <- i
+    AG_to_CM[Upstream_AG[[Outlet_AG[i]]]] <- OCN$FD$toCM[RN_to_FD[Outlet_RN[i]]]
   }
   #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE)
   #t1 <- Sys.time()
@@ -409,6 +409,8 @@ aggregate_OCN <- function(OCN,
   
   # other
   OCN$thrA <- thrA
+  OCN$streamOrderType <- streamOrderType
+  OCN$maxReachLength <- maxReachLength
   
   # re-define AG_to_RN, AG_to_FD, RN_to_AG considering AG nodes as pixels and not reaches
   AG_to_FDnode <- numeric(Nnodes_AG)

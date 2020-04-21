@@ -8,6 +8,7 @@ draw_thematic_OCN <- function(theme,OCN,
                               exactDraw=FALSE,
                               chooseCM=FALSE,
                               drawNodes=FALSE,
+                              nodeType="upstream",
                               cex=2,
                               pch=21,
                               nanColor="#0099FF",
@@ -59,20 +60,20 @@ draw_thematic_OCN <- function(theme,OCN,
   }
   
   
-#  tmp <- "TMP"
-#  if (length(theme)==OCN$RN$nNodes && (length(theme)==OCN$AG$nNodes)){
-#    while ((tmp != "RN") && (tmp != "AG"))
-#      tmp <- readline(prompt="theme can be interpreted as a vector both at the RN and AG levels. Choose desired level by typing RN or AG: ")
-#    if (tmp == "RN"){
-#      byRN = TRUE
-#    } else if (tmp == "AG"){
-#      byRN = FALSE
-#    } else {
-#      print('Wrong input!')
-#    }
-#  } 
+  #  tmp <- "TMP"
+  #  if (length(theme)==OCN$RN$nNodes && (length(theme)==OCN$AG$nNodes)){
+  #    while ((tmp != "RN") && (tmp != "AG"))
+  #      tmp <- readline(prompt="theme can be interpreted as a vector both at the RN and AG levels. Choose desired level by typing RN or AG: ")
+  #    if (tmp == "RN"){
+  #      byRN = TRUE
+  #    } else if (tmp == "AG"){
+  #      byRN = FALSE
+  #    } else {
+  #      print('Wrong input!')
+  #    }
+  #  } 
   
-
+  
   
   if (length(cex)>1 && length(cex) != length(theme)){
     stop('cex has invalid length')
@@ -177,8 +178,10 @@ draw_thematic_OCN <- function(theme,OCN,
       }
       if (byRN==TRUE){
         points(OCN$RN$X[i],OCN$RN$Y[i],bg=hexcolor,pch=pch_vec[i],cex=cex_vec[i])
-      } else {
+      } else if (nodeType=="upstream") {
         points(OCN$AG$X[i],OCN$AG$Y[i],bg=hexcolor,pch=pch_vec[i],cex=cex_vec[i])  
+      } else if (nodeType=="downstream") {
+        points(OCN$AG$XReach[i],OCN$AG$YReach[i],bg=hexcolor,pch=pch_vec[i],cex=cex_vec[i])  
       }
     }
   }
@@ -199,11 +202,12 @@ draw_thematic_OCN <- function(theme,OCN,
       }
       if (byRN==TRUE){
         node <- which(OCN$FD$X==OCN$RN$X[i] & OCN$FD$Y==OCN$RN$Y[i])
-        points(X[node],Y[node],bg=hexcolor,pch=pch_vec[i],cex=cex_vec[i])
-      } else {
+      } else if (byRN==FALSE && nodeType=="upstream") {
         node <- which(OCN$FD$X==OCN$AG$X[i] & OCN$FD$Y==OCN$AG$Y[i])
-        points(X[node],Y[node],bg=hexcolor,pch=pch_vec[i],cex=cex_vec[i])  
+      } else if (byRN==FALSE && nodeType=="downstream") {
+        node <- which(OCN$FD$X==OCN$AG$XReach[i] & OCN$FD$Y==OCN$AG$YReach[i])
       }
+      points(X[node],Y[node],bg=hexcolor,pch=pch_vec[i],cex=cex_vec[i])  
     }
   }
   

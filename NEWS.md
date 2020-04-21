@@ -1,3 +1,16 @@
+# OCNet 0.2.0.9000
+
+## Major changes
+
+* `aggregate_OCN`, `find_area_theshold_OCN`: functioning of `maxReachLength` option has changed 
+
+## Bugs fixed
+
+* `aggregate_OCN`: fixed issue in calculation of `RN$toCM` and `AG$toCM`
+* `aggregate_OCN`, `find_area_theshold_OCN`: `maxReachLength` and `streamOrderType` are returned 
+* `draw_elev2D_OCN`: added option `addLegend`
+* `draw_thematic_OCN`: added option `nodeType`, documentation updated
+
 # OCNet 0.2.0
 
 ## Major changes

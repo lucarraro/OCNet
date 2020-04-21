@@ -8,7 +8,7 @@ draw_thematic_OCN(theme, OCN,
   colLevels = NULL, cutoff = FALSE,
   colPalette = colorRampPalette(c("yellow","red","black")),
   exactDraw = FALSE, chooseCM = FALSE, drawNodes = FALSE,  
-  cex = 2, pch = 21, nanColor = "#0099FF",
+  nodeType = "upstream", cex = 2, pch = 21, nanColor = "#0099FF",
   riverColor = "#0099FF", backgroundColor = "#999999", 
   addLegend = TRUE)
 }
@@ -28,12 +28,14 @@ The vector can contain \code{NA} and \code{NaN} values to identify RN or AG node
 
 \item{colPalette}{Color palette used to display theme values. \code{colPalette} accepts both functions creating color palettes and vectors of colors. In the latter case, \code{length(colPalette)} must be greater than the number of color levels. See examples below and \code{\link{hcl.colors}}.}
 
-\item{chooseCM}{Index of catchment to display (only effective if \code{OCN$N_outlet > 1}). It can be a logical or a numeric vector. If \code{FALSE}, all catchments are displayed. If \code{TRUE}, the catchment with largest area is displayed. If \code{chooseCM} is a subset of vector \code{1:length(OCN$N_outlet)}, only the catchment(s) identified by the indices in \code{chooseCM} are displayed.}
+\item{chooseCM}{Index of catchment to display (only effective if \code{OCN$nOutlet > 1}). It can be a logical or a numeric vector. If \code{FALSE}, all catchments are displayed. If \code{TRUE}, the catchment with largest area is displayed. If \code{chooseCM} is a subset of vector \code{1:length(OCN$nOutlet)}, only the catchment(s) identified by the indices in \code{chooseCM} are displayed.}
 
-\item{exactDraw}{If \code{TRUE}, the real shape of OCNs is plotted. If flow crosses a boundary, the pixel that is not contiguous to its outlet is flipped.}
+\item{exactDraw}{Logical. If \code{TRUE}, the real shape of OCNs is plotted. If flow crosses a boundary, the pixel that is not contiguous to its outlet is flipped.}
 
-\item{drawNodes}{If \code{FALSE}, the theme is directly displayed on the river network. In this case, the edge departing from a given node is displayed with the color attributed to the node. If \code{TRUE}, the theme is displayed via markers at the locations of the nodes at the RN or AG level (depending on the length of \code{theme}).
+\item{drawNodes}{Logical. If \code{FALSE}, the theme is directly displayed on the river network. In this case, the edge departing from a given node is displayed with the color attributed to the node. If \code{TRUE}, the theme is displayed via markers at the locations of the nodes at the RN or AG level (depending on the length of \code{theme}).
 In this case, \code{nanColor} can be used to define the color of the river network.}
+
+\item{nodeType}{Only effective if \code{drawNodes == TRUE} and \code{length(theme) == OCN$RN$nNodes}. Can assume values \code{"upstream"} or \code{"downstream"}. If \code{"upstream"}, nodes are drawn at the upstream ends of the corresponding edges (i.e. at the coordinates defined by \code{OCN$AG$X}, \code{OCN$AG$Y}). If \code{"downstream"}, nodes are drawn at the downstream ends of the corresponding edges (i.e. at the coordinates defined by \code{OCN$AG$XReach}, \code{OCN$AG$YReach}).}
 
 \item{cex}{Only effective if \code{drawNodes == TRUE}. It sets the dimension of the markers (equivalent to 
 parameter \code{cex} of function \code{\link{points}}). It can be a scalar or a vector of length \code{length(theme)}.}
@@ -50,7 +52,7 @@ equal to \code{length(chooseCM)}. If \code{length(backgroundColor) == length(cho
 (corresponding to the respective outlet). If instead \code{length(chooseCM) > 1} and \code{length(backgroundColor) == 1}, all catchments are colored with the same 
 \code{backgroundColor}.}
 
-\item{addLegend}{If \code{TRUE}, add legend to the plot. If \code{discreteLevels = FALSE}, this appears a colorbar.}
+\item{addLegend}{Logical. If \code{TRUE}, add legend to the plot. If also \code{discreteLevels = FALSE}, \code{\link{image.plot}} is used to display the legend, which appears as a colorbar; as a result, elements (e.g. node coordinates) subsequently plotted of on top of the 2D elevation map might be wrongly positioned. }
 }
 \value{
 No output is returned.
