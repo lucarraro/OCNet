@@ -24,8 +24,6 @@ Authors@R:
     person(given = "Enrico",
            family = "Bertuzzo",
            role = "aut"))
-URL: https://github.com/lucarraro/OCNet
-BugReports: https://github.com/lucarraro/OCNet/issues
 Description: Generate and analyze Optimal Channel Networks (OCNs): 
 	oriented spanning trees reproducing all scaling features characteristic 
 	of real, natural river networks. As such, they can be used in a variety 
