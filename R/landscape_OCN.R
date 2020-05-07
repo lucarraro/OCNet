@@ -202,7 +202,7 @@ landscape_OCN <- function(OCN,
   }
   if (displayUpdates>0){message("Calculating real X, Y coordinates...   100%\n", appendLF = FALSE)}
   
-  if (displayUpdates>0){message("Calculating catchment contour(s)... ", appendLF = FALSE)}
+  if (displayUpdates>0){message("Calculating catchment contour(s)... \r", appendLF = FALSE)}
   # determine contour of catchments (with original coordinates)
   X_contour <- vector("list", length = OCN$nOutlet)
   Y_contour <- vector("list", length = OCN$nOutlet)
@@ -225,6 +225,7 @@ landscape_OCN <- function(OCN,
       X_contour[[j]][[k]] <- count[[k]]$x
       Y_contour[[j]][[k]] <- count[[k]]$y
     } 
+    if (displayUpdates==2){message(sprintf("Calculating catchment contour(s)... %.1f%%\r",j/OCN$nOutlet*50), appendLF = FALSE)}
   }
   
   # determine contour of catchments (for real-shaped OCN)
@@ -248,8 +249,9 @@ landscape_OCN <- function(OCN,
       X_contour_draw[[j]][[k]] <- count[[k]]$x
       Y_contour_draw[[j]][[k]] <- count[[k]]$y
     }  
+    if (displayUpdates==2){message(sprintf("Calculating catchment contour(s)... %.1f%%\r",50+j/OCN$nOutlet*50), appendLF = FALSE)}
   }
-  if (displayUpdates>0){message(" 100%\n", appendLF = FALSE)}
+  if (displayUpdates==1){message("Calculating catchment contour(s)... 100%\n", appendLF = FALSE)}
   
   # add results to OCN list
   OCN$FD[["slope"]] <- Slope
