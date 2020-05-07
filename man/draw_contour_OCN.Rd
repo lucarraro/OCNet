@@ -48,14 +48,14 @@ draw_contour_OCN(landscape_OCN(OCN_20), thrADraw = 4)
 \donttest{
 # 2a) plot real shape of multiple-outlet OCN created with periodic boundaries
 # add outlets on top of the rivers
-OCN <- landscape_OCN(OCN_300_4out_PB) # it takes around one minute
+OCN <- landscape_OCN(OCN_300_4out_PB, displayUpdates = 2) # it takes around one minute
 draw_contour_OCN(OCN, drawOutlets = 2)
 
 # 2b) same as before, but use same color palette for rivers and contours
 draw_contour_OCN(OCN, colPalCont = 0)
 
 # 2c) draw contours of catchments obtained from an OCN with nOutlet = "All"
-OCN <- landscape_OCN(OCN_400_Allout) # it takes some minutes
+OCN <- landscape_OCN(OCN_400_Allout, , displayUpdates = 2) # it takes some minutes
 draw_contour_OCN(OCN)
 
 # 2d) same as above, but do not plot contours, and plot outlets 
