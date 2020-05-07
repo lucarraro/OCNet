@@ -39,11 +39,11 @@ To export in vectorial format, use \code{\link{rgl.postscript}} (but note that t
 The function will attempt at drawing a contour of the plotted entity (i.e. the lattice or a catchment, depending on \code{chooseCM}) at null elevation, and drawing polygons connecting this contour with the lattice/catchment contour at the real elevation. If \code{chooseCM != FALSE}, this might result in errors owing to failure of \code{\link{polygon3d}} in triangulating the polygons.  
 }
 \examples{
-\donttest{
+\dontrun{
 draw_elev3Drgl_OCN(landscape_OCN(OCN_20))
 }
 
-\donttest{
+\dontrun{
 # 1a) draw the 3D representation of a single catchment within an OCN 
 # generated with nOutlet = "All" and add draw the river on top of it
 OCN <- landscape_OCN(OCN_400_Allout, displayUpdates = 2) # this takes some minutes
