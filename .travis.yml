@@ -14,4 +14,3 @@ addons:
     - libglu1-mesa-dev 
     - libx11-dev
     - libfreetype6-dev
-install: travis_wait mvn install
