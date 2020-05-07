@@ -68,25 +68,44 @@ find_area_threshold_OCN <- function(OCN,
       IsNodeAG <- SourceOrConfluence|OutletNotChannelHead
       whichNodeAG <- which(IsNodeAG)
       
-      
       nNodes_AG <- sum(IsNodeAG)
       Length_AG <- numeric(nNodes_AG)
       RN_to_AG <- numeric(nNodes_RN)
       reachID <- 1
       while (length(whichNodeAG) != 0){ # explore all AG Nodes
         i <- whichNodeAG[1] # select the first
-        RN_to_AG[i] <- reachID; j <- DownNode_RN[i] 
+        RN_to_AG[i] <- reachID 
+        j <- DownNode_RN[i] 
         Length_AG[reachID] <- Length_RN[i]
-        while (!IsNodeAG[j] && j!=0 && Length_AG[reachID] <= maxReachLength) {
-          RN_to_AG[j] <- reachID 
-          Length_AG[reachID] <-  Length_AG[reachID] + Length_RN[j]
+        tmp_length <- Length_RN[i]
+        tmp <- NULL
+        j0 <- j
+        while (!IsNodeAG[j] && j!=0) {
+          tmp <- c(tmp, j)
+          tmp_length <-  tmp_length + Length_RN[j]
           j_old <- j
           j <- DownNode_RN[j]} 
-        if (Length_AG[reachID] > maxReachLength){
-          j <- j_old
-          Length_AG[reachID] <-  Length_AG[reachID] - Length_RN[j]
-          ChannelHeads[j] <- 1
-          whichNodeAG <- c(whichNodeAG,j)}
+        
+        if (tmp_length > maxReachLength){
+          n_splits <- ceiling(tmp_length/maxReachLength)
+          new_maxLength <- tmp_length/n_splits
+          j <- j0
+          while (!IsNodeAG[j] && j!=0 && Length_AG[reachID] <= new_maxLength) {
+            RN_to_AG[j] <- reachID 
+            Length_AG[reachID] <-  Length_AG[reachID] + Length_RN[j]
+            j_old <- j
+            j <- DownNode_RN[j]}
+          if (Length_AG[reachID] > new_maxLength){
+            j <- j_old
+            Length_AG[reachID] <-  Length_AG[reachID] - Length_RN[j]
+            ChannelHeads[j] <- 1
+            whichNodeAG <- c(whichNodeAG,j)}
+          
+        } else {
+          RN_to_AG[tmp] <- reachID
+          Length_AG[reachID] <- tmp_length
+        }
+        
         reachID <- reachID + 1
         whichNodeAG <- whichNodeAG[-1]
       }
@@ -188,7 +207,6 @@ find_area_threshold_OCN <- function(OCN,
   Thresholds[["streamOrder"]] <- vec_StreamOrder
   Thresholds$maxReachLength <- maxReachLength
   Thresholds$streamOrderType <- streamOrderType
-  
   
   invisible(Thresholds)
 }

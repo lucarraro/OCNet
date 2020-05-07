@@ -83,7 +83,7 @@ aggregate_OCN <- function(OCN,
   # RN_to_CM[i] indicates outlet to which reach i drains
   RN_to_CM <- numeric(Nnodes_RN)
   for (i in 1:OCN$nOutlet){
-    RN_to_CM[Upstream_RN[[Outlet_RN[i]]]] <- OCN$FD$toCM[RN_to_FD[Outlet_RN[i]]]
+    RN_to_CM[Upstream_RN[[Outlet_RN[i]]]] <- i
   }
   
   
@@ -103,22 +103,42 @@ aggregate_OCN <- function(OCN,
   A_AG <- NaN*numeric(Nnodes_AG)
   while (length(whichNodeAG) != 0){ # explore all AG Nodes
     i <- whichNodeAG[1] # select the first
-    RN_to_AG[i] <- reachID; j <- DownNode_RN[i] 
+    RN_to_AG[i] <- reachID 
+    j <- DownNode_RN[i] 
     X_AG[reachID] <- X_RN[i]
     Y_AG[reachID] <- Y_RN[i]
     Z_AG[reachID] <- Z_RN[i]
     A_AG[reachID] <- A_RN[i]
     Length_AG[reachID] <- Length_RN[i]
-    while (!IsNodeAG[j] && j!=0 && Length_AG[reachID] <= maxReachLength) {
-      RN_to_AG[j] <- reachID 
-      Length_AG[reachID] <-  Length_AG[reachID] + Length_RN[j]
+    tmp_length <- Length_RN[i]
+    tmp <- NULL
+    j0 <- j
+    while (!IsNodeAG[j] && j!=0) {
+      tmp <- c(tmp, j)
+      tmp_length <-  tmp_length + Length_RN[j]
       j_old <- j
       j <- DownNode_RN[j]} 
-    if (Length_AG[reachID] > maxReachLength){
-      j <- j_old
-      Length_AG[reachID] <-  Length_AG[reachID] - Length_RN[j]
-      ChannelHeads[j] <- 1
-      whichNodeAG <- c(whichNodeAG,j)}
+    
+    if (tmp_length > maxReachLength){
+      n_splits <- ceiling(tmp_length/maxReachLength)
+      new_maxLength <- tmp_length/n_splits
+      j <- j0
+      while (!IsNodeAG[j] && j!=0 && Length_AG[reachID] <= new_maxLength) {
+        RN_to_AG[j] <- reachID 
+        Length_AG[reachID] <-  Length_AG[reachID] + Length_RN[j]
+        j_old <- j
+        j <- DownNode_RN[j]}
+      if (Length_AG[reachID] > new_maxLength){
+        j <- j_old
+        Length_AG[reachID] <-  Length_AG[reachID] - Length_RN[j]
+        ChannelHeads[j] <- 1
+        whichNodeAG <- c(whichNodeAG,j)}
+
+    } else {
+      RN_to_AG[tmp] <- reachID
+      Length_AG[reachID] <- tmp_length
+    }
+    
     reachID <- reachID + 1
     whichNodeAG <- whichNodeAG[-1]
   }
@@ -220,7 +240,7 @@ aggregate_OCN <- function(OCN,
   # AG_to_CM[i] indicates outlet to which reach i drains
   AG_to_CM <- numeric(Nnodes_AG)
   for (i in 1:OCN$nOutlet){
-    AG_to_CM[Upstream_AG[[Outlet_AG[i]]]] <- OCN$FD$toCM[RN_to_FD[Outlet_RN[i]]]
+    AG_to_CM[Upstream_AG[[Outlet_AG[i]]]] <- i
   }
   #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE)
   #t1 <- Sys.time()
