@@ -44,7 +44,7 @@ draw_elev3D_OCN(landscape_OCN(OCN_20))
 # 1a) draw the 3D representation of the OCN (without displaying the river  
 # and the colorbar) and enhance the aspect ratio of Z coordinates 
 # with respect to the default value (the final result will be ugly):
-OCN <- landscape_OCN(OCN_400_Allout) # this takes some minutes  
+OCN <- landscape_OCN(OCN_400_Allout, displayUpdates = 2) # this takes some minutes  
 draw_elev3D_OCN(OCN, expand = 0.2, addColorbar = FALSE, drawRiver = FALSE)
 
 # 1b) same as above, but operate coarse graining  and modify shade for better aesthetics: 

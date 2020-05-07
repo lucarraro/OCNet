@@ -46,7 +46,7 @@ draw_elev3Drgl_OCN(landscape_OCN(OCN_20))
 \donttest{
 # 1a) draw the 3D representation of a single catchment within an OCN 
 # generated with nOutlet = "All" and add draw the river on top of it
-OCN <- landscape_OCN(OCN_400_Allout) # this takes some minutes
+OCN <- landscape_OCN(OCN_400_Allout, displayUpdates = 2) # this takes some minutes
 draw_elev3Drgl_OCN(OCN, chooseCM = 983, drawRiver = TRUE)
 
 # 1b) draw the 3D representation of the largest catchment within the OCN 
@@ -64,7 +64,7 @@ draw_elev3Drgl_OCN(OCN, coarseGrain = c(5,5), aspect = c(1, 1, 0.2))
 # 2) draw the 3D representation of a single catchment of an OCN generated
 # with periodicBoundaries = TRUE
 # (note that the real shape of the catchment is drawn)
-OCN <- landscape_OCN(OCN_300_4out_PB) # this takes some minutes
+OCN <- landscape_OCN(OCN_300_4out_PB, displayUpdates = 2) # this takes some minutes
 draw_elev3Drgl_OCN(OCN, chooseCM = TRUE) 
 }
 }
