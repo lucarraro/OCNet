@@ -173,18 +173,14 @@ title("4-outlet OCN")
 par(old.par)
 }
 
-\donttest{
+\dontrun{
 # 3) generate 3 single-outlet OCNs on the same (100x100) domain starting from different 
 # initial states, and show 20 intermediate plots and console updates.
 set.seed(1)
 OCN_V <- create_OCN(100, 100, typeInitialState = "V", showIntermediatePlots = TRUE, 
 		nUpdates = 20, displayUpdates = 2)
-}
-\donttest{
 OCN_T <- create_OCN(100, 100, typeInitialState = "T", showIntermediatePlots = TRUE, 
 		nUpdates = 20, displayUpdates = 2)
-}
-\dontrun{
 OCN_I <- create_OCN(100, 100, typeInitialState = "I", showIntermediatePlots = TRUE, 
 		nUpdates = 20, displayUpdates = 2)
 }
