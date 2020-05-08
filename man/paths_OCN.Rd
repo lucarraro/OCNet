@@ -43,7 +43,7 @@ Function that determines upstream and downstream paths and path lengths between 
 \examples{
 # 1) Calculate paths between nodes of an OCN
 OCN <- paths_OCN(aggregate_OCN(landscape_OCN(OCN_20), thrA = 4))
-\donttest{
+\dontrun{
 # 2) Display distance to outlet (at the RN level) along the main stem
 # of an OCN
 OCN <- aggregate_OCN(landscape_OCN(OCN_250_T)) # this takes some seconds

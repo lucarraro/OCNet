@@ -103,7 +103,7 @@ draw_thematic_OCN(OCN$AG$A, OCN, drawNodes = TRUE,
 title("All nodes with A > 200 pixels \n are treated as NaN")		
 par(old.par)
 
-\donttest{
+\dontrun{
 # 2) Display distance to outlet (at the RN level) along the main stem
 # of an OCN
 OCN <- aggregate_OCN(landscape_OCN(OCN_250_T)) # this takes some seconds
