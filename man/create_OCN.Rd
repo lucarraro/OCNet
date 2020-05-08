@@ -180,7 +180,7 @@ set.seed(1)
 OCN_V <- create_OCN(100, 100, typeInitialState = "V", showIntermediatePlots = TRUE, 
 		nUpdates = 20, displayUpdates = 2)
 }
-\dontrun{
+\donttest{
 OCN_T <- create_OCN(100, 100, typeInitialState = "T", showIntermediatePlots = TRUE, 
 		nUpdates = 20, displayUpdates = 2)
 }
