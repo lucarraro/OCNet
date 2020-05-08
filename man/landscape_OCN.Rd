@@ -77,7 +77,7 @@ optimization algorithm is not guaranteed for large \code{OCN$nOutlet} (say, \cod
 # 1) draw 2D elevation map of a 20x20 OCN with default options
 OCN2 <- landscape_OCN(OCN_20)
 
-\donttest{
+\dontrun{
 # 2) generate a 100x50 OCN; assume that the pixel resolution is 200 m
 # (the total catchment area is 20 km2)
 set.seed(1)
@@ -93,7 +93,7 @@ draw_elev3D_OCN(OCN)
 draw_elev3Drgl_OCN(OCN)
 }
 
-\donttest{
+\dontrun{
 # 3) generate a 100x50 OCN with 4 outlets
 set.seed(1)
 OCN <- create_OCN(100, 50, cellsize = 200, 
