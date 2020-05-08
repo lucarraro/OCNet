@@ -93,7 +93,7 @@ draw_elev3D_OCN(OCN)
 draw_elev3Drgl_OCN(OCN)
 }
 
-\dontrun{
+\donttest{
 # 3) generate a 100x50 OCN with 4 outlets
 set.seed(1)
 OCN <- create_OCN(100, 50, cellsize = 200, 
