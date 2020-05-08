@@ -158,7 +158,7 @@ set.seed(1)
 OCN_a <- create_OCN(20, 20)
 draw_simple_OCN(OCN_a)
 
-\donttest{
+\dontrun{
 # 2) creates and displays a 2-outlet OCNs with manually set outlet location, 
 # and a 4-outlet OCNs with random outlet position.
 set.seed(1)
@@ -173,7 +173,7 @@ title("4-outlet OCN")
 par(old.par)
 }
 
-\donttest{
+\dontrun{
 # 3) generate 3 single-outlet OCNs on the same (100x100) domain starting from different 
 # initial states, and show 20 intermediate plots and console updates.
 set.seed(1)
@@ -185,7 +185,7 @@ OCN_I <- create_OCN(100, 100, typeInitialState = "I", showIntermediatePlots = TR
 		nUpdates = 20, displayUpdates = 2)
 }
 
-\donttest{
+\dontrun{
 # 4) generate a 2-outlet OCN and show intermediate plots. Note that different colors are used 
 # to identify the two networks  (all pixels are colored because thrADraw = 0).
 set.seed(1)
