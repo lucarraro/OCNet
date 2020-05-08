@@ -179,8 +179,12 @@ par(old.par)
 set.seed(1)
 OCN_V <- create_OCN(100, 100, typeInitialState = "V", showIntermediatePlots = TRUE, 
 		nUpdates = 20, displayUpdates = 2)
+}
+\donttest{
 OCN_T <- create_OCN(100, 100, typeInitialState = "T", showIntermediatePlots = TRUE, 
 		nUpdates = 20, displayUpdates = 2)
+}
+\donttest{
 OCN_I <- create_OCN(100, 100, typeInitialState = "I", showIntermediatePlots = TRUE, 
 		nUpdates = 20, displayUpdates = 2)
 }
