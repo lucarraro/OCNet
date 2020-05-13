@@ -1,4 +1,6 @@
-# OCNet 0.2.0.9000
+# OCNet 0.3.0.9000
+
+# OCNet 0.3.0
 
 ## Major changes
 
