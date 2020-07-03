@@ -3,10 +3,14 @@ aggregate_OCN <- function(OCN,
                           thrA=0.002*OCN$dimX*OCN$dimY*OCN$cellsize^2,
                           streamOrderType="Strahler",
                           maxReachLength=Inf){
+
+  if (!inherits(OCN,"OCNlandscape")) 
+    stop("Input 'OCN' not of class 'OCNlandscape'. You should run 'landscape_OCN' prior to 'aggregate_OCN'.")
+  cl <- match.call()
   
-  if (!("slope" %in% names(OCN$FD))){
-    stop('Missing fields in OCN. You should run landscape_OCN prior to aggregate_OCN.')
-  }
+#  if (!("slope" %in% names(OCN$FD))){
+#    stop('Missing fields in OCN. You should run landscape_OCN prior to aggregate_OCN.')
+#  }
   
   if (maxReachLength < OCN$cellsize*sqrt(2)){
     stop("maxReachLength cannot be smaller than OCN$cellsize*sqrt(2).")
@@ -450,5 +454,9 @@ aggregate_OCN <- function(OCN,
   OCN$AG[["toFD"]] <- AG_to_FDnode
   OCN$AG[["toRN"]] <- AG_to_RNnode
   
-  invisible(OCN)
+  OCN$call_aggregate <- cl
+  
+  class(OCN) <- c("OCNaggregate", "OCNlandscape", "OCN")
+  
+  return(OCN)  #invisible(OCN)
 }

@@ -18,9 +18,12 @@ Possible values are \code{"NE"}, \code{"SE"}, \code{"SW"}, \code{"NW"}.}
 
 \item{cellsize}{Size of a pixel (expressed in planar units).}
 }
-\value{
-A list that contains the same objects as those produced by \code{\link{create_OCN}}. 
-As such, it can be used as input for all other complementary functions of the package.
+\value{An object of \code{class} \code{"OCN"}, similar as the output of \code{\link{create_OCN}}. 
+
+The functions \code{print} and \code{summary} extract relevant information of the object. 
+
+A detailed description of the elements of the \code{"OCN"} class is given 
+in the help of \code{\link{create_OCN}}. 
 }
 \description{
 Function that creates Peano networks on a square lattice.

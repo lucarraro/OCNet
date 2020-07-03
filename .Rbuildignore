@@ -2,3 +2,14 @@
 ^\.Rproj\.user$
 ^\.travis\.yml$
 ^\README\.md$
+
+
+OCN_250_*cold.*
+OCN_400_T_out*	
+OCN_500_*
+OCN_rect*
+
+
+makeData.R
+
+Makefile

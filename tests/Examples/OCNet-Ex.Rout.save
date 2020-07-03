@@ -1,0 +1,360 @@
+
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "OCNet"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> base::assign(".ExTimings", "OCNet-Ex.timings", pos = 'CheckExEnv')
+> base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+> base::assign(".format_ptime",
++ function(x) {
++   if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
++   if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
++   options(OutDec = '.')
++   format(x[1L:3L], digits = 7L)
++ },
++ pos = 'CheckExEnv')
+> 
+> ### * </HEADER>
+> library('OCNet')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("OCN_to_SSN")
+> ### * OCN_to_SSN
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: OCN_to_SSN
+> ### Title: Transform OCN into SSN object
+> ### Aliases: OCN_to_SSN
+> 
+> ### ** Examples
+> 
+> # transform a 20x20 single-outlet OCN (aggregated at the AG level)
+> # into a SSN object and plot it
+> OCN <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 4)
+> ssn1 <- OCN_to_SSN(OCN, "AG", obsDesign = SSN::poissonDesign(10), 
++ path=paste(tempdir(),"/OCN.ssn", sep = ""), importToR = TRUE)
+> plot(ssn1)
+> 
+> ## No test: 
+> # 1) create a 50x50 OCN with two outlets and periodic boundaries; 
+> set.seed(1)
+> OCN <- create_OCN(50, 50, nOutlet = 2, outletSide = c("S", "N"),
++ 		outletPos = c(1, 50), periodicBoundaries = TRUE)
+create_OCN is running...
+Estimated duration: 16.71 seconds 
+Note that the above estimate is only based on the choice of parameters dimX, dimY and nIter, and not on processor performance.
+
+> # aggregate the OCN;
+> OCN <- aggregate_OCN(landscape_OCN(OCN))
+> # transform it into a SSN object aggregated at the RN level;
+> ssn2 <- OCN_to_SSN(OCN, "RN", obsDesign = SSN::binomialDesign(c(10, 10)),
++ 		path = paste(tempdir(),"/OCN2.ssn", sep = ""), importToR = TRUE)
+> # and plot the SSN object; it is constituted by two networks,
+> # and nodes' coordinates are the "real" ones  
+> old.par <- par(no.readonly = TRUE)
+> par(mai = c(1, 1, 1, 1))
+> plot(ssn2, xlab = "X", ylab = "Y")
+> par(old.par)
+> ## End(No test)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("OCN_to_SSN", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> graphics::par(get("par.postscript", pos = 'CheckExEnv'))
+> cleanEx()
+> nameEx("OCN_to_igraph")
+> ### * OCN_to_igraph
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: OCN_to_igraph
+> ### Title: Transform OCN into igraph object
+> ### Aliases: OCN_to_igraph
+> 
+> ### ** Examples
+> 
+> # 1) transform a 20x20 OCN, at the AG level, into a graph object 
+> OCN <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 4)
+> g <- OCN_to_igraph(OCN, level = "AG")
+> plot(g, layout = matrix(c(OCN$AG$X,OCN$AG$Y), ncol = 2, nrow = OCN$AG$nNodes))
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("OCN_to_igraph", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("aggregate_OCN")
+> ### * aggregate_OCN
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: aggregate_OCN
+> ### Title: Aggregate an Optimal Channel Network
+> ### Aliases: aggregate_OCN
+> 
+> ### ** Examples
+> 
+> # 1) aggregate a 20x20 OCN by imposing thrA = 4
+> OCN <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 4)
+> 
+> ## No test: 
+> # 2) explore the effects of thrA and maxReachLength on a large OCN
+> OCN <- landscape_OCN(OCN_250_T) # it takes some seconds
+> OCN_a <- aggregate_OCN(OCN, thrA = 200) # it takes some seconds
+> OCN_b <- aggregate_OCN(OCN, thrA = 1000) # it takes some seconds
+> OCN_c <- aggregate_OCN(OCN, thrA = 1000, maxReachLength = 20) # it takes some seconds
+> 
+> old.par <- par(no.readonly = TRUE)
+> par(mfrow = c(1,3))
+> draw_subcatchments_OCN(OCN_a)
+> points(OCN_a$AG$X, OCN_a$AG$Y, pch = 19, col = "#0044bb") 
+> title(paste("No. AG nodes = ", as.character(OCN_a$AG$nNodes),
++ 		sep=""))
+> draw_subcatchments_OCN(OCN_b)
+> points(OCN_b$AG$X, OCN_b$AG$Y, pch = 19, col = "#0044bb") 
+> title(paste("No. AG nodes = ", as.character(OCN_b$AG$nNodes),
++ 		sep=""))
+> draw_subcatchments_OCN(OCN_c)
+> points(OCN_c$AG$X, OCN_c$AG$Y, pch = 19, col = "#0044bb") 
+> title(paste("No. AG nodes = ", as.character(OCN_c$AG$nNodes),
++ 		sep=""))
+> par(old.par)
+> ## End(No test)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("aggregate_OCN", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> graphics::par(get("par.postscript", pos = 'CheckExEnv'))
+> cleanEx()
+> nameEx("create_OCN")
+> ### * create_OCN
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: create_OCN
+> ### Title: Create an Optimal Channel Network
+> ### Aliases: create_OCN
+> 
+> ### ** Examples
+> 
+> # 1) creates and displays a single outlet 20x20 OCN with default options
+> set.seed(1)
+> OCN_a <- create_OCN(20, 20)
+> draw_simple_OCN(OCN_a)
+> 
+> ## No test: 
+> # 2) creates and displays a 2-outlet OCNs with manually set outlet location, 
+> # and a 4-outlet OCNs with random outlet position.
+> set.seed(1)
+> old.par <- par(no.readonly = TRUE)
+> par(mfrow=c(1,2))
+> OCN_b1 <- create_OCN(30, 30, nOutlet = 2, outletSide = c("N", "W"), outletPos = c(15, 12))
+> OCN_b2 <- create_OCN(30, 30, nOutlet = 4)
+> draw_simple_OCN(OCN_b1)
+> title("2-outlet OCN")
+> draw_simple_OCN(OCN_b2)
+> title("4-outlet OCN")
+> par(old.par)
+> ## End(No test)
+> 
+> 
+> # 3) generate 3 single-outlet OCNs on the same (100x100) domain starting from different 
+> # initial states, and show 20 intermediate plots and console updates.
+> set.seed(1)
+> OCN_V <- create_OCN(100, 100, typeInitialState = "V", showIntermediatePlots = TRUE, 
++ 		nUpdates = 20, displayUpdates = 2)
+create_OCN is running...
+Estimated duration: 2.87 minutes 
+Note that the above estimate is only based on the choice of parameters dimX, dimY and nIter, and not on processor performance.
+
+Initializing...
+Initialization completed. Elapsed time is 1.31 s 
+Search algorithm has started.
+
+5.0% completed - Elapsed time: 16.90 s - Jun10 18:46 - Energy: 51240 
+10.0% completed - Elapsed time: 32.55 s - Jun10 18:46 - Energy: 52764 
+15.0% completed - Elapsed time: 47.50 s - Jun10 18:47 - Energy: 51394 
+20.0% completed - Elapsed time: 61.58 s - Jun10 18:47 - Energy: 45791 
+25.0% completed - Elapsed time: 75.87 s - Jun10 18:47 - Energy: 40646 
+30.0% completed - Elapsed time: 90.05 s - Jun10 18:47 - Energy: 36849 
+35.0% completed - Elapsed time: 104.09 s - Jun10 18:48 - Energy: 34604 
+40.0% completed - Elapsed time: 118.33 s - Jun10 18:48 - Energy: 33309 
+45.0% completed - Elapsed time: 132.20 s - Jun10 18:48 - Energy: 32650 
+50.0% completed - Elapsed time: 145.91 s - Jun10 18:48 - Energy: 32262 
+55.0% completed - Elapsed time: 159.59 s - Jun10 18:48 - Energy: 31908 
+60.0% completed - Elapsed time: 172.95 s - Jun10 18:49 - Energy: 31706 
+65.0% completed - Elapsed time: 186.32 s - Jun10 18:49 - Energy: 31445 
+70.0% completed - Elapsed time: 199.77 s - Jun10 18:49 - Energy: 31332 
+75.0% completed - Elapsed time: 212.89 s - Jun10 18:49 - Energy: 31243 
+80.0% completed - Elapsed time: 226.08 s - Jun10 18:50 - Energy: 31168 
+85.0% completed - Elapsed time: 239.10 s - Jun10 18:50 - Energy: 31071 
+90.0% completed - Elapsed time: 252.12 s - Jun10 18:50 - Energy: 31022 
+95.0% completed - Elapsed time: 265.15 s - Jun10 18:50 - Energy: 30966 
+100.0% completed - Elapsed time: 278.06 s - Jun10 18:50 - Energy: 30932 
+> OCN_T <- create_OCN(100, 100, typeInitialState = "T", showIntermediatePlots = TRUE, 
++ 		nUpdates = 20, displayUpdates = 2)
+create_OCN is running...
+Estimated duration: 2.87 minutes 
+Note that the above estimate is only based on the choice of parameters dimX, dimY and nIter, and not on processor performance.
+
+Initializing...
+Initialization completed. Elapsed time is 1.17 s 
+Search algorithm has started.
+
+5.0% completed - Elapsed time: 15.28 s - Jun10 18:51 - Energy: 51706 
+10.0% completed - Elapsed time: 29.69 s - Jun10 18:51 - Energy: 55112 
+15.0% completed - Elapsed time: 43.58 s - Jun10 18:51 - Energy: 52118 
+20.0% completed - Elapsed time: 57.47 s - Jun10 18:51 - Energy: 46902 
+25.0% completed - Elapsed time: 71.32 s - Jun10 18:52 - Energy: 41241 
+30.0% completed - Elapsed time: 85.44 s - Jun10 18:52 - Energy: 37218 
+35.0% completed - Elapsed time: 99.61 s - Jun10 18:52 - Energy: 34892 
+40.0% completed - Elapsed time: 113.79 s - Jun10 18:52 - Energy: 33835 
+45.0% completed - Elapsed time: 127.69 s - Jun10 18:53 - Energy: 32908 
+50.0% completed - Elapsed time: 142.93 s - Jun10 18:53 - Energy: 32527 
+55.0% completed - Elapsed time: 156.57 s - Jun10 18:53 - Energy: 32229 
+60.0% completed - Elapsed time: 170.04 s - Jun10 18:53 - Energy: 32027 
+65.0% completed - Elapsed time: 183.36 s - Jun10 18:54 - Energy: 31858 
+70.0% completed - Elapsed time: 197.38 s - Jun10 18:54 - Energy: 31730 
+75.0% completed - Elapsed time: 210.73 s - Jun10 18:54 - Energy: 31644 
+80.0% completed - Elapsed time: 223.92 s - Jun10 18:54 - Energy: 31586 
+85.0% completed - Elapsed time: 237.16 s - Jun10 18:54 - Energy: 31529 
+90.0% completed - Elapsed time: 250.19 s - Jun10 18:55 - Energy: 31436 
+95.0% completed - Elapsed time: 263.17 s - Jun10 18:55 - Energy: 31399 
+100.0% completed - Elapsed time: 276.12 s - Jun10 18:55 - Energy: 31358 
+> OCN_I <- create_OCN(100, 100, typeInitialState = "I", showIntermediatePlots = TRUE, 
++ 		nUpdates = 20, displayUpdates = 2)
+create_OCN is running...
+Estimated duration: 2.87 minutes 
+Note that the above estimate is only based on the choice of parameters dimX, dimY and nIter, and not on processor performance.
+
+Initializing...
+Initialization completed. Elapsed time is 1.31 s 
+Search algorithm has started.
+
+5.0% completed - Elapsed time: 15.32 s - Jun10 18:55 - Energy: 52930 
+10.0% completed - Elapsed time: 30.91 s - Jun10 18:56 - Energy: 51857 
+15.0% completed - Elapsed time: 46.01 s - Jun10 18:56 - Energy: 50731 
+20.0% completed - Elapsed time: 60.59 s - Jun10 18:56 - Energy: 45845 
+25.0% completed - Elapsed time: 74.74 s - Jun10 18:56 - Energy: 40941 
+30.0% completed - Elapsed time: 88.76 s - Jun10 18:57 - Energy: 37285 
+35.0% completed - Elapsed time: 103.35 s - Jun10 18:57 - Energy: 35084 
+40.0% completed - Elapsed time: 117.75 s - Jun10 18:57 - Energy: 33791 
+45.0% completed - Elapsed time: 131.71 s - Jun10 18:57 - Energy: 33147 
+50.0% completed - Elapsed time: 145.30 s - Jun10 18:57 - Energy: 32675 
+55.0% completed - Elapsed time: 158.78 s - Jun10 18:58 - Energy: 32349 
+60.0% completed - Elapsed time: 172.46 s - Jun10 18:58 - Energy: 32104 
+65.0% completed - Elapsed time: 186.11 s - Jun10 18:58 - Energy: 31871 
+70.0% completed - Elapsed time: 199.80 s - Jun10 18:58 - Energy: 31743 
+75.0% completed - Elapsed time: 212.87 s - Jun10 18:59 - Energy: 31614 
+80.0% completed - Elapsed time: 225.80 s - Jun10 18:59 - Energy: 31524 
+85.0% completed - Elapsed time: 238.78 s - Jun10 18:59 - Energy: 31473 
+90.0% completed - Elapsed time: 251.64 s - Jun10 18:59 - Energy: 31402 
+95.0% completed - Elapsed time: 264.44 s - Jun10 18:59 - Energy: 31362 
+100.0% completed - Elapsed time: 277.22 s - Jun10 19:00 - Energy: 31329 
+> 
+> 
+> 
+> # 4) generate a 2-outlet OCN and show intermediate plots. Note that different colors are used 
+> # to identify the two networks  (all pixels are colored because thrADraw = 0).
+> set.seed(1)
+> OCN <- create_OCN(150, 70, nOutlet = 2, outletPos = c(1, 150), outletSide = c("S", "N"),
++ 		typeInitialState = "V", periodicBoundaries = TRUE, 
++ 		showIntermediatePlots = TRUE, thrADraw = 0)
+create_OCN is running...
+Estimated duration: 3.14 minutes 
+Note that the above estimate is only based on the choice of parameters dimX, dimY and nIter, and not on processor performance.
+
+> # The resulting networks have an irregular contour, and their outlets are located on the contour:
+> draw_contour_OCN(landscape_OCN(OCN))
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("create_OCN", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> graphics::par(get("par.postscript", pos = 'CheckExEnv'))
+> cleanEx()
+> nameEx("create_peano")
+> ### * create_peano
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: create_peano
+> ### Title: Create Peano network
+> ### Aliases: create_peano
+> 
+> ### ** Examples
+> 
+> # 1) create a peano network in a 32x32 square,
+> # use landscape_OCN, aggregate_OCN functions,
+> # and display subcatchment map and map of drainage area
+> peano <- create_peano(4)
+> peano <- aggregate_OCN(landscape_OCN(peano), thrA = 4)
+> old.par <- par(no.readonly = TRUE)
+> par(mfrow=c(1,3))
+> draw_simple_OCN(peano)
+> title("Peano network")
+> draw_subcatchments_OCN(peano)
+> title("Subcatchments")
+> draw_thematic_OCN(peano$RN$A, peano)
+> title("Drainage area at RN level")
+> par(old.par)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("create_peano", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> graphics::par(get("par.postscript", pos = 'CheckExEnv'))
+> cleanEx()
+> nameEx("draw_contour_OCN")
+> ### * draw_contour_OCN
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: draw_contour_OCN
+> ### Title: Draw Optimal Channel Network with catchment contours
+> ### Aliases: draw_contour_OCN
+> 
+> ### ** Examples
+> 
+> # 1) draw contour of a 20x20 single-outlet OCN
+> # (for single-outlet OCNs without periodic boundaries, the output
+> # of draw_contour_OCN is very similar to that of draw_simple_OCN)
+> draw_contour_OCN(landscape_OCN(OCN_20), thrADraw = 4)
+> 
+> 
+> # 2a) plot real shape of multiple-outlet OCN created with periodic boundaries
+> # add outlets on top of the rivers
+> OCN <- landscape_OCN(OCN_300_4out_PB, displayUpdates = 2) # it takes around one minute
+Calculating lengths and slopes... Error in as.vector(x) : object 'OCN_300_4out_PB' not found
+Calls: landscape_OCN -> setdiff -> as.vector
+Execution halted

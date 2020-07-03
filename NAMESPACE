@@ -34,4 +34,17 @@ importFrom("sp", "Line", "Lines", "SpatialLines", "SpatialLinesDataFrame",
 	"SpatialPointsDataFrame")
 importFrom("utils", "write.table")
 
+S3method(plot, OCN)
+S3method(print, OCN)
+S3method(summary, OCN)
+
+S3method(plot, OCNlandscape)
+S3method(print, OCNlandscape)
+S3method(summary, OCNlandscape)
+
+S3method(plot, OCNaggregate)
+S3method(print, OCNaggregate)
+S3method(summary, OCNaggregate)
+
+
 useDynLib(OCNet, .registration = TRUE)

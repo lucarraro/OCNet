@@ -3,7 +3,7 @@
 \title{Draw an Optimal Channel Network}
 \usage{
 draw_simple_OCN(OCN, thrADraw = 0.002 * OCN$dimX * OCN$dimY *
-  OCN$cellsize^2, riverColor = "#0066FF", easyDraw = NULL)
+  OCN$cellsize^2, riverColor = "#0066FF", easyDraw = NULL, ...)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{create_OCN}}.}
@@ -13,6 +13,8 @@ draw_simple_OCN(OCN, thrADraw = 0.002 * OCN$dimX * OCN$dimY *
 \item{riverColor}{Color used to plot the river.}
 
 \item{easyDraw}{Logical. If \code{TRUE}, the whole network is displayed, and pixels with drainage area lower than \code{thrADraw} are displayed in light gray. If \code{FALSE}, only pixels with drainage area greater or equal to \code{thrADraw} are displayed. Default is \code{FALSE} if \code{OCN$nNodes <= 40000}, and \code{TRUE} otherwise. Note that setting \code{easyDraw = FALSE} for large networks might slow down the process considerably.}
+
+\item{...}{Further arguments passed to \code{plot}.}
 }
 \value{
 No output is returned.

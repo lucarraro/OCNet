@@ -7,6 +7,10 @@ landscape_OCN <- function(OCN,
                           optimControl=list(maxit=100*length(OCN$FD$outlet), trace=1),
                           displayUpdates=0) {
   
+  if (!inherits(OCN, "OCN")) 
+    stop("Input 'OCN' not of class 'OCN'.")
+  cl <- match.call()
+  
   if (!(displayUpdates %in% c(0,1,2))) {stop("Invalid displayUpdates")}
   
   if (displayUpdates>0){message("Calculating lengths and slopes... \r", appendLF = FALSE)}
@@ -273,5 +277,9 @@ landscape_OCN <- function(OCN,
   
   if (optimizeDZ==TRUE) {OCN$optList <- OptList}
   
-  invisible(OCN)
+  
+  OCN$call_landscape <- cl
+  class(OCN) <- c("OCNlandscape", "OCN")
+  
+  return(OCN)  #  invisible(OCN)
 }

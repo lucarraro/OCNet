@@ -64,7 +64,7 @@ draw_elev3Drgl_OCN(OCN, coarseGrain = c(5,5), aspect = c(1, 1, 0.2))
 # 2) draw the 3D representation of a single catchment of an OCN generated
 # with periodicBoundaries = TRUE
 # (note that the real shape of the catchment is drawn)
-OCN <- landscape_OCN(OCN_300_4out_PB, displayUpdates = 2) # this takes some minutes
+OCN <- landscape_OCN(OCN_300_4out_PB_hot, displayUpdates = 2) # this takes some minutes
 draw_elev3Drgl_OCN(OCN, chooseCM = TRUE) 
 }
 }

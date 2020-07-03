@@ -84,8 +84,11 @@ Note that, for large lattices, \code{showIntermediatePlots = TRUE} might slow do
 \item{\code{2}}{Progress updates are given. The number of these is controlled by \code{nUpdates}}
 }}
 }
-\value{
-A list whose objects are listed below. Variables that define the network at the FD level are wrapped in the sublist \code{FD}.
+\value{An object of \code{class} \code{"OCN"}. 
+
+The functions \code{print} and \code{summary} extract relevant information of the object. 
+
+An object of class \code{"lm"} is a list whose objects are listed below. Variables that define the network at the FD level are wrapped in the sublist \code{FD}.
 Adjacency matrices describing 4- or 8- nearest-neighbours connectivity among pixels are contained in lists N4 and N8, respectively. 
 \item{\code{FD$A}}{Vector (of length \code{dimX*dimY}) containing drainage area values for all FD pixels (in square planar units).}
 \item{\code{FD$W}}{Adjacency matrix (\code{dimX*dimY} by \code{dimX*dimY}) at the FD level. 

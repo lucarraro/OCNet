@@ -21,7 +21,9 @@ create_OCN <- function(dimX,dimY,
                         saveN8=FALSE,
                         saveN4=FALSE,
                         displayUpdates=1){
-  
+
+  cl <- match.call()
+
   if (dimX<2 | dimY<2) stop("Dimensions too small.")
   if (dimX*dimY > 1000) {
     dim <- sqrt(dimX*dimY)
@@ -398,8 +400,10 @@ create_OCN <- function(dimX,dimY,
   if (saveN4==TRUE) {
     N4 <- list(W=W_N4)
     OCN[["N4"]] <- N4}
-  
-  invisible(OCN)
+
+  OCN$call <- cl  
+  class(OCN) <- "OCN"  
+  return( OCN)  #  invisible(OCN)
 }
 
 

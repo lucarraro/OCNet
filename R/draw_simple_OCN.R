@@ -2,7 +2,7 @@
 draw_simple_OCN <- function(OCN,
                             thrADraw=0.002*OCN$dimX*OCN$dimY*OCN$cellsize^2,
                             riverColor="#0066FF",
-                            easyDraw=NULL){
+                            easyDraw=NULL, ...){
   
   if (is.null(easyDraw)){
   if (OCN$FD$nNodes>4e4) {
@@ -16,7 +16,7 @@ draw_simple_OCN <- function(OCN,
   #on.exit(par(old.par))
   #par(bty="n")
   plot(c(min(OCN$FD$X),max(OCN$FD$X)),c(min(OCN$FD$Y),max(OCN$FD$Y)),
-       type="n",asp=1,axes=FALSE,xlab=" ",ylab=" ")
+       type="n",asp=1,axes=FALSE,xlab=" ",ylab=" ", ...)
   #points(OCN$FD$X[OCN$FD$outlet],OCN$FD$Y[OCN$FD$outlet],pch=22,col="#000000",bg="#000000")
   
   if (easyDraw==FALSE){

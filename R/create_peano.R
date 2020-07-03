@@ -4,6 +4,7 @@ create_peano <- function(nIterPeano,
                          xllcorner=1,
                          yllcorner=1,
                          cellsize=1){
+  cl <- match.call()
   
   if (!(outletPos %in% c("NE","NW","SE","SW"))){
     stop('Invalid outletPos')}
@@ -106,7 +107,11 @@ create_peano <- function(nIterPeano,
   # note: for peano networks, ExpEnergy only has the meaning of quantity related to the exponent of the slope-area relationship
   # s \propto A^(ExpEnergy-1)
   
-  invisible(peano)   
+  
+  
+  peano$call <- cl  
+  class(peano) <- "OCN"  
+  return( peano)  #  invisible(peano)   
 }
 
 # auxiliary functions
