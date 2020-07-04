@@ -3,12 +3,22 @@
 ^\.travis\.yml$
 ^\README\.md$
 
+OCN_250\.rda
+OCN_250\.Rd
+OCN_250_V_cold\.rda
+OCN_250_V_cold\.Rd
+OCN_250_V_hot\.rda 	
+OCN_250_V_hot\.Rd 	
+OCN_250_cold\.rda
+OCN_250_cold\.Rd
+OCN_250_hot\.rda 	
+OCN_250_hot\.Rd 	
 
-OCN_250_*cold.*
-OCN_400_T_out*	
+OCN_400_T_hot\.*
 OCN_500_*
 OCN_rect*
-
+OCN_300_diag\.*
+OCN_300_7out\.*
 
 makeData.R
 

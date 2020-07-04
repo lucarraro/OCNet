@@ -1,0 +1,77 @@
+
+R Under development (unstable) (2020-06-04 r78644) -- "Unsuffered Consequences"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #
+> # Package tests
+> #
+> #
+> # 
+> 
+> require(OCNet)
+Loading required package: OCNet
+> 
+> # agg contains length, and cumsum of all numeric entries
+> ocn_test <- function(obj, agg, tol=1e-6, label="") {
++   
++   stopifnot( length(obj)==agg[1])
++   
++   tmp <- sum( unlist( obj[unlist( lapply(obj, is.numeric))]))
++   stopifnot( abs(tmp-agg[2]) < tol)
++   
++   tmp <- sum( unlist( obj$FD[unlist( lapply(obj$FD, is.numeric))]))
++   stopifnot( abs(tmp-agg[3]) < tol)
++ 
++   if (!is.null(obj$CR)){
++     tmp <- sum( unlist( obj$CR[unlist( lapply(obj$CR, is.numeric))]))
++     stopifnot( abs(tmp-agg[4]) < tol)
++   }
++   return(TRUE)    
++ }
+> 
+> get_agg <- function( obj) {
++   agg <-
++     c( length(obj),
++        sum( unlist( obj[unlist( lapply(obj, is.numeric))])),
++        sum( unlist( obj$FD[unlist( lapply(obj$FD, is.numeric))]))
++     )
++   if (!is.null(obj$CR)){
++     agg[4] <-  sum( unlist( obj$CR[unlist( lapply(obj$CR, is.numeric))]))
++   }
++   print( agg, digits=16)
++   return(agg)
++ }
+> 
+> ocn <- create_OCN(12,3,  seed=1)
+> ocn_test( ocn, c(12.0, 1458.5, 1095.))
+[1] TRUE
+> ocn <- create_OCN(12, 3, seed=1, saveEnergy = TRUE)
+> ocn_test( ocn, c( 13,93892.78110789257,  1095))
+[1] TRUE
+>   
+>   
+> # the following should cause errors!
+> try( create_OCN(12, -3))
+Error in create_OCN(12, -3) : Dimensions too small.
+> try( create_OCN(4, 4, outletSide = "K"))
+Error in create_OCN(4, 4, outletSide = "K") : Invalid outletSide
+> 
+> 
+> # To be completed....
+> 
+> proc.time()
+   user  system elapsed 
+  2.743   0.172   2.905 

@@ -8,8 +8,7 @@
 #
 #  Classes with inheritance:			
 #    https://www.datamentor.io/r-programming/inheritance/
-#  OCN > OCNlandscape
-#  OCN > OCNaggregate
+#  OCN > OCNlandscape > OCNaggregate
 #
 
 
@@ -49,8 +48,15 @@ summary.OCNlandscape <- function(object, ...) {
   invisible(object)
 }
 
-plot.OCNlandscape <- function(x, ...) {        
-    draw_simple_OCN( x, ...)
+plot.OCNlandscape <- function(x, which=c("contour","elev2D","elev3D","elev3Drgl","simple"), ...) {
+  # implement which with numbers??
+    type <- match.arg(which)
+    switch(type,
+           contour=draw_contour_OCN(x, ...),
+           elev2D=draw_elev2D_OCN(x, ...),
+           elev3D=draw_elev3D_OCN(x,...),
+           elev3Drgl=draw_elev3Drgl_OCN(x, ...),
+           simple=draw_simple_OCN(x, ...))
     invisible()  
 }
 

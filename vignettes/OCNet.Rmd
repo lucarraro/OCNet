@@ -3,7 +3,7 @@ title: "An introduction to OCNet"
 author: "Luca Carraro, Florian Altermatt, Emanuel A. Fronhofer, Reinhard Furrer, Isabelle Gounand, Andrea Rinaldo, Enrico Bertuzzo"
 date: "November 06, 2019"
 output: 
-    bookdown::html_document2: #rmarkdown::html_vignette: # pdf_document 
+    bookdown::html_document2:
       base_format: rmarkdown::html_vignette
       toc: true
       number_sections: true

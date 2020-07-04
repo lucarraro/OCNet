@@ -15,6 +15,7 @@ create_OCN <- function(dimX,dimY,
                         coolingRate=1,
                         showIntermediatePlots=FALSE,
                         thrADraw=0.002*dimX*dimY*cellsize^2,
+                        seed=NULL,
                         easyDraw=NULL,
                         saveEnergy=FALSE,
                         saveExitFlag=FALSE,
@@ -46,6 +47,9 @@ create_OCN <- function(dimX,dimY,
   
   t0 <- Sys.time()
   if (displayUpdates==2){message('Initializing...\n', appendLF = FALSE)}
+  
+  if (!is.null(seed)) set.seed(seed)
+  
   
   ################################## 
   ## DEFINE INITIAL NETWORK STATE ##  
