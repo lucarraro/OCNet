@@ -11,7 +11,7 @@ OCNet enables the creation and analysis of Optimal Channel Networks (OCNs). Thes
 
 OCNs are obtained by minimization of a functional which represents total energy dissipated by water flowing through the network spanning the lattice. Such a formulation embeds the evidence that morphological and hydrological characteristics of rivers (in particular, water discharge and slope) follow a power-law scaling with drainage area. 
 
-For further details, please see Carraro et al. (2020). Generation and application of river network analogues for use in ecology and evolution. *bioRxiv*. doi:10.1101/2020.02.17.948851.
+For further details, please see Carraro et al. (2020). Generation and application of river network analogues for use in ecology and evolution. *Ecology and Evolution*. doi:10.1002/ece3.6479.
 
 ## A minimal working example
 
