@@ -1,3 +1,7 @@
+# OCNet 0.3.1.9999
+
+* `CITATION` added
+
 # OCNet 0.3.1
 
 ## Bugs fixed
