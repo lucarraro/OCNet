@@ -1,6 +1,6 @@
 # OCNet 0.3.1.9999
 
-* `CITATION` added
+* `CITATION` updated
 
 # OCNet 0.3.1
 
