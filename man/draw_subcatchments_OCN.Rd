@@ -2,7 +2,7 @@
 \alias{draw_subcatchments_OCN}
 \title{Draw subcatchment map from an Optimal Channel Network}
 \usage{
-draw_subcatchments_OCN(OCN, drawRiver = TRUE, colPalette = NULL)
+draw_subcatchments_OCN(OCN, drawRiver = TRUE, colPalette = NULL, ...)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{aggregate_OCN}}.}
@@ -10,6 +10,8 @@ draw_subcatchments_OCN(OCN, drawRiver = TRUE, colPalette = NULL)
 \item{drawRiver}{if \code{TRUE}, draw the OCN on top of the subcatchment map.}
 
 \item{colPalette}{Color palette used. Default is \code{c("#009900", "#FFFF00",  "#FF9900", "#FF0000", "#FF00FF",  "#9900CC", "#555555", "#BBBBBB")}. Only the first \code{n} colors are used, where \code{n} is the number of different colors needed (calculated via a greedy coloring algorithm). \code{colPalette} accepts both functions creating color palettes and vectors of colors (see examples); in the latter case, the length of the vector cannot be lower than \code{n} (\code{n} cannot be predicted a priori, but generally 6 colors should suffice).}
+
+\item{...}{Additional graphical arguments passed to the plot function.}
 }
 \value{
 No output is returned.

@@ -42,4 +42,5 @@ Suggests:
     knitr,
     rmarkdown,
     bookdown
+BugReports: https://github.com/lucarraro/OCNet/issues
 VignetteBuilder: knitr

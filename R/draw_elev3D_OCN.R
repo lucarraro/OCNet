@@ -9,7 +9,7 @@ draw_elev3D_OCN <- function(OCN,
                             theta=-20,
                             phi=30,
                             expand=0.05,
-                            shade=0.5){
+                            shade=0.5, ...){
 
   if (!("Z" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_elev3D_OCN.')
@@ -45,10 +45,10 @@ draw_elev3D_OCN <- function(OCN,
   zfacet <- Zmat[-1, -1] + Zmat[-1, -OCN$dimX/coarseGrain[1]] + Zmat[-OCN$dimY/coarseGrain[2], -1] + Zmat[-OCN$dimY/coarseGrain[2], -OCN$dimX/coarseGrain[1]]
   vt <- persp(seq(min(X_cg),max(X_cg),OCN$cellsize*coarseGrain[1]),seq(min(Y_cg),max(Y_cg),OCN$cellsize*coarseGrain[2]),t(Zmat),
               theta=theta,phi=phi,col=colPalette[cut(t(zfacet),1000)],expand=expand,shade=shade,
-              border=NA,axes=FALSE)
+              border=NA,axes=FALSE, ...)
   
   if (addColorbar==TRUE){
-  image.plot(col=colPalette,legend.only=TRUE,zlim=c(min(OCN$FD$Z),max(OCN$FD$Z)))
+    image.plot(col=colPalette,legend.only=TRUE,zlim=c(min(OCN$FD$Z),max(OCN$FD$Z)))
   }
   # draw river
   if (drawRiver==TRUE){

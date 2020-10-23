@@ -273,7 +273,7 @@ aggregate_OCN <- function(OCN,
         StreamOrder_AG[j] <- sum(StreamOrder_AG[tmp])
       } else {StreamOrder_AG[j] <- 1} # if j is an headwater, impose StreamOrder = 1
     } 
-  }
+  }  else   stop("'streamOrderType' must be 'Strahler' or 'Shreve'.")
   #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE); 
   #t1 <- Sys.time()
   

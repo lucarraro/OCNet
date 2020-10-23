@@ -10,7 +10,7 @@ draw_thematic_OCN(theme, OCN,
   exactDraw = FALSE, chooseCM = FALSE, drawNodes = FALSE,  
   nodeType = "upstream", cex = 2, pch = 21, nanColor = "#0099FF",
   riverColor = "#0099FF", backgroundColor = "#999999", 
-  addLegend = TRUE)
+  addLegend = TRUE, ...)
 }
 \arguments{
 \item{theme}{Vector (of length \code{OCN$AG$Nnodes} or \code{OCN$RN$Nnodes}) expressing the spatial field of interest. 
@@ -53,6 +53,8 @@ equal to \code{length(chooseCM)}. If \code{length(backgroundColor) == length(cho
 \code{backgroundColor}.}
 
 \item{addLegend}{Logical. If \code{TRUE}, add legend to the plot. If also \code{discreteLevels = FALSE}, \code{\link{image.plot}} is used to display the legend, which appears as a colorbar; as a result, elements (e.g. node coordinates) subsequently plotted of on top of the 2D elevation map might be wrongly positioned. }
+
+\item{...}{Additional graphical arguments passed to the plot function.}
 }
 \value{
 No output is returned.

@@ -14,7 +14,7 @@ draw_simple_OCN(OCN, thrADraw = 0.002 * OCN$dimX * OCN$dimY *
 
 \item{easyDraw}{Logical. If \code{TRUE}, the whole network is displayed, and pixels with drainage area lower than \code{thrADraw} are displayed in light gray. If \code{FALSE}, only pixels with drainage area greater or equal to \code{thrADraw} are displayed. Default is \code{FALSE} if \code{OCN$nNodes <= 40000}, and \code{TRUE} otherwise. Note that setting \code{easyDraw = FALSE} for large networks might slow down the process considerably.}
 
-\item{...}{Further arguments passed to \code{plot}.}
+\item{...}{Additional graphical arguments passed to the plot function.}
 }
 \value{
 No output is returned.

@@ -14,7 +14,7 @@ draw_thematic_OCN <- function(theme,OCN,
                               nanColor="#0099FF",
                               riverColor="#0099FF",
                               backgroundColor="#999999",
-                              addLegend=TRUE){
+                              addLegend=TRUE, ...){
   
   # initialization
   
@@ -115,7 +115,7 @@ draw_thematic_OCN <- function(theme,OCN,
   #par(bty="n")
   plot(c(min(X[OCN$FD$toCM %in% chooseCM]),max(X[OCN$FD$toCM %in% chooseCM])),
        c(min(Y[OCN$FD$toCM %in% chooseCM]),max(Y[OCN$FD$toCM %in% chooseCM])),
-       type="n",xlab=" ",ylab=" ",axes=FALSE,asp=1)
+       type="n", xlab=" ", ylab=" ", axes=FALSE, asp=1, ...)
   
   if (!is.null(backgroundColor)){
     if ((length(chooseCM) > 1) && (length(backgroundColor)==1) ){

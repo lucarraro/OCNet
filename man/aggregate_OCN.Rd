@@ -99,7 +99,7 @@ In this case, the indices from \code{AG$nNodes + 1} to \code{SC$nNodes} identify
 \item{\code{SC$toFD}}{List (of length \code{SC$nNodes}) whose object \code{i} is a vector of indices of FD pixels constituting the subcatchment \code{i}.}
 \item{\code{SC$X}, \code{SC$Y}}{Vectors (of length \code{SC$nNodes}) of X, Y coordinates (in planar units) of subcatchment centroids.}
 \item{\code{SC$Z}}{Vector (of length \code{SC$nNodes}) of average subcatchment elevation (in elevational units).}
-Finally, \code{thrA} is added to the list.
+Finally, \code{thrA}, \code{streamOrderType} and \code{maxReachLength} are added to the list.
 }
 \description{
 Function that, given an OCN, builds the network at the river network (RN), aggregated (AG), subcatchment (SC), and catchment (CM) levels.
@@ -133,8 +133,7 @@ title(paste("No. AG nodes = ", as.character(OCN_b$AG$nNodes),
 		sep=""))
 draw_subcatchments_OCN(OCN_c)
 points(OCN_c$AG$X, OCN_c$AG$Y, pch = 19, col = "#0044bb") 
-title(paste("No. AG nodes = ", as.character(OCN_c$AG$nNodes),
-		sep=""))
+title(paste("No. AG nodes = ", as.character(OCN_c$AG$nNodes), sep=""))
 par(old.par)
 }
 }

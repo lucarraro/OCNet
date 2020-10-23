@@ -4,7 +4,7 @@
 \usage{
 draw_contour_OCN(OCN, thrADraw = 0.002 * OCN$dimX * OCN$dimY *
   OCN$cellsize^2, exactDraw = TRUE, drawContours = TRUE, colPalRiver = NULL, 
-  colPalCont = "#000000", drawOutlets = 0, pch = 15, colPalOut = "#000000")
+  colPalCont = "#000000", drawOutlets = 0, pch = 15, colPalOut = "#000000", ...)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{landscape_OCN}}.}
@@ -25,6 +25,8 @@ the pixel that is not contiguous to its outlet is flipped. It is only effective 
 \item{pch}{Shape of the outlet points (if \code{drawOutlets = TRUE}). See \code{\link{points}} for legend.}
 
 \item{colPalOut}{Color palette used to plot the outlet points (if \code{drawOutlets = TRUE}). Details as in \code{colPalRiver}. Additionally, if \code{colPalOut = 0}, the palette specified in \code{colPalRiver} is copied. }
+
+\item{...}{Additional graphical arguments passed to the plot function.}
 
 }
 \value{

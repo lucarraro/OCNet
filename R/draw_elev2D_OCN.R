@@ -1,7 +1,7 @@
 
 draw_elev2D_OCN <- function(OCN,
                               colPalette=terrain.colors(1000,alpha=1),
-                              addLegend=TRUE){
+                              addLegend=TRUE, ...){
   
   if (!("Z" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_elev2D_OCN.')
@@ -15,11 +15,11 @@ draw_elev2D_OCN <- function(OCN,
   if (addLegend==TRUE){
   image.plot(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),
              seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize),
-             t(Zmat),col=colPalette,xlab=" ",ylab=" ",axes=FALSE,asp=1)
+             t(Zmat),col=colPalette,xlab=" ",ylab=" ",axes=FALSE,asp=1, ...)
   } else {
     image(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),
                seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize),
-               t(Zmat),col=colPalette,xlab=" ",ylab=" ",axes=FALSE,asp=1)
+               t(Zmat),col=colPalette,xlab=" ",ylab=" ",axes=FALSE,asp=1, ...)
   }
   invisible()
 }

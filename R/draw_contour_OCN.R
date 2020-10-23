@@ -7,7 +7,8 @@ draw_contour_OCN <- function(OCN,
                              colPalCont="#000000",
                              drawOutlets=0,
                              pch=15,
-                             colPalOut="#000000"){
+                             colPalOut="#000000",
+                             ...){
   
   if (!("XDraw" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_contour_OCN.')
@@ -72,7 +73,7 @@ draw_contour_OCN <- function(OCN,
   #old.par <- par(no.readonly =TRUE) 
   #on.exit(par(old.par))
   #par(bty="n")
-  plot(c(min(XDraw),max(XDraw)),c(min(YDraw),max(YDraw)),type="n",xlab=" ",ylab=" ",axes=FALSE,asp=1)
+  plot(c(min(XDraw),max(XDraw)),c(min(YDraw),max(YDraw)),type="n",xlab=" ",ylab=" ",axes=FALSE,asp=1, ...)
   
   if (drawOutlets==1) {
     for (i in 1:OCN$nOutlet){

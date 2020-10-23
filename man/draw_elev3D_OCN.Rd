@@ -5,7 +5,7 @@
 draw_elev3D_OCN(OCN, coarseGrain = c(1,1), colPalette = terrain.colors(1000, alpha = 1),
   addColorbar = TRUE, drawRiver = TRUE, thrADraw = 0.002 *
   OCN$dimX * OCN$dimY * OCN$cellsize^2, riverColor = "#00CCFF",
-  theta = -20, phi = 30, expand = 0.05, shade = 0.5)
+  theta = -20, phi = 30, expand = 0.05, shade = 0.5, ...)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{landscape_OCN}}.}
@@ -29,6 +29,9 @@ domain, where each cell's elevation is the average of elevations of the correspo
 function \code{\link{persp}}. \code{theta} expresses azimuthal direction; \code{phi} gives 
 colatitude; \code{expand} is the expansion factor for the Z coordinates; \code{shade} controls
 the shade at a surface facet.}
+
+\item{...}{Additional graphical parameters passed to \code{persp} function.}
+
 }
 \value{
 No output is returned.

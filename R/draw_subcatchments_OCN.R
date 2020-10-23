@@ -1,7 +1,7 @@
 
 draw_subcatchments_OCN <- function(OCN,
                                    drawRiver = TRUE,
-                                   colPalette = NULL){
+                                   colPalette = NULL, ...){
   
   if (!("SC" %in% names(OCN))){
     stop('Missing fields in OCN. You should run aggregate_OCN prior to draw_subcatchments_OCN.')
@@ -69,7 +69,7 @@ draw_subcatchments_OCN <- function(OCN,
   #par(bty="n")
   image(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),
         seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize),
-        t(Color_SC),col=colPalette,xlab=" ",ylab=" ",asp=1,axes=FALSE)
+        t(Color_SC),col=colPalette,xlab=" ",ylab=" ",asp=1,axes=FALSE, ...)
   # attributing colors in reverse order should increase overall contrast
   
   if (drawRiver==TRUE){

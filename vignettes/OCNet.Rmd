@@ -9,7 +9,7 @@ output:
       number_sections: true
       fig_caption: true
 vignette: >
-  %\VignetteIndexEntry{Create Optimal Channel Networks}
+  %\VignetteIndexEntry{An introduction to OCNet}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -30,16 +30,13 @@ suppressPackageStartupMessages(library(SSN))
 
 **Graphical abstract**
 ```{r, fig.width=7, fig.height=2}
-set.seed(1)
-OCN <- create_OCN(30, 20, outletPos = 1)
+OCN <- create_OCN(30, 20, outletPos = 1, seed=1)
 OCN <- aggregate_OCN(landscape_OCN(OCN), thrA = 3)
 par(mfrow = c(1, 3), mai = c(0, 0, 0.2, 0.2))
-draw_simple_OCN(OCN, thrADraw = 3)
-title("Optimal Channel Network")
-draw_elev3D_OCN(OCN, drawRiver = FALSE, addColorbar = FALSE, expand = 0.2, theta = -30)
-title("Elevation")
-draw_thematic_OCN(OCN$AG$streamOrder, OCN, discreteLevels = TRUE, colPalette = rainbow(4))
-title("Strahler stream order")
+draw_simple_OCN(OCN, thrADraw = 3, main = "Optimal Channel Network")
+draw_elev3D_OCN(OCN, drawRiver = FALSE, addColorbar = FALSE, expand = 0.2, main = "Elevation")
+draw_thematic_OCN(OCN$AG$streamOrder, OCN, discreteLevels = TRUE, colPalette = rainbow(4), 
+                  main = "Strahler stream order")
 
 ```
 
@@ -164,10 +161,9 @@ ex$SC$toFD
 Let's build an OCN on a 20x20 lattice and assume that each cell represents a square of side 500 m. The total size of the catchment is therefore 100 km^2^. Let's locate the outlet close to the southwestern corner of the lattice. Function `draw_simple_OCN` can then be used to display the OCN.
 
 ```{r, fig.width=4, fig.height=4}
-set.seed(1)
-OCNwe <- create_OCN(20, 20, outletPos = 3, cellsize = 500)
+OCNwe <- create_OCN(20, 20, outletPos = 3, cellsize = 500, seed=1)
 par(mai=c(0,0,0,0))
-draw_simple_OCN(OCNwe)
+plot(OCNwe)
 
 ```
 
@@ -176,7 +172,7 @@ Now, let's construct the elevation field subsumed by the OCN. Let's suppose that
 ```{r, fig.width=7, fig.height=2.8}
 OCNwe <- landscape_OCN(OCNwe, slope0 = 0.01)
 par(mai=c(0,0,0,0.5))
-draw_elev3D_OCN(OCNwe, drawRiver = FALSE)
+draw_elev3D_OCN(OCNwe, drawRiver = FALSE)  # or plot(OCNwe, which="elev3D", drawRiver = FALSE)
 
 ```
 
@@ -313,17 +309,16 @@ The left panel of the graph below shows the time evolution of the local populati
 ```{r, fig.width=7, fig.height=2.8}
 par(mfrow = c(1, 2))
 plot(pop[OCNwe$RN$outlet, ], type = "l", ylim = c(0, 1.05*K[OCNwe$RN$outlet]), col = "red", 
-     xlab = "Time", ylab = "Population", lwd = 2)
-title("Evolution of local pop. size")
+     xlab = "Time", ylab = "Population", lwd = 2, main = "Evolution of local pop. size")
 lines(c(1, nTimestep),c(K[OCNwe$RN$outlet], K[OCNwe$RN$outlet]), col = "red", lty = 2)
 farthestNode <- which(OCNwe$RN$downstreamPathLength[ , OCNwe$RN$outlet]
                       == max(OCNwe$RN$downstreamPathLength[ , OCNwe$RN$outlet]))[1]
 lines(pop[farthestNode, ], type="l", col="blue",lwd=2)
 lines(c(1, nTimestep), c(K[farthestNode], K[farthestNode]), col = "blue", lty = 2)
 
-plot(colSums(pop), type = "l", xlab = "Time", ylab = "Population", lwd = 2, ylim = c(0, 1.05*sum(K)))
+plot(colSums(pop), type = "l", xlab = "Time", ylab = "Population", lwd = 2, 
+     ylim = c(0, 1.05*sum(K)), main = "Evolution of metapop. size")
 lines(c(1, nTimestep), c(sum(K),sum(K)), lty = 2)
-title("Evolution of metapop. size")
 ```
 
 
@@ -331,17 +326,13 @@ Function `draw_thematic_OCN` can be used to visualize the spatial distribution o
 ```{r, fig.width=7, fig.height=5}
 par(mfrow = c(2, 2), mai = c(0.1, 0, 0.2, 0))
 draw_thematic_OCN(pop[,1], OCNwe, colLevels = c(0, max(K), 1000),
-                  drawNodes = TRUE)
-title("Time = 1")
+                  drawNodes = TRUE, main = "Time = 1")
 draw_thematic_OCN(pop[,5], OCNwe, colLevels = c(0, max(K), 1000),
-                  drawNodes = TRUE)
-title("Time = 5")
+                  drawNodes = TRUE, main = "Time = 5")
 draw_thematic_OCN(pop[,20], OCNwe, colLevels = c(0, max(K), 1000),
-                  drawNodes = TRUE)
-title("Time = 20")
+                  drawNodes = TRUE, main = "Time = 20")
 draw_thematic_OCN(pop[,100], OCNwe, colLevels = c(0, max(K), 1000),
-                  drawNodes = TRUE)
-title("Time = 100")
+                  drawNodes = TRUE, main = "Time = 100")
 
 ```
 
@@ -354,28 +345,22 @@ Function `create_peano` can be used in lieu of `create_OCN` to generate Peano ne
 ```{r, fig.width=7, fig.height=5}
 par(mfrow = c(2, 3), mai = c(0, 0, 0.2, 0))
 peano0 <- create_peano(0)
-draw_simple_OCN(peano0)
-title("Iteration: 0 - Lattice size: 2x2")
+draw_simple_OCN(peano0, main = "Iteration: 0 - Lattice size: 2x2")
 
 peano1 <- create_peano(1)
-draw_simple_OCN(peano1)
-title("Iteration: 1 - Lattice size: 4x4")
+draw_simple_OCN(peano1, main = "Iteration: 1 - Lattice size: 4x4")
 
 peano2 <- create_peano(2)
-draw_simple_OCN(peano2)
-title("Iteration: 2 - Lattice size: 8x8")
+draw_simple_OCN(peano2, main = "Iteration: 2 - Lattice size: 8x8")
 
 peano3 <- create_peano(3)
-draw_simple_OCN(peano3)
-title("Iteration: 3 - Lattice size: 16x16")
+draw_simple_OCN(peano3, main = "Iteration: 3 - Lattice size: 16x16")
 
 peano4 <- create_peano(4)
-draw_simple_OCN(peano4)
-title("Iteration: 4 - Lattice size: 32x32")
+draw_simple_OCN(peano4, main = "Iteration: 4 - Lattice size: 32x32")
 
 peano5 <- create_peano(5)
-draw_simple_OCN(peano5)
-title("Iteration: 5 - Lattice size: 64x64")
+draw_simple_OCN(peano5, main = "Iteration: 5 - Lattice size: 64x64")
 
 ```
 
@@ -462,8 +447,8 @@ Function `OCN_to_SSN` transforms an OCN at a given aggregation level into an SSN
 ssnOCN <- OCN_to_SSN(OCNwe, level = "RN", obsDesign = SSN::binomialDesign(50),
                      path = paste(tempdir(), "/OCN.ssn", sep = ""), importToR = TRUE)
 plot.SpatialStreamNetwork(ssnOCN, "upDist", breaktype = "user", brks = seq(0,14000,2000), 
-                          xlab = "x [m]", ylab = "y [m]", asp = 1)
-title("Distance from outlet of observation points [m]")
+                          xlab = "x [m]", ylab = "y [m]", asp = 1, 
+                          main = "Distance from outlet of observation points [m]")
 
 ```
 

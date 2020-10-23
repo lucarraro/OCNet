@@ -118,7 +118,7 @@ between pixels: \code{N8$W[i,j] = 1} if pixel \code{j} shares an edge or a verte
 It is saved only if \code{saveN8 = TRUE}.}  
 Finally, \code{dimX}, \code{dimY}, \code{cellsize}, \code{nOutlet}, \code{periodicBoundaries}, \code{expEnergy}, 
 \code{coolingRate}, \code{typeInitialState}, \code{nIter} are passed to the list as they were included in the input (except \code{nOutlet = "All"} which is converted to
- \code{2*(dimX + dimY - 2))}.
+ \code{2*(dimX + dimY - 2)}.
 }
 \description{
 Function that performs the OCN search algorithm on a rectangular lattice and creates OCN at the flow direction (FD) level.
@@ -157,6 +157,7 @@ OCN was generated, it is convenient to set \code{typeInitialState = "I"} and the
   
 The default temperature schedule for the simulated annealing process is generally adequate for generating an OCN that does not resemble the initial network state if the size of the lattice is not too large (say, until \code{dimX*dimY <= 40000}). When \code{dimX*dimY > 40000}, it might be convenient to make use of a "warmer" temperature schedule (for example, by setting \code{coolingRate = 0.5} and \code{initialNoCoolingPhase = 0.1}; see also the package vignette) and/or increase \code{nIter} with respect to its default value. Note that these suggestions only pertain to the aesthetics of the final OCN; the default temperature schedule and \code{nIter} are calibrated to ensure convergence of the OCN (i.e. achievement of a local minimum of \code{Energy}, save for a reasonable threshold) also for lattices larger than \code{dimX*dimY = 40000}.
 }
+\seealso{\code{\link{landscape_OCN}}}
 \examples{
 # 1) creates and displays a single outlet 20x20 OCN with default options
 set.seed(1)
