@@ -96,11 +96,13 @@ then \code{FD$downNode[o] = 0}.}
 \item{\code{FD$X (FD$Y)}}{Vector (of length \code{dimX*dimY}) containing X (Y) coordinate values for all FD pixels.}
 \item{\code{FD$nNodes}}{Number of nodes at FD level (equal to \code{dimX*dimY}).}
 \item{\code{FD$outlet}}{Vector (of length \code{nOutlet}) indices of pixels at FD level corresponding to outlets.}
+\item{\code{FD$perm}}{Vector (of length \code{dimX*dimY}) representing a permutation of the FD pixels: \code{perm[(which(perm==i) - FD$A[i] + 1):which(perm==i)]} gives the indices of the pixels that drain into pixel \code{i}.}
+\item{\code{energyInit}}{Initial energy value.}
 \item{\code{energy}}{Vector (of length \code{nIter}) of energy values for each stage of the OCN during the search algorithm (only present if \code{saveEnergy = TRUE}).}
 \item{\code{exitFlag}}{Vector (of length \code{nIter}) showing the outcome of the rewiring process (only present if \code{saveExitFlag = TRUE}). Its entries can assume one of the following values:
 \describe{
 \item{\code{0}}{Rewiring is accepted.}
-\item{\code{1}}{Rewiring is not accepted (because it does not lower \code{Energy} or according to the acceptance probability of the simulated annealing algorithm).}
+\item{\code{1}}{Rewiring is not accepted (because it does not lower \code{energy} or according to the acceptance probability of the simulated annealing algorithm).}
 \item{\code{2}}{Rewiring is invalid  because a loop in the graph was generated, therefore the network is no longer a direct acyclic graph.}
 \item{\code{3}}{Rewiring is invalid because of cross-flow. This means that, for example, in a 2x2 cluster of pixel, the southwestern (SW) corner drains into the NE one, and SE drains into NW.
 Although this circumstance does not imply the presence of a loop in the graph, it has no physical meaning and is thereby forbidden.}

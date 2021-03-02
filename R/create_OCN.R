@@ -386,9 +386,10 @@ create_OCN <- function(dimX,dimY,
   #W <- as.dgCMatrix.spam(t(Wt)) # ensure compatibility with other functions
   W <- t(Wt)
   
-  FD <- list(A=A*cellsize^2,W=W,downNode=DownNode,X=X,Y=Y,nNodes=Nnodes,outlet=OutletPixel)
+  FD <- list(A=A*cellsize^2,W=W,downNode=DownNode,X=X,Y=Y,nNodes=Nnodes,outlet=OutletPixel,perm=pl)
   OCN <- list(FD=FD,dimX=dimX,dimY=dimY,cellsize=cellsize,nOutlet=nOutlet,periodicBoundaries=periodicBoundaries,
-              expEnergy=expEnergy,coolingRate=coolingRate,typeInitialState=typeInitialState,nIter=nIter,initialNoCoolingPhase=initialNoCoolingPhase)
+              expEnergy=expEnergy,coolingRate=coolingRate,typeInitialState=typeInitialState,nIter=nIter,initialNoCoolingPhase=initialNoCoolingPhase,
+              energyInit=Energy_0)
   
   if (saveEnergy==TRUE) {OCN[["energy"]] <- Energy}
   if (saveExitFlag==TRUE) {OCN[["exitFlag"]] <- ExitFlag}

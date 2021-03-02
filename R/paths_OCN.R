@@ -9,8 +9,8 @@ paths_OCN <- function(OCN,
   
   # RN level
   RN_DownstreamPathLength <- spam(0,OCN$RN$nNodes,OCN$RN$nNodes)
-  indices <- matrix(0,1000*OCN$RN$nNodes,2)
-  values <- numeric(1000*OCN$RN$nNodes)
+  indices <- matrix(0,OCN$RN$nNodes^2,2)
+  values <- numeric(OCN$RN$nNodes^2)
   RN_DownstreamPath <- vector("list",OCN$RN$nNodes)
   counter <- 1
   for (i in 1:OCN$RN$nNodes){RN_DownstreamPath[[i]] <- vector("list",OCN$RN$nNodes)}
@@ -85,8 +85,8 @@ paths_OCN <- function(OCN,
   # AG level
   AG_DownstreamPathLength <- spam(0,OCN$AG$nNodes,OCN$AG$nNodes)
   AG_DownstreamPath <- vector("list",OCN$AG$nNodes)
-  indices <- matrix(0,1000*OCN$AG$nNodes,2)
-  values <- numeric(1000*OCN$AG$nNodes)
+  indices <- matrix(0,OCN$AG$nNodes^2,2)
+  values <- numeric(OCN$AG$nNodes^2)
   counter <- 1
   for (i in 1:OCN$AG$nNodes){AG_DownstreamPath[[i]] <- vector("list",OCN$AG$nNodes)}
   for (i in 1:OCN$AG$nNodes){
@@ -120,8 +120,8 @@ paths_OCN <- function(OCN,
   # CountPaths[k] is the number of paths connecting pairs of reaches passing through k, considering also k as a start/end point (i.e. the path connecting k to k is counted)
   
   AG_DwnstrLength_unconnected <- spam(0,OCN$AG$nNodes,OCN$AG$nNodes)
-  indices <- matrix(0,1000*OCN$AG$nNodes,2)
-  values <- numeric(1000*OCN$AG$nNodes)
+  indices <- matrix(0,OCN$AG$nNodes^2,2)
+  values <- numeric(OCN$AG$nNodes^2)
   counter <- 1
   for (i in 1:OCN$AG$nNodes){
     for (j in 1:OCN$AG$nNodes){
