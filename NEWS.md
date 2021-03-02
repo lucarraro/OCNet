@@ -1,4 +1,4 @@
-# OCNet 0.3.1.9999
+# OCNet 0.4.0
 
 ## Major changes
 
@@ -10,8 +10,11 @@
 
 ## Others
 
-* `CITATION` updated
 * `create_OCN`: `OCN$energyInit`, `OCN$FD$perm` are added to output
+
+# OCNet 0.3.2
+
+* * `CITATION` updated
 
 # OCNet 0.3.1
 
