@@ -274,7 +274,8 @@ continue_OCN <- function(OCN,nNewIter,
   
   FD <- list(A=A*cellsize^2,W=W,downNode=downNode,X=X,Y=Y,nNodes=nNodes,outlet=OutletPixel,perm=pl)
   OCN_new <- list(FD=FD,dimX=dimX,dimY=dimY,cellsize=cellsize,nOutlet=nOutlet,periodicBoundaries=periodicBoundaries,
-                  expEnergy=expEnergy,coolingRate=c(OCN$coolingRate,coolingRate),typeInitialState=OCN$typeInitialState,nIter=OCN$nIter+nNewIter,
+                  expEnergy=expEnergy,coolingRate=c(OCN$coolingRate,coolingRate),typeInitialState=OCN$typeInitialState,
+                  nIter=OCN$nIter+nNewIter,nIterSequence=c(OCN$nIter, nNewIter),
                   initialNoCoolingPhase=c(OCN$initialNoCoolingPhase,initialNoCoolingPhase),
                   energyInit=energyInit)
   
