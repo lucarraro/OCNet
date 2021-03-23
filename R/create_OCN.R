@@ -1,26 +1,26 @@
 create_OCN <- function(dimX,dimY,
-                        nOutlet=1,
-                        outletSide="S", # vector of sides where outlets are located
-                        outletPos=round(dimX/3),
-                        periodicBoundaries=FALSE, # if TRUE, reflecting boundaries are applied. If FALSE, boundaries are non-reflecting.
-                        typeInitialState=NULL,
-                        flowDirStart=NULL,
-                        expEnergy=0.5, # energy \propto Q*deltaH, Q propto A, deltaH propto A^-0.5
-                        cellsize=1,
-                        xllcorner=0.5*cellsize,
-                        yllcorner=0.5*cellsize,
-                        nIter=40*dimX*dimY,
-                        nUpdates=50, # number of times an update is shown
-                        initialNoCoolingPhase=0,
-                        coolingRate=1,
-                        showIntermediatePlots=FALSE,
-                        thrADraw=0.002*dimX*dimY*cellsize^2,
-                        easyDraw=NULL,
-                        saveEnergy=FALSE,
-                        saveExitFlag=FALSE,
-                        saveN8=FALSE,
-                        saveN4=FALSE,
-                        displayUpdates=1){
+                       nOutlet=1,
+                       outletSide="S", # vector of sides where outlets are located
+                       outletPos=round(dimX/3),
+                       periodicBoundaries=FALSE, # if TRUE, reflecting boundaries are applied. If FALSE, boundaries are non-reflecting.
+                       typeInitialState=NULL,
+                       flowDirStart=NULL,
+                       expEnergy=0.5, # energy \propto Q*deltaH, Q propto A, deltaH propto A^-0.5
+                       cellsize=1,
+                       xllcorner=0.5*cellsize,
+                       yllcorner=0.5*cellsize,
+                       nIter=40*dimX*dimY,
+                       nUpdates=50, # number of times an update is shown
+                       initialNoCoolingPhase=0,
+                       coolingRate=1,
+                       showIntermediatePlots=FALSE,
+                       thrADraw=0.002*dimX*dimY*cellsize^2,
+                       easyDraw=NULL,
+                       saveEnergy=FALSE,
+                       saveExitFlag=FALSE,
+                       saveN8=FALSE,
+                       saveN4=FALSE,
+                       displayUpdates=1){
   
   if (dimX<2 | dimY<2) stop("Dimensions too small.")
   if (dimX*dimY > 1000) {
@@ -32,7 +32,7 @@ create_OCN <- function(dimX,dimY,
       unitTime <- "minutes"
     } else if (estTime >= 3600) {
       estTime <- estTime/3600
-    unitTime <- "hours"}
+      unitTime <- "hours"}
     
     if (displayUpdates != 0){
       message("create_OCN is running...\n", appendLF = FALSE)
@@ -56,7 +56,7 @@ create_OCN <- function(dimX,dimY,
       typeInitialState <- "I"
     }
   }
- 
+  
   # set outletSide, outletPos in accordance with the input given 
   if ((nOutlet=="All")==TRUE){
     outletSide <- c(rep("S",dimX),rep("E",dimY-2),rep("N",dimX),rep("W",dimY-2))
@@ -243,7 +243,7 @@ create_OCN <- function(dimX,dimY,
   
   ## spam solution
   #Wt <- as.spam.dgCMatrix(Wt)
-
+  
   
   ##########################
   ## OCN SEARCH ALGORITHM ##  
@@ -276,16 +276,16 @@ create_OCN <- function(dimX,dimY,
          type="n",asp=1,axes=FALSE,xlab="",ylab="") # 
     points(X[OutletPixel],Y[OutletPixel],pch=15,col=rnbw[catch[resort[OutletPixel]]])
     if (easyDraw == FALSE){
-    for (i in AvailableNodesPlot){
-      if (AA[i]<=thrADraw & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
-        lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5,col="#E0E0E0")}
-    }
+      for (i in AvailableNodesPlot){
+        if (AA[i]<=thrADraw & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
+          lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5,col="#E0E0E0")}
+      }
     }
     for (i in 1:Nnodes){
       if (!(i %in% OutletPixel)){
-      if (AA[i]>thrADraw & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
-        lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5+4.5*(AA[i]/Nnodes/cellsize^2)^0.5,col=rnbw[catch[resort[i]]])}
-    }}
+        if (AA[i]>thrADraw & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
+          lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5+4.5*(AA[i]/Nnodes/cellsize^2)^0.5,col=rnbw[catch[resort[i]]])}
+      }}
   }
   
   #Rprof("\\\\eawag/userdata/carrarlu/Desktop/Luca/OCN/R/spam_stuff/Rprof100.out")
@@ -299,85 +299,85 @@ create_OCN <- function(dimX,dimY,
   
   # simulated annealing algorithm
   if (nIter > 1){
-  for (iter in 2:nIter) {
-    t2 <- Sys.time() 
-    # pick random node (excluding the outlet)
-    Energy_new <- 100*Energy_0
-    node <- sample(AvailableNodes,1)
-    # change downstream connection from chosen node
-    down_new <- sample(NeighbouringNodes[[node]][NeighbouringNodes[[node]]!=DownNode[node]],1) # sample one node from list of neighbouring nodes, excluding the one that was previously connected to node
-    
-    ind1 <- (X[NeighbouringNodes[[node]]]==X[node] & Y[NeighbouringNodes[[node]]]==Y[down_new])
-    Node1 <- NeighbouringNodes[[node]][ind1]
-    
-    ind2 <- (X[NeighbouringNodes[[node]]]==X[down_new] & Y[NeighbouringNodes[[node]]]==Y[node])
-    Node2 <- NeighbouringNodes[[node]][ind2]
-    
-    if (isTRUE(Node1 != down_new) && isTRUE(Node2 != down_new) && # if  node -> down_new is diagonal connection 
-        (DownNode[Node1] == Node2 || DownNode[Node2] == Node1)) { # if cross flow
-      flag <- 3 # skip iteration because of cross-flow
-    } else {
+    for (iter in 2:nIter) {
+      t2 <- Sys.time() 
+      # pick random node (excluding the outlet)
+      Energy_new <- 100*Energy_0
+      node <- sample(AvailableNodes,1)
+      # change downstream connection from chosen node
+      down_new <- sample(NeighbouringNodes[[node]][NeighbouringNodes[[node]]!=DownNode[node]],1) # sample one node from list of neighbouring nodes, excluding the one that was previously connected to node
       
+      ind1 <- (X[NeighbouringNodes[[node]]]==X[node] & Y[NeighbouringNodes[[node]]]==Y[down_new])
+      Node1 <- NeighbouringNodes[[node]][ind1]
+      
+      ind2 <- (X[NeighbouringNodes[[node]]]==X[down_new] & Y[NeighbouringNodes[[node]]]==Y[node])
+      Node2 <- NeighbouringNodes[[node]][ind2]
+      
+      if (isTRUE(Node1 != down_new) && isTRUE(Node2 != down_new) && # if  node -> down_new is diagonal connection 
+          (DownNode[Node1] == Node2 || DownNode[Node2] == Node1)) { # if cross flow
+        flag <- 3 # skip iteration because of cross-flow
+      } else {
+        
         pas <- allinoneF( as.integer(nOutlet), pl, Wt, DownNode, node,
-                        down_new, A[node], expEnergy)
+                          down_new, A[node], expEnergy)
         flag <- pas$flag
-      if (flag==1){
-        Anew <- pas$Anew
-        Energy_new <- pas$energy
+        if (flag==1){
+          Anew <- pas$Anew
+          Energy_new <- pas$energy
+        }
+      }
+      
+      # accept change if energy is lower or owing to the simulated annealing rule
+      if (Energy_new <= Energy[iter-1] | runif(1)<exp(-(Energy_new-Energy[iter-1])/Temperature[iter-1])) {
+        # update network
+        flag <- 0
+        pl <- pas$perm
+        Wt <- pas$Wt_new
+        A <- Anew[invPerm(pl)] # re-permute to the original indexing
+        Energy[iter] <- Energy_new
+        DownNode[node] <- down_new
+      } else {Energy[iter] <- Energy[iter-1]} # recject change and keep previous W
+      
+      # write update
+      if (displayUpdates==2){
+        if (iter %% round(nIter/nUpdates)==0){
+          message(sprintf('%.1f%% completed - Elapsed time: %.2f s - %11s - Energy: %0.f \n',
+                          iter/nIter*100,difftime(Sys.time(),t0,units='secs'),format(Sys.time(),"%b%d %H:%M"),Energy[iter]), appendLF = FALSE)
+        }}
+      # plot update
+      
+      if (iter %% round(nIter/nUpdates)==0){
+        if (showIntermediatePlots==TRUE){ 
+          AA <- A*cellsize^2 
+          resort <- invPerm(pl)
+          catch <- numeric(Nnodes)
+          for (o in 1:nOutlet){
+            catch[(resort[OutletPixel[o]]-AA[OutletPixel[o]]/cellsize^2+1):resort[OutletPixel[o]]] <- o
+          }
+          plot(c(min(X),max(X)),c(min(Y),max(Y)),type="n",main=sprintf('OCN %dx%d (%.1f%% completed)',dimX,dimY,iter/nIter*100),
+               asp=1,axes=FALSE,xlab=" ",ylab=" ") # 
+          points(X[OutletPixel],Y[OutletPixel],pch=15,col=rnbw[catch[resort[OutletPixel]]])
+          if (easyDraw == FALSE){
+            for (i in AvailableNodesPlot){
+              if (AA[i]<=(thrADraw)  & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
+                lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5,col="#E0E0E0")}
+            }
+          }
+          for (i in 1:Nnodes){
+            if (!(i %in% OutletPixel)){
+              if (AA[i]>(thrADraw)  & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
+                lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5+4.5*(AA[i]/Nnodes/cellsize^2)^0.5,col=rnbw[catch[resort[i]]])}
+            }}
+        }}
+      #}
+      t3<-Sys.time()
+      savetime[iter] <- t3-t2
+      ExitFlag[iter] <- flag
+      
+      if (sum(A[OutletPixel])  != dimX*dimY){
+        stop('Error: sum(A[OutletPixel]) is not equal to the total lattice area')
       }
     }
-    
-    # accept change if energy is lower or owing to the simulated annealing rule
-    if (Energy_new <= Energy[iter-1] | runif(1)<exp(-(Energy_new-Energy[iter-1])/Temperature[iter-1])) {
-      # update network
-      flag <- 0
-      pl <- pas$perm
-      Wt <- pas$Wt_new
-      A <- Anew[invPerm(pl)] # re-permute to the original indexing
-      Energy[iter] <- Energy_new
-      DownNode[node] <- down_new
-    } else {Energy[iter] <- Energy[iter-1]} # recject change and keep previous W
-    
-    # write update
-    if (displayUpdates==2){
-      if (iter %% round(nIter/nUpdates)==0){
-        message(sprintf('%.1f%% completed - Elapsed time: %.2f s - %11s - Energy: %0.f \n',
-                    iter/nIter*100,difftime(Sys.time(),t0,units='secs'),format(Sys.time(),"%b%d %H:%M"),Energy[iter]), appendLF = FALSE)
-        }}
-    # plot update
-   
-    if (iter %% round(nIter/nUpdates)==0){
-      if (showIntermediatePlots==TRUE){ 
-        AA <- A*cellsize^2 
-        resort <- invPerm(pl)
-        catch <- numeric(Nnodes)
-        for (o in 1:nOutlet){
-          catch[(resort[OutletPixel[o]]-AA[OutletPixel[o]]/cellsize^2+1):resort[OutletPixel[o]]] <- o
-        }
-        plot(c(min(X),max(X)),c(min(Y),max(Y)),type="n",main=sprintf('OCN %dx%d (%.1f%% completed)',dimX,dimY,iter/nIter*100),
-             asp=1,axes=FALSE,xlab=" ",ylab=" ") # 
-        points(X[OutletPixel],Y[OutletPixel],pch=15,col=rnbw[catch[resort[OutletPixel]]])
-        if (easyDraw == FALSE){
-        for (i in AvailableNodesPlot){
-          if (AA[i]<=(thrADraw)  & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
-            lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5,col="#E0E0E0")}
-        }
-        }
-        for (i in 1:Nnodes){
-          if (!(i %in% OutletPixel)){
-          if (AA[i]>(thrADraw)  & abs(X[i]-X[DownNode[i]])<=cellsize & abs(Y[i]-Y[DownNode[i]])<=cellsize ) {
-            lines(c(X[i],X[DownNode[i]]),c(Y[i],Y[DownNode[i]]),lwd=0.5+4.5*(AA[i]/Nnodes/cellsize^2)^0.5,col=rnbw[catch[resort[i]]])}
-        }}
-      }}
-    #}
-    t3<-Sys.time()
-    savetime[iter] <- t3-t2
-    ExitFlag[iter] <- flag
-    
-    if (sum(A[OutletPixel])  != dimX*dimY){
-      stop('Error: sum(A[OutletPixel]) is not equal to the total lattice area')
-    }
-  }
   }
   ######################
   ## EXPORT VARIABLES ##
@@ -409,7 +409,7 @@ create_OCN <- function(dimX,dimY,
 #########################################
 
 initialstate_OCN <- function(dimX,dimY,nOutlet,outletSide,outletPos,typeInitialState){
-
+  
   ## create initial state of the network
   flowDirStart <- matrix(data=0,nrow=dimY,ncol=dimX)
   
@@ -510,28 +510,28 @@ initialstate_OCN <- function(dimX,dimY,nOutlet,outletSide,outletPos,typeInitialS
       # }
       tmpX <- round(0.25*dimX); tmpY <- round(0.25*dimY)
       for (i in 1:nOutlet){
-         if (outletSide[i]=="N"){
-           lowX <- max(1,outletPos[i]-tmpX)
-           uppX <- min(outletPos[i]+tmpX,dimX)
-           flowDirStart[(dimY-tmpY+1):dimY,lowX:outletPos[i]] <- 1
-           flowDirStart[(dimY-tmpY+1):dimY,outletPos[i]:uppX] <- 5
-         } else if (outletSide[i]=="E") {
-           lowY <- max(1,outletPos[i]-tmpY)
-           uppY <- min(outletPos[i]+tmpY,dimY)
-           flowDirStart[lowY:outletPos[i],(dimX-tmpX+1):dimX] <- 7
-           flowDirStart[outletPos[i]:uppY,(dimX-tmpX+1):dimX] <- 3
-         } else if (outletSide[i]=="S") {
-           lowX <- max(1,outletPos[i]-tmpX)
-           uppX <- min(outletPos[i]+tmpX,dimX)
-           flowDirStart[1:tmpY,lowX:outletPos[i]] <- 1
-           flowDirStart[1:tmpY,outletPos[i]:uppX] <- 5
-         } else if (outletSide[i]=="W") {
-           lowY <- max(1,outletPos[i]-tmpY)
-           uppY <- min(outletPos[i]+tmpY,dimY)
-           flowDirStart[lowY:outletPos[i],1:tmpX] <- 7
-           flowDirStart[outletPos[i]:uppY,1:tmpX] <- 3
-         }
-       }
+        if (outletSide[i]=="N"){
+          lowX <- max(1,outletPos[i]-tmpX)
+          uppX <- min(outletPos[i]+tmpX,dimX)
+          flowDirStart[(dimY-tmpY+1):dimY,lowX:outletPos[i]] <- 1
+          flowDirStart[(dimY-tmpY+1):dimY,outletPos[i]:uppX] <- 5
+        } else if (outletSide[i]=="E") {
+          lowY <- max(1,outletPos[i]-tmpY)
+          uppY <- min(outletPos[i]+tmpY,dimY)
+          flowDirStart[lowY:outletPos[i],(dimX-tmpX+1):dimX] <- 7
+          flowDirStart[outletPos[i]:uppY,(dimX-tmpX+1):dimX] <- 3
+        } else if (outletSide[i]=="S") {
+          lowX <- max(1,outletPos[i]-tmpX)
+          uppX <- min(outletPos[i]+tmpX,dimX)
+          flowDirStart[1:tmpY,lowX:outletPos[i]] <- 1
+          flowDirStart[1:tmpY,outletPos[i]:uppX] <- 5
+        } else if (outletSide[i]=="W") {
+          lowY <- max(1,outletPos[i]-tmpY)
+          uppY <- min(outletPos[i]+tmpY,dimY)
+          flowDirStart[lowY:outletPos[i],1:tmpX] <- 7
+          flowDirStart[outletPos[i]:uppY,1:tmpX] <- 3
+        }
+      }
       for (i in 1:nOutlet){
         if (outletSide[i]=="N"){
           flowDirStart[(dimY-tmpY+1):dimY,outletPos[i]] <- 7 
@@ -598,13 +598,13 @@ initialstate_OCN <- function(dimX,dimY,nOutlet,outletSide,outletPos,typeInitialS
       }
       for (i in 1:nOutlet){
         if (outletSide[i]=="N"){
-      flowDirStart[(dimY-tmpY+1):dimY,outletPos[i]] <- 7 
+          flowDirStart[(dimY-tmpY+1):dimY,outletPos[i]] <- 7 
         } else if (outletSide[i]=="E") {
-      flowDirStart[outletPos[i],(dimX-tmpX+1):dimX] <- 1 
+          flowDirStart[outletPos[i],(dimX-tmpX+1):dimX] <- 1 
         } else if (outletSide[i]=="S") {
-      flowDirStart[1:tmpY,outletPos[i]] <- 3 
+          flowDirStart[1:tmpY,outletPos[i]] <- 3 
         } else if (outletSide[i]=="W") {
-      flowDirStart[outletPos[i],1:tmpX] <- 5 
+          flowDirStart[outletPos[i],1:tmpX] <- 5 
         }
       }      
     } else if (typeInitialState=="V") {
@@ -654,66 +654,67 @@ initialstate_OCN <- function(dimX,dimY,nOutlet,outletSide,outletPos,typeInitialS
       #     if (dimY>outletPos[i]) {for (j in 1:min(dimY-outletPos[i],dimX-1)) {flowDirStart[outletPos[i]+j,j+1]=4}}
       #   }
       # }
-      tmpX <- round(0.25*dimX); tmpY <- round(0.25*dimY)
-      for (i in 1:nOutlet){
-           if (outletSide[i]=="N"){
-             lowX <- max(1,outletPos[i]-tmpX)
-             uppX <- min(outletPos[i]+tmpX,dimX)
-             flowDirStart[(dimY-tmpY):dimY,lowX:uppX] <- 0
-             if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowX)) {flowDirStart[dimY+1-j,lowX:(outletPos[i]-j)]=1}}
-             if (dimX>outletPos[i]) {for (j in 1:(uppX-outletPos[i])) {flowDirStart[dimY+1-j,(outletPos[i]+j):uppX]=5}}
-             flowDirStart[flowDirStart==0]=7
-             
-           } else if (outletSide[i]=="S"){
-             lowX <- max(1,outletPos[i]-tmpX)
-             uppX <- min(outletPos[i]+tmpX,dimX)
-             flowDirStart[1:(tmpY+1),lowX:uppX] <- 0
-             if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowX)) {flowDirStart[j,lowX:(outletPos[i]-j)]=1}}
-             if (dimX>outletPos[i]) {for (j in 1:(uppX-outletPos[i])) {flowDirStart[j,(outletPos[i]+j):uppX]=5}}
-             flowDirStart[flowDirStart==0]=3
-             
-           } else if (outletSide[i]=="E"){
-             lowY <- max(1,outletPos[i]-tmpY)
-             uppY <- min(outletPos[i]+tmpY,dimY)
-             flowDirStart[lowY:uppY,(dimX-tmpX):dimX] <- 0
-             if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowY)) {flowDirStart[lowY-1+j,(dimX-outletPos[i]+lowY+j-1):dimX]=7}}
-             if (dimY>outletPos[i]) {for (j in 1:(uppY-outletPos[i])) {flowDirStart[outletPos[i]+j,(dimX+1-j):dimX]=3}}
-             flowDirStart[flowDirStart==0]=1
-           }  else if (outletSide[i]=="W"){
-             lowY <- max(1,outletPos[i]-tmpY)
-             uppY <- min(outletPos[i]+tmpY,dimY)
-             flowDirStart[lowY:uppY,1:(tmpX+1)] <- 0
-             if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowY)) {flowDirStart[lowY-1+j,1:(outletPos[i]-lowY-j+1)]=7}}
-             if (dimY>outletPos[i]) {for (j in 1:(uppY-outletPos[i])) {flowDirStart[outletPos[i]+j,1:j]=3}}
-             flowDirStart[flowDirStart==0]=5
-           }
+      if (nOutlet > 1){ ## BUG WHEN OUTLET IS ON LONG SIDE OF A RECTANGULAR LATTICE
+        tmpX <- round(0.25*dimX); tmpY <- round(0.25*dimY)
+        for (i in 1:nOutlet){
+          if (outletSide[i]=="N"){
+            lowX <- max(1,outletPos[i]-tmpX)
+            uppX <- min(outletPos[i]+tmpX,dimX)
+            flowDirStart[(dimY-tmpY):dimY,lowX:uppX] <- 0
+            if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowX)) {flowDirStart[dimY+1-j,lowX:(outletPos[i]-j)]=1}}
+            if (dimX>outletPos[i]) {for (j in 1:(uppX-outletPos[i])) {flowDirStart[dimY+1-j,(outletPos[i]+j):uppX]=5}}
+            flowDirStart[flowDirStart==0]=7
+            
+          } else if (outletSide[i]=="S"){
+            lowX <- max(1,outletPos[i]-tmpX)
+            uppX <- min(outletPos[i]+tmpX,dimX)
+            flowDirStart[1:(tmpY+1),lowX:uppX] <- 0
+            if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowX)) {flowDirStart[j,lowX:(outletPos[i]-j)]=1}}
+            if (dimX>outletPos[i]) {for (j in 1:(uppX-outletPos[i])) {flowDirStart[j,(outletPos[i]+j):uppX]=5}}
+            flowDirStart[flowDirStart==0]=3
+            
+          } else if (outletSide[i]=="E"){
+            lowY <- max(1,outletPos[i]-tmpY)
+            uppY <- min(outletPos[i]+tmpY,dimY)
+            flowDirStart[lowY:uppY,(dimX-tmpX):dimX] <- 0
+            if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowY)) {flowDirStart[lowY-1+j,(dimX-outletPos[i]+lowY+j-1):dimX]=7}}
+            if (dimY>outletPos[i]) {for (j in 1:(uppY-outletPos[i])) {flowDirStart[outletPos[i]+j,(dimX+1-j):dimX]=3}}
+            flowDirStart[flowDirStart==0]=1
+          }  else if (outletSide[i]=="W"){
+            lowY <- max(1,outletPos[i]-tmpY)
+            uppY <- min(outletPos[i]+tmpY,dimY)
+            flowDirStart[lowY:uppY,1:(tmpX+1)] <- 0
+            if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowY)) {flowDirStart[lowY-1+j,1:(outletPos[i]-lowY-j+1)]=7}}
+            if (dimY>outletPos[i]) {for (j in 1:(uppY-outletPos[i])) {flowDirStart[outletPos[i]+j,1:j]=3}}
+            flowDirStart[flowDirStart==0]=5
+          }
         }
-      for (i in 1:nOutlet){
-        if (outletSide[i]=="N"){
-          lowX <- max(1,outletPos[i]-tmpX)
-          uppX <- min(outletPos[i]+tmpX,dimX)
-          if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowX+1)) {flowDirStart[dimY+1-j,outletPos[i]+1-j]=8}}
-          if (dimX>outletPos[i]) {for (j in 1:(uppX-outletPos[i])) {flowDirStart[dimY-j,outletPos[i]+j]=6}}
-          
-        } else if (outletSide[i]=="S"){
-          lowX <- max(1,outletPos[i]-tmpX)
-          uppX <- min(outletPos[i]+tmpX,dimX)
-          if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowX+1)) {flowDirStart[j,outletPos[i]+1-j]=2}}
-          if (dimX>outletPos[i]) {for (j in 1:(uppX-outletPos[i])) {flowDirStart[j+1,outletPos[i]+j]=4}}
-          
-        } else if (outletSide[i]=="E"){
-          lowY <- max(1,outletPos[i]-tmpY)
-          uppY <- min(outletPos[i]+tmpY,dimY)
-          if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowY)) {flowDirStart[lowY-1+j,dimX-outletPos[i]+lowY+j-1]=8}}
-          if (dimY>outletPos[i]) {for (j in 1:(uppY-outletPos[i])) {flowDirStart[outletPos[i]+j,dimX-j]=2}}
-        }  else if (outletSide[i]=="W"){
-          lowY <- max(1,outletPos[i]-tmpY)
-          uppY <- min(outletPos[i]+tmpY,dimY)
-          if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowY)) {flowDirStart[lowY-1+j,outletPos[i]-lowY-j+2]=6}}
-          if (dimY>outletPos[i]) {for (j in 1:(uppY-outletPos[i])) {flowDirStart[outletPos[i]+j,j+1]=4}}
+        for (i in 1:nOutlet){
+          if (outletSide[i]=="N"){
+            lowX <- max(1,outletPos[i]-tmpX)
+            uppX <- min(outletPos[i]+tmpX,dimX)
+            if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowX+1)) {flowDirStart[dimY+1-j,outletPos[i]+1-j]=8}}
+            if (dimX>outletPos[i]) {for (j in 1:(uppX-outletPos[i])) {flowDirStart[dimY-j,outletPos[i]+j]=6}}
+            
+          } else if (outletSide[i]=="S"){
+            lowX <- max(1,outletPos[i]-tmpX)
+            uppX <- min(outletPos[i]+tmpX,dimX)
+            if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowX+1)) {flowDirStart[j,outletPos[i]+1-j]=2}}
+            if (dimX>outletPos[i]) {for (j in 1:(uppX-outletPos[i])) {flowDirStart[j+1,outletPos[i]+j]=4}}
+            
+          } else if (outletSide[i]=="E"){
+            lowY <- max(1,outletPos[i]-tmpY)
+            uppY <- min(outletPos[i]+tmpY,dimY)
+            if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowY)) {flowDirStart[lowY-1+j,dimX-outletPos[i]+lowY+j-1]=8}}
+            if (dimY>outletPos[i]) {for (j in 1:(uppY-outletPos[i])) {flowDirStart[outletPos[i]+j,dimX-j]=2}}
+          }  else if (outletSide[i]=="W"){
+            lowY <- max(1,outletPos[i]-tmpY)
+            uppY <- min(outletPos[i]+tmpY,dimY)
+            if (outletPos[i]>1) {for (j in 1:(outletPos[i]-lowY)) {flowDirStart[lowY-1+j,outletPos[i]-lowY-j+2]=6}}
+            if (dimY>outletPos[i]) {for (j in 1:(uppY-outletPos[i])) {flowDirStart[outletPos[i]+j,j+1]=4}}
+          }
         }
       }
-      
     } else {
       stop("Invalid initial state")
     }
