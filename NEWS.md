@@ -1,3 +1,9 @@
+# OCNet 0.5.0
+
+## Major changes
+
+* `paths_OCN`: improved algorithm. Option `includeUnconnectedPaths` added. Option `includePaths` replaces `pathsRN`.
+
 # OCNet 0.4.0
 
 ## Major changes
