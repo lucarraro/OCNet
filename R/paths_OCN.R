@@ -1,161 +1,159 @@
-
 paths_OCN <- function(OCN,
-                      pathsRN=FALSE,
-                      includeDownstreamNode=FALSE){
+                      includePaths=FALSE,
+                      includeDownstreamNode=FALSE,
+                      includeUnconnectedPaths=FALSE){
   
   if (!("RN" %in% names(OCN))){
     stop('Missing fields in OCN. You should run aggregate_OCN prior to paths_OCN.')
   }
   
-  # RN level
+  iDP <- includeUnconnectedPaths
+  
+  # RN
   RN_DownstreamPathLength <- spam(0,OCN$RN$nNodes,OCN$RN$nNodes)
-  indices <- matrix(0,OCN$RN$nNodes^2,2)
-  values <- numeric(OCN$RN$nNodes^2)
-  RN_DownstreamPath <- vector("list",OCN$RN$nNodes)
-  counter <- 1
-  for (i in 1:OCN$RN$nNodes){RN_DownstreamPath[[i]] <- vector("list",OCN$RN$nNodes)}
+  if (iDP){RN_DwnstrLength_unconnected <- matrix(0,OCN$RN$nNodes,OCN$RN$nNodes)}
+  # if (iDP){RN_DwnstrLength_unconnected <- spam(0,OCN$RN$nNodes,OCN$RN$nNodes)}
+  
+  indices_down <-  matrix(0,OCN$RN$nNodes*1000,2)
+  values_down <-   numeric(OCN$RN$nNodes*1000)
+  counter_down <-  1
+  # if (iDP){
+  #   indices_unc <- matrix(0,OCN$RN$nNodes^2,2)  # this might crash for large values 
+  #   values_unc <- numeric(OCN$RN$nNodes^2)   
+  #   counter_unc <- counter_down 
+  # }
+ if(includePaths){RN_DownstreamPath <- vector("list",OCN$RN$nNodes)}
+
+  #for (i in 1:OCN$RN$nNodes){RN_DownstreamPath[[i]] <- vector("list",OCN$RN$nNodes)}
   for (i in 1:OCN$RN$nNodes){
-    Ups <- OCN$RN$upstream[[i]]
-    for (j in 1:length(Ups)){
-      k <- Ups[j]
-      Path <- k
-      while (k != i) {
-        k <- OCN$RN$downNode[k]
-        Path <- c(Path, k)
+
+    if(includePaths){RN_DownstreamPath[[i]][[i]] <- i}
+    Path <- i
+    j <- i
+    while (j != OCN$RN$outlet){
+      j <- OCN$RN$downNode[j]
+      Path <- c(Path,j)
+      
+      if(includePaths){RN_DownstreamPath[[i]][[j]] <- Path}
+      
+      indices_down[counter_down, ] <- c(i, j)
+      if (includeDownstreamNode){
+      values_down[counter_down] <- sum(OCN$RN$leng[Path])
+      } else {
+        values_down[counter_down] <- sum(OCN$RN$leng[Path]) - OCN$RN$leng[j]  
       }
-      RN_DownstreamPath[[Ups[j]]][[i]] <- Path
-      indices[counter, ] <- c(Ups[j],i)
-      values[counter] <- sum(OCN$RN$leng[Path]) 
-      if (includeDownstreamNode==FALSE){
-        values[counter] <- values[counter] - OCN$RN$leng[k]
+      counter_down <- counter_down + 1
+      
+      # Ups: contains all nodes upstream of j, barring those upstream of the penultimate path node and  j 
+      # -> all the nodes for which j is the intersection node
+      if (iDP){
+      Ups <- setdiff(OCN$RN$upstream[[j]], c(OCN$RN$upstream[[Path[length(Path) - 1]]],j) ) 
+      
+      for (u in Ups){
+        if (includeDownstreamNode){
+          RN_DwnstrLength_unconnected[i,u] <- sum(OCN$RN$leng[Path])  # count the intersection node
+        } else {
+          RN_DwnstrLength_unconnected[i,u] <- sum(OCN$RN$leng[Path]) - OCN$RN$leng[j] # don't count the intersection node
+        }
       }
-      counter <- counter + 1
-      #RN_DownstreamPathLength[Ups[j],i] <- sum(OCN$RN$leng[Path])
+      
+      # for (u in Ups){
+      #   indices_unc[counter_unc, ] <- c(i, u)
+      #   if (includeDownstreamNode){
+      #   values_unc[counter_unc] <- sum(OCN$RN$leng[Path])  # count the intersection node
+      #   } else {
+      #   values_unc[counter_unc] <- sum(OCN$RN$leng[Path]) - OCN$RN$leng[j] # don't count the intersection node
+      #   }
+      #   counter_unc <- counter_unc + 1
+      # }
+      }
     }
-    # if ((i %% round(OCN$RN$nNodes/100))==0){
-    #   print(sprintf('paths at RN level: %0.1f%% completed',i*100/OCN$RN$nNodes))
-    # }
+    message(sprintf("RN downstream paths... %.1f%%\r",i/(1.001*OCN$RN$nNodes)*100), appendLF = FALSE)
   }
-  indices <- indices[1:(counter-1),]
-  values <- values[1:(counter-1)]
-  RN_DownstreamPathLength[indices] <- values
+  indices_down <- indices_down[1:(counter_down-1), ]
+  values_down <- values_down[1:(counter_down-1)]
+  RN_DownstreamPathLength[indices_down] <- values_down
   
-  #RN_DownstreamPathLength <- as(RN_DownstreamPathLength,"sparseMatrix")
-  #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE) 
-  #t1 <- Sys.time()
-  
-  #print('Downstream/Upstream path lengths for unconnected reaches...',quote=FALSE) 
-  # DwnstrLength_unconnected[i,j] is the length of the downstream path joining i to k, where k is the junction node between two flow-unconnected reaches i and j 
-  # CountPaths[k] is the number of paths connecting pairs of reaches passing through k, considering also k as a start/end point (i.e. the path connecting k to k is counted)
-  
-  # RN_DwnstrLength_unconnected <- matrix(data=0,nrow=OCN$RN$nNodes,ncol=OCN$RN$nNodes)
-  # CountPaths <- rep(0,OCN$RN$nNodes)
-  # for (i in 1:OCN$RN$nNodes){
-  #   for (j in 1:OCN$RN$nNodes){
-  #     # check whether i and j belong to the same catchment
-  #     if (OCN$RN$toCM[i]==OCN$RN$toCM[j]){
-  #       k  <- intersect(RN_DownstreamPath[[i]][[OCN$RN$outlet[OCN$RN$toCM[i]]]],RN_DownstreamPath[[j]][[OCN$RN$outlet[OCN$RN$toCM[j]]]])[1]
-  #       RN_DwnstrLength_unconnected[i,j] <- RN_DownstreamPathLength[i,k]
-  #       #CountPaths[k] <- CountPaths[k]  + 1 
-  #     }
-  #   }
+  # if (iDP){
+  # indices_unc <- indices_unc[1:(counter_unc-1), ]
+  # values_unc <- values_unc[1:(counter_unc-1)]
+  # RN_DwnstrLength_unconnected[indices_unc] <- values_unc
   # }
-  # RN_DwnstrLength_unconnected <- RN_DwnstrLength_unconnected * (RN_DownstreamPathLength==0) # remove flow-connected reaches
-  # RN_DwnstrLength_unconnected <- as(RN_DwnstrLength_unconnected,"sparseMatrix")
-  # #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE)
-  # #t1 <- Sys.time()
+  message("RN downstream paths... 100.0%\n", appendLF = FALSE)
   
-  # RN_DwnstrLength_unconnected <- matrix(data=0,nrow=OCN$RN$nNodes,ncol=OCN$RN$nNodes)
-  # CountPaths <- rep(0,OCN$RN$nNodes)
-  # for (i in 1:OCN$RN$nNodes){
-  #   for (j in 1:OCN$RN$nNodes){
-  #     # check whether i and j belong to the same catchment
-  #     if (OCN$RN$toCM[i]==OCN$RN$toCM[j]){
-  #       k  <- intersect(RN_DownstreamPath[[i]][[OCN$RN$outlet[OCN$RN$toCM[i]]]],RN_DownstreamPath[[j]][[OCN$RN$outlet[OCN$RN$toCM[j]]]])[1]
-  #       RN_DwnstrLength_unconnected[i,j] <- RN_DownstreamPathLength[i,k]
-  #       #CountPaths[k] <- CountPaths[k]  + 1 
-  #     }
-  #   }
-  # }
-  # RN_DwnstrLength_unconnected <- RN_DwnstrLength_unconnected * (RN_DownstreamPathLength==0) # remove flow-connected reaches
-  # RN_DwnstrLength_unconnected <- as(RN_DwnstrLength_unconnected,"sparseMatrix")
-  # #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE)
-  # #t1 <- Sys.time()
-  
-  # AG level
+  # AG
   AG_DownstreamPathLength <- spam(0,OCN$AG$nNodes,OCN$AG$nNodes)
-  AG_DownstreamPath <- vector("list",OCN$AG$nNodes)
-  indices <- matrix(0,OCN$AG$nNodes^2,2)
-  values <- numeric(OCN$AG$nNodes^2)
-  counter <- 1
-  for (i in 1:OCN$AG$nNodes){AG_DownstreamPath[[i]] <- vector("list",OCN$AG$nNodes)}
-  for (i in 1:OCN$AG$nNodes){
-    Ups <- OCN$AG$upstream[[i]]
-    for (j in 1:length(Ups)){
-      k <- Ups[j]
-      Path <- k
-      while (k != i) {
-        k <- OCN$AG$downNode[k]
-        Path <- c(Path, k)
-      }
-      AG_DownstreamPath[[Ups[j]]][[i]] <- Path
-      #AG_DownstreamPathLength[Ups[j],i] <- sum(OCN$AG$leng[Path])
-      indices[counter, ] <- c(Ups[j],i)
-      values[counter] <- sum(OCN$AG$leng[Path]) 
-      if (includeDownstreamNode==FALSE){
-        values[counter] <- values[counter]  - OCN$AG$leng[k]
-      }
-      counter <- counter + 1
-    }
-  }
-  indices <- indices[1:(counter-1), ]
-  values <- values[1:(counter-1)]
-  AG_DownstreamPathLength[indices] <- values
-  #AG_DownstreamPathLength <- as(AG_DownstreamPathLength,"sparseMatrix")
-  #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE) 
-  #t1 <- Sys.time()
+  if(iDP){AG_DwnstrLength_unconnected <- matrix(0,OCN$AG$nNodes,OCN$AG$nNodes)} 
+  #if(iDP){AG_DwnstrLength_unconnected <- spam(0,OCN$AG$nNodes,OCN$AG$nNodes)}
+  if(includePaths){AG_DownstreamPath <- vector("list",OCN$AG$nNodes)}
   
-  #print('Downstream/Upstream path lengths for unconnected reaches...',quote=FALSE) 
-  # DwnstrLength_unconnected[i,j] is the length of the downstream path joining i to k, where k is the junction node between two flow-unconnected reaches i and j 
-  # CountPaths[k] is the number of paths connecting pairs of reaches passing through k, considering also k as a start/end point (i.e. the path connecting k to k is counted)
+  indices_down <-  matrix(0,OCN$AG$nNodes*1000,2)
+  values_down <-  numeric(OCN$AG$nNodes*1000)
+  counter_down <-  1
+  # if (iDP){
+  #   indices_unc <- matrix(0,OCN$AG$nNodes^2,2)  
+  #   values_unc <- numeric(OCN$AG$nNodes^2)  
+  #   counter_unc <- counter_down 
+  # }
   
-  AG_DwnstrLength_unconnected <- spam(0,OCN$AG$nNodes,OCN$AG$nNodes)
-  indices <- matrix(0,OCN$AG$nNodes^2,2)
-  values <- numeric(OCN$AG$nNodes^2)
-  counter <- 1
+  #AG_DownstreamPath <- vector("list",OCN$AG$nNodes)
+  
+  #for (i in 1:OCN$AG$nNodes){AG_DownstreamPath[[i]] <- vector("list",OCN$AG$nNodes)}
   for (i in 1:OCN$AG$nNodes){
-    for (j in 1:OCN$AG$nNodes){
-      # check whether i and j belong to the same catchment
-      if (OCN$AG$toCM[i]==OCN$AG$toCM[j] && AG_DownstreamPathLength[i,j]==0){
-        k  <- intersect(AG_DownstreamPath[[i]][[OCN$AG$outlet[OCN$AG$toCM[i]]]],AG_DownstreamPath[[j]][[OCN$AG$outlet[OCN$AG$toCM[j]]]])[1]
-        #AG_DwnstrLength_unconnected[i,j] <- AG_DownstreamPathLength[i,k]
-        indices[counter,] <- c(i,j)
-        values[counter] <- AG_DownstreamPathLength[i,k]
-        counter <- counter + 1
-        #CountPaths[k] <- CountPaths[k]  + 1 
+    
+    if(includePaths){AG_DownstreamPath[[i]][[i]] <- i}
+    Path <- i
+    j <- i
+    while (j != OCN$AG$outlet){
+      j <- OCN$AG$downNode[j]
+      Path <- c(Path,j)
+      
+      if(includePaths){AG_DownstreamPath[[i]][[j]] <- Path}
+      
+      indices_down[counter_down, ] <- c(i, j)
+      if (includeDownstreamNode){
+        values_down[counter_down] <- sum(OCN$AG$leng[Path])
+      } else {
+        values_down[counter_down] <- sum(OCN$AG$leng[Path]) - OCN$AG$leng[j]  
+      }
+      counter_down <- counter_down + 1
+      
+      # Ups: contains all nodes upstream of j, barring those upstream of the penultimate path node and  j 
+      # -> all the nodes for which j is the intersection node
+      if(iDP){
+      Ups <- setdiff(OCN$AG$upstream[[j]], c(OCN$AG$upstream[[Path[length(Path) - 1]]],j) ) 
+      
+      for (u in Ups){
+        if (includeDownstreamNode){
+            AG_DwnstrLength_unconnected[i, u] <- sum(OCN$AG$leng[Path])  # count the intersection node
+        } else {
+          AG_DwnstrLength_unconnected[i, u] <- sum(OCN$AG$leng[Path]) - OCN$AG$leng[j] # don't count the intersection node
+        }
+      }
       }
     }
+    message(sprintf("AG downstream paths... %.1f%%\r",i/(1.001*OCN$AG$nNodes)*100), appendLF = FALSE)
   }
-  indices <- indices[1:(counter-1), ]
-  values <- values[1:(counter-1)]
-  AG_DwnstrLength_unconnected[indices] <- values
+  indices_down <- indices_down[1:(counter_down-1), ]
+  values_down <- values_down[1:(counter_down-1)]
+  AG_DownstreamPathLength[indices_down] <- values_down
+  # if(iDP){
+  # indices_unc <- indices_unc[1:(counter_unc-1), ]
+  # values_unc <- values_unc[1:(counter_unc-1)]
+  # AG_DwnstrLength_unconnected[indices_unc] <- values_unc
+  # }
+  message("AG downstream paths... 100.0%\n", appendLF = FALSE)
   
-  #AG_DwnstrLength_unconnected <- AG_DwnstrLength_unconnected * (AG_DownstreamPathLength==0) # remove flow-connected reaches
-  #AG_DwnstrLength_unconnected <- as(AG_DwnstrLength_unconnected,"sparseMatrix")
-  #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE)
-  #t1 <- Sys.time()
   
   ## copy variables into OCN
-  if (pathsRN==TRUE){ OCN$RN$downstreamPath <- RN_DownstreamPath}
+  if (includePaths){ OCN$RN$downstreamPath <- RN_DownstreamPath}
   OCN$RN$downstreamPathLength <- RN_DownstreamPathLength
-  # OCN$RN$DwnstrLength_unconnected <- RN_DwnstrLength_unconnected
-  OCN$AG$downstreamPath <- AG_DownstreamPath
+  if(iDP){OCN$RN$downstreamLengthUnconnected <- RN_DwnstrLength_unconnected}
+  if (includePaths){ OCN$AG$downstreamPath <- AG_DownstreamPath}
   OCN$AG$downstreamPathLength <- AG_DownstreamPathLength
-  OCN$AG$downstreamLengthUnconnected <- AG_DwnstrLength_unconnected
+  if(iDP){OCN$AG$downstreamLengthUnconnected <- AG_DwnstrLength_unconnected}
   
   
   invisible(OCN)
   
 }
-
-
