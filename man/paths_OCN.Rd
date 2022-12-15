@@ -3,7 +3,7 @@
 \title{Calculate paths between nodes in an Optimal Channel Network}
 \usage{
 paths_OCN(OCN, includePaths = FALSE, 
-includeDownstreamNode = FALSE, includeUnconnectedPaths = FALSE)
+includeDownstreamNode = FALSE, includeUnconnectedPaths = FALSE, displayUpdates = FALSE)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{aggregate_OCN}}.}
@@ -13,13 +13,15 @@ includeDownstreamNode = FALSE, includeUnconnectedPaths = FALSE)
 \item{includeDownstreamNode}{Logical. If \code{TRUE}, path lengths include the length of the edge departing from the last downstream node of the path.}
 
 \item{includeUnconnectedPaths}{Logical. If \code{TRUE}, calculate path lengths between unconnected nodes (\code{RN$downstreamLengthUnconnected} and \code{AG$downstreamLengthUnconnected}). Note that this might slow down the function execution considerably, and create RAM issues for very large OCNs.}
+
+\item{displayUpdates}{Logical. State if updates are printed on the console while \code{landscape_OCN} runs.}
 }
 \value{
 A list that contains all objects contained in \code{OCN}, in addition to the objects listed below. 
 \item{\code{RN$downstreamPath}}{List (of length \code{OCN$RN$nNodes}) whose object \code{i} is a list (of length \code{OCN$RN$nNodes}). 
 If nodes \code{i} and \code{j} are connected by a downstream path, then \code{RN$downstreamPath[[i]][[j]]} is a vector 
 containing the indices of the nodes constituting such path (\code{i} and \code{j} are included). If \code{i} and \code{j} are not connected 
-by a downstream path, then \code{RN$downstreamPath[[i]][[j]] = 0}. Only present if \code{includePaths = TRUE}.}
+by a downstream path, then \code{RN$downstreamPath[[i]][[j]] = NULL}. Only present if \code{includePaths = TRUE}.}
 \item{\code{RN$downstreamPathLength}}{Sparse matrix (\code{OCN$RN$nNodes} by \code{OCN$RN$nNodes}) containing length of paths between nodes 
 that are connected by a downstream path; if \code{i} and \code{j} are not connected by a downstream path, then \code{RN$downstreamPathLength[i,j] = 0}. 
 Note that \code{RN$downstreamPathLength[i,i] = 0} if \code{includeDownstreamNode = FALSE}; alternatively, it is \code{RN$downstreamPathLength[i,i] = OCN$RN$leng[i]}. 
@@ -33,7 +35,7 @@ downstream path, then \code{RN$downstreamLengthUnconnected[i,j] = 0}. It is a \c
 \item{\code{AG$downstreamPath}}{List (of length \code{OCN$AG$nNodes}) whose object \code{i} is a list (of length \code{OCN$AG$nNodes}). 
 If nodes \code{i} and \code{j} are connected by a downstream path, then \code{AG$downstreamPath[[i]][[j]]} is a vector 
 containing the indices of the nodes constituting such path (\code{i} and \code{j} are included). If \code{i} and \code{j} are not connected 
-by a downstream path, then \code{AG$downstreamPath[[i]][[j]] = 0}. Only present if \code{includePaths = TRUE}.}
+by a downstream path, then \code{AG$downstreamPath[[i]][[j]] = NULL}. Only present if \code{includePaths = TRUE}.}
 \item{\code{AG$downstreamPathLength}}{Sparse matrix (\code{OCN$AG$nNodes} by \code{OCN$AG$nNodes}) containing length of paths between nodes 
 that are connected by a downstream path; if \code{i} and \code{j} are not connected by a downstream path, then \code{AG$downstreamPathLength[i,j] = 0}. 
 Note that \code{AG$downstreamPathLength[i,i] = 0} if \code{includeDownstreamNode = FALSE}; alternatively, it is \code{AG$downstreamPathLength[i,i] = OCN$AG$leng[i]}. 

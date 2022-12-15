@@ -1,7 +1,8 @@
 paths_OCN <- function(OCN,
                       includePaths=FALSE,
                       includeDownstreamNode=FALSE,
-                      includeUnconnectedPaths=FALSE){
+                      includeUnconnectedPaths=FALSE,
+                      displayUpdates=FALSE){
   
   if (!("RN" %in% names(OCN))){
     stop('Missing fields in OCN. You should run aggregate_OCN prior to paths_OCN.')
@@ -22,9 +23,11 @@ paths_OCN <- function(OCN,
   #   values_unc <- numeric(OCN$RN$nNodes^2)   
   #   counter_unc <- counter_down 
   # }
- if(includePaths){RN_DownstreamPath <- vector("list",OCN$RN$nNodes)}
-
-  #for (i in 1:OCN$RN$nNodes){RN_DownstreamPath[[i]] <- vector("list",OCN$RN$nNodes)}
+  if(includePaths){
+    RN_DownstreamPath <- vector("list",OCN$RN$nNodes)
+    for (i in 1:OCN$RN$nNodes){RN_DownstreamPath[[i]] <- vector("list",OCN$RN$nNodes)}
+  }
+  
   for (i in 1:OCN$RN$nNodes){
 
     if(includePaths){RN_DownstreamPath[[i]][[i]] <- i}
@@ -68,7 +71,8 @@ paths_OCN <- function(OCN,
       # }
       }
     }
-    message(sprintf("RN downstream paths... %.1f%%\r",i/(1.001*OCN$RN$nNodes)*100), appendLF = FALSE)
+    if (displayUpdates){
+    message(sprintf("RN downstream paths... %.1f%%\r",i/(1.001*OCN$RN$nNodes)*100), appendLF = FALSE)}
   }
   indices_down <- indices_down[1:(counter_down-1), ]
   values_down <- values_down[1:(counter_down-1)]
@@ -79,13 +83,18 @@ paths_OCN <- function(OCN,
   # values_unc <- values_unc[1:(counter_unc-1)]
   # RN_DwnstrLength_unconnected[indices_unc] <- values_unc
   # }
-  message("RN downstream paths... 100.0%\n", appendLF = FALSE)
+  if (displayUpdates){
+  message("RN downstream paths... 100.0%\n", appendLF = FALSE)}
   
   # AG
   AG_DownstreamPathLength <- spam(0,OCN$AG$nNodes,OCN$AG$nNodes)
   if(iDP){AG_DwnstrLength_unconnected <- matrix(0,OCN$AG$nNodes,OCN$AG$nNodes)} 
   #if(iDP){AG_DwnstrLength_unconnected <- spam(0,OCN$AG$nNodes,OCN$AG$nNodes)}
-  if(includePaths){AG_DownstreamPath <- vector("list",OCN$AG$nNodes)}
+  
+  if(includePaths){
+    AG_DownstreamPath <- vector("list",OCN$AG$nNodes)
+    for (i in 1:OCN$AG$nNodes){AG_DownstreamPath[[i]] <- vector("list",OCN$AG$nNodes)}
+  }
   
   indices_down <-  matrix(0,OCN$AG$nNodes*1000,2)
   values_down <-  numeric(OCN$AG$nNodes*1000)
@@ -132,7 +141,8 @@ paths_OCN <- function(OCN,
       }
       }
     }
-    message(sprintf("AG downstream paths... %.1f%%\r",i/(1.001*OCN$AG$nNodes)*100), appendLF = FALSE)
+    if (displayUpdates){
+    message(sprintf("AG downstream paths... %.1f%%\r",i/(1.001*OCN$AG$nNodes)*100), appendLF = FALSE)}
   }
   indices_down <- indices_down[1:(counter_down-1), ]
   values_down <- values_down[1:(counter_down-1)]
@@ -142,7 +152,8 @@ paths_OCN <- function(OCN,
   # values_unc <- values_unc[1:(counter_unc-1)]
   # AG_DwnstrLength_unconnected[indices_unc] <- values_unc
   # }
-  message("AG downstream paths... 100.0%\n", appendLF = FALSE)
+  if (displayUpdates){
+  message("AG downstream paths... 100.0%\n", appendLF = FALSE)}
   
   
   ## copy variables into OCN
