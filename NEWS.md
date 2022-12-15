@@ -1,3 +1,9 @@
+# OCNet 0.5.1
+
+## Bugs fixed
+
+* `paths_OCN`: corrected bug in export of `downstreamPath`. Option `displayUpdates` added.
+
 # OCNet 0.5.0
 
 ## Major changes
