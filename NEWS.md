@@ -2,7 +2,7 @@
 
 ## Bugs fixed
 
-* `paths_OCN`: corrected bug in export of `downstreamPath`. Option `displayUpdates` added.
+* `paths_OCN`: corrected bug in export of `downstreamPath`. Option `displayUpdates` added. Example in `continue_OCN` modified.
 
 # OCNet 0.5.0
 
