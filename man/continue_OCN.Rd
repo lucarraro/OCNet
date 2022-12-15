@@ -39,10 +39,10 @@ Function that performs the OCN search algorithm on an existing OCN.
 }
 \examples{
 set.seed(1)
-OCN_a <- create_OCN(20, 20, nIter = 16000)
+OCN_a <- create_OCN(20, 20, nIter = 10000)
 set.seed(1)
-OCN_b <- create_OCN(20, 20, nIter = 8000)
-OCN_b <- continue_OCN(OCN_b, nNewIter = 8000)
+OCN_b <- create_OCN(20, 20, nIter = 5000)
+OCN_b <- continue_OCN(OCN_b, nNewIter = 5000)
 
 old.par <- par(no.readonly = TRUE)
 par(mfrow=c(1,2))
