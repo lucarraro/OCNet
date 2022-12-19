@@ -1,5 +1,5 @@
 
-draw_thematic_OCN <- function(theme,OCN,
+draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
                               chooseAggregation=NULL,
                               discreteLevels=FALSE,
                               colLevels=NULL,
@@ -17,16 +17,26 @@ draw_thematic_OCN <- function(theme,OCN,
                               addLegend=TRUE){
   
   # initialization
+  if (!("RN" %in% names(OCN))){ # try to swap arguments if in wrong order
+    tmp <- OCN
+    OCN <- theme
+    theme <- tmp
+  }
+  
+  if (all(is.na(theme))){
+    addLegend <- FALSE
+  }
   
   if (!("RN" %in% names(OCN))){
     stop('Missing fields in OCN. You should run aggregate_OCN prior to draw_thematic_OCN.')
   }
   
   if (discreteLevels == FALSE) {
+    if (length(colLevels)<3){N_colLevels <- 1000} else {N_colLevels <- colLevels[3]}
+    
     if (is.null(colLevels)){
-      colLevels <- c(min(theme[!(is.nan(theme))]),max(theme[!(is.nan(theme))]),1000)
+      colLevels <- c(min(theme[!(is.nan(theme))]),max(theme[!(is.nan(theme))]),N_colLevels)
     }
-    N_colLevels <- colLevels[3]
     minval <- colLevels[1]
     maxval <- colLevels[2]
     if (minval==maxval) {maxval <- minval + 1}
