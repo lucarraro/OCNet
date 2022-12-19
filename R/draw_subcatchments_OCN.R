@@ -8,7 +8,7 @@ draw_subcatchments_OCN <- function(OCN,
   }
   
   if (isTRUE(OCN$typeInitialState=="custom")){
-    stop('draw_elev2D_OCN is not currently implemented for OCNs created via create_general_contour_OCN')
+    stop('draw_subcatchments_OCN is not currently implemented for OCNs created via create_general_contour_OCN')
   }
   
   ## Greedy algorithm for coloring subcatchment map

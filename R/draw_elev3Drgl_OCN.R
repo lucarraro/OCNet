@@ -11,7 +11,7 @@ draw_elev3Drgl_OCN <- function(OCN,
   #ColPalette=terrain.colors(1000,alpha=1),
   
   if (isTRUE(OCN$typeInitialState=="custom")){
-    stop('draw_elev2D_OCN is not currently implemented for OCNs created via create_general_contour_OCN')
+    stop('draw_elev3Drgl_OCN is not currently implemented for OCNs created via create_general_contour_OCN')
   }
   
   # give default values to unspecified arguments

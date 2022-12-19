@@ -19,7 +19,7 @@ draw_elev3D_OCN <- function(OCN,
   }  
   
   if (isTRUE(OCN$typeInitialState=="custom")){
-    stop('draw_elev2D_OCN is not currently implemented for OCNs created via create_general_contour_OCN')
+    stop('draw_elev3D_OCN is not currently implemented for OCNs created via create_general_contour_OCN')
   }
   
   Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
