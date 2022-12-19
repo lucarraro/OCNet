@@ -14,7 +14,8 @@ landscape_OCN(OCN, slope0 = 1, zMin = 0, optimizeDZ = FALSE,
 \item{zMin}{Elevation of the lowest pixel (in elevation units).}
 
 \item{optimizeDZ}{If \code{TRUE}, when there are multiple catchments, minimize differences in elevation at the catchment borders 
-by lifting catchments, while respecting \code{zMin}. If \code{FALSE}, all outlet pixels have elevation equal to \code{zMin}.}
+by lifting catchments, while respecting \code{zMin}. If \code{FALSE}, all outlet pixels have elevation equal to \code{zMin}. 
+This option is not effective for OCNs generated via \code{\link{create_general_contour_OCN}}.}
 
 \item{optimMethod}{Optimization method used by function \code{\link{optim}} (only used if \code{optimizeDZ = TRUE}).}
 

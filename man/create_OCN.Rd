@@ -35,17 +35,18 @@ If \code{nOutlet > 1} is specified by the user and \code{outletSide}, \code{outl
 \code{"T"} (T-shaped drainage pattern); \code{"V"} (V-shaped drainage pattern); \code{"H"} (hip roof). Default value is set to \code{"I"}, unless when \code{nOutlet = "All"}, where default is \code{"H"}. 
 See Details for explanation on initial network state in the multiple outlet case.}
 
-\item{flowDirStart}{Matrix (dimY by dimX) with custom initial flow directions. Possible entries to \code{flowDirStart} are natural numbers between 1 and 8. 
-Key is as follows (capital letters indicate cardinal directions)
+\item{flowDirStart}{Matrix (\code{dimY} by \code{dimX}) with custom initial flow directions. 
+Possible entries to \code{flowDirStart} are natural numbers between 1 and 8, indicating direction of flow from one cell to the neighbouring one. 
+Key is as follows:
 \describe{
-\item{\code{1}}{E (+1 column)}
-\item{\code{2}}{SE (-1 row, +1 column)}
-\item{\code{3}}{S (-1 row)}
-\item{\code{4}}{SW (-1 row, -1 column)}
-\item{\code{5}}{W (-1 column)}
-\item{\code{6}}{NW (+1 row, -1 column)}
-\item{\code{7}}{N (+1 row)}
-\item{\code{8}}{ NE (+1 row, +1 column)}
+\item{\code{1}}{+1 column}
+\item{\code{2}}{-1 row, +1 column}
+\item{\code{3}}{-1 row}
+\item{\code{4}}{-1 row, -1 column}
+\item{\code{5}}{-1 column}
+\item{\code{6}}{+1 row, -1 column}
+\item{\code{7}}{+1 row}
+\item{\code{8}}{+1 row, +1 column}
 }}
 
 \item{expEnergy}{Exponent of the functional \code{sum(A^expEnergy)} that is minimized during the OCN search algorithm.}
