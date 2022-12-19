@@ -98,7 +98,7 @@ landscape_OCN <- function(OCN,
   
   
   # find altitude of secondary outlets with respect to altitude of the main outlet
-  if (optimizeDZ==TRUE & typeInitialState != "custom"){
+  if (optimizeDZ==TRUE & OCN$typeInitialState != "custom"){
     if (displayUpdates==1){message("Optimizing outlet elevations... \r", appendLF = FALSE)}
     if (length(OCN$FD$outlet)>1){ 
       if (optimControl$trace>0) {message("Optimizing outlet elevations...\n", appendLF = FALSE)}
