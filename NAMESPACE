@@ -1,5 +1,6 @@
 export(aggregate_OCN)
 export(continue_OCN)
+export(create_general_contour_OCN)
 export(create_OCN)
 export(create_peano)
 export(draw_contour_OCN)
