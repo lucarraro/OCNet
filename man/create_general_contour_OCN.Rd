@@ -2,7 +2,7 @@
 \alias{create_general_contour_OCN}
 \title{Create an Optimal Channel Network on a general contour}
 \usage{
-create_OCN(flowDirStart, expEnergy = 0.5,
+create_general_contour_OCN(flowDirStart, expEnergy = 0.5,
   cellsize = 1, xllcorner = 0.5 * cellsize, yllcorner = 0.5 *
   cellsize, nIter = NULL, nUpdates = 50,
   initialNoCoolingPhase = 0, coolingRate = 1,
