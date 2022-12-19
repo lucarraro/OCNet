@@ -35,7 +35,12 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
     if (length(colLevels)<3){N_colLevels <- 1000} else {N_colLevels <- colLevels[3]}
     
     if (is.null(colLevels)){
-      colLevels <- c(min(theme[!(is.nan(theme))]),max(theme[!(is.nan(theme))]),N_colLevels)
+      minval <- min(theme[!(is.nan(theme))])
+      maxval <- max(theme[!(is.nan(theme))])
+      if (is.na(minval) & is.na(maxval)){
+        minval <- 0; maxval <- 0;
+      }
+      colLevels <- c(minval,maxval,N_colLevels)
     }
     minval <- colLevels[1]
     maxval <- colLevels[2]
