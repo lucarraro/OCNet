@@ -18,6 +18,10 @@ draw_elev3D_OCN <- function(OCN,
     stop('coarseGrain[1] must be divisor of dimX; coarseGrain[2] must be divisor of dimY')
   }  
   
+  if (isTRUE(OCN$typeInitialState=="custom")){
+    stop('draw_elev2D_OCN does not work for OCNs created via create_general_contour_OCN')
+  }
+  
   Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
   Xvec <- seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize)
   Yvec <- seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize)

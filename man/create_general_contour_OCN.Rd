@@ -22,7 +22,7 @@ Cells within the catchment have natural numbers between 1 and 8. Key is as follo
 \item{\code{5}}{-1 column}
 \item{\code{6}}{+1 row, -1 column}
 \item{\code{7}}{+1 row}
-\item{\code{8}}{+1 row, +1 column)}
+\item{\code{8}}{+1 row, +1 column}
 }}
 
 \item{expEnergy}{Exponent of the functional \code{sum(A^expEnergy)} that is minimized during the OCN search algorithm.}
@@ -58,8 +58,8 @@ Note that, for large lattices, \code{showIntermediatePlots = TRUE} might slow do
 }}
 }
 \value{
-A list analogous to what is produced via \code{\link{create_OCN}}, to which the reader is referred for detailed documentation.
-However, note that \code{dimX} and \code{dimY} are equal to the number of columns and rows of \code{flowDirStart}, respectively, 
+A list as in \code{\link{create_OCN}}, to which the reader is referred for detailed documentation.
+However, note that in this case \code{dimX} and \code{dimY} are equal to the number of columns and rows of \code{flowDirStart}, respectively, 
 while \code{nNodes} is the number of non-\code{NaN} pixels in \code{flowDirStart}. Hence, \code{nNodes} is generally lower than
 \code{dimX*dimY}.
 }

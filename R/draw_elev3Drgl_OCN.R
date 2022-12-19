@@ -10,6 +10,10 @@ draw_elev3Drgl_OCN <- function(OCN,
   #aspect=c(1,1,0.1),
   #ColPalette=terrain.colors(1000,alpha=1),
   
+  if (isTRUE(OCN$typeInitialState=="custom")){
+    stop('draw_elev2D_OCN does not work for OCNs created via create_general_contour_OCN')
+  }
+  
   # give default values to unspecified arguments
   args.def <- list(aspect=c(OCN$dimX/sqrt(OCN$dimX*OCN$dimY),OCN$dimY/sqrt(OCN$dimX*OCN$dimY),0.1),axes=FALSE,xlab="",ylab="",zlab="")
   inargs <- list(...)
