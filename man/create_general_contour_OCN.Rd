@@ -6,8 +6,8 @@ create_general_contour_OCN(flowDirStart, expEnergy = 0.5,
   cellsize = 1, xllcorner = 0.5 * cellsize, yllcorner = 0.5 *
   cellsize, nIter = NULL, nUpdates = 50,
   initialNoCoolingPhase = 0, coolingRate = 1,
-  showIntermediatePlots = FALSE, thrADraw = 0.002 * dimX * dimY *
-  cellsize^2, easyDraw = NULL, saveEnergy = FALSE, saveExitFlag = FALSE,
+  showIntermediatePlots = FALSE, thrADraw = NULL, 
+  easyDraw = NULL, saveEnergy = FALSE, saveExitFlag = FALSE,
   displayUpdates = 1)
 }
 \arguments{
