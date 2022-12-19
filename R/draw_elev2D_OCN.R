@@ -7,7 +7,7 @@ draw_elev2D_OCN <- function(OCN,
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_elev2D_OCN.')
   }
   if (isTRUE(OCN$typeInitialState=="custom")){
-    stop('draw_elev2D_OCN does not work for OCNs created via create_general_contour_OCN')
+    stop('draw_elev2D_OCN is not currently implemented for OCNs created via create_general_contour_OCN')
   }
   
   # plot elevation map

@@ -7,6 +7,10 @@ draw_subcatchments_OCN <- function(OCN,
     stop('Missing fields in OCN. You should run aggregate_OCN prior to draw_subcatchments_OCN.')
   }
   
+  if (isTRUE(OCN$typeInitialState=="custom")){
+    stop('draw_elev2D_OCN is not currently implemented for OCNs created via create_general_contour_OCN')
+  }
+  
   ## Greedy algorithm for coloring subcatchment map
   ## Create list of nodes for the greedy algorithm
   W <- OCN$SC$W
