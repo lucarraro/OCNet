@@ -67,6 +67,9 @@ while \code{nNodes} is the number of non-\code{NaN} pixels in \code{flowDirStart
 Function that performs the OCN search algorithm on a general contour and creates OCN at the flow direction (FD) level.
 }
 \examples{
-OCN <- create_general_contour_OCN(flowDir)
+OCN1 <- create_general_contour_OCN(flowDir, nIter=0) # initial flow directions
+OCN2 <- create_general_contour_OCN(flowDir) # perform OCN algorithm
+draw_simple_OCN(OCN1)
+draw_simple_OCN(OCN2)
 }
 
