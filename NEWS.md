@@ -6,7 +6,7 @@
 
 ## Minor changes
 
-* `create_OCN`, `landscape_OCN`, `draw_elev2D_OCN`, `draw_elev3D_OCN`,`draw_elev3Drgl_OCN`, `draw_subcatchments_OCN` have been updated for consistence/compatibility with `create_general_contour_OCN`.
+* `create_OCN`, `landscape_OCN`, `aggregate_OCN`, `draw_elev2D_OCN`, `draw_elev3D_OCN`,`draw_elev3Drgl_OCN`, `draw_subcatchments_OCN` have been updated for consistence/compatibility with `create_general_contour_OCN`.
 * `draw_thematic_OCN`: default option for `theme` added; inverted order of input variables (with backward compatibility maintained); functioning of `colLevels` improved.
 
 # OCNet 0.5.1
