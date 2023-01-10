@@ -82,14 +82,14 @@ draw_contour_OCN <- function(OCN,
   
   if (EasyDraw==FALSE){
     for (i in AvailableNodes){
-      if (OCN$FD$A[i]<thrADraw & abs(XDraw[i]-XDraw[OCN$FD$downNode[i]]) <= OCN$cellsize & abs(YDraw[i]-YDraw[OCN$FD$downNode[i]]) <= OCN$cellsize) {
+      if (OCN$FD$A[i]<thrADraw & abs(XDraw[i]-XDraw[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize & abs(YDraw[i]-YDraw[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize) {
         lines(c(XDraw[i],XDraw[OCN$FD$downNode[i]]),c(YDraw[i],YDraw[OCN$FD$downNode[i]]),lwd=0.5,col="#E0E0E0")} 
     }
   }
   for (i in AvailableNodes){
     if (OCN$FD$A[i]>=thrADraw & 
-        abs(XDraw[i]-XDraw[OCN$FD$downNode[i]]) <= OCN$cellsize & 
-        abs(YDraw[i]-YDraw[OCN$FD$downNode[i]]) <= OCN$cellsize  ) {
+        abs(XDraw[i]-XDraw[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize & 
+        abs(YDraw[i]-YDraw[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize  ) {
       lines(c(XDraw[i],XDraw[OCN$FD$downNode[i]]),c(YDraw[i],YDraw[OCN$FD$downNode[i]]),
             lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=colPalRiver[OCN$FD$toCM[i]])}
   }
