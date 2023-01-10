@@ -45,9 +45,9 @@ create_OCN <- function(dimX,dimY,
   t0 <- Sys.time()
   if (displayUpdates==2){message('Initializing...\n', appendLF = FALSE)}
   
-  ################################## 
-  ## DEFINE INITIAL NETWORK STATE ##  
-  ##################################  
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%# 
+  # DEFINE INITIAL NETWORK STATE ####  
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#  
   
   if ((nOutlet=="All")==TRUE && is.null(typeInitialState)==TRUE){
     typeInitialState <- "H"
@@ -245,9 +245,9 @@ create_OCN <- function(dimX,dimY,
   #Wt <- as.spam.dgCMatrix(Wt)
   
   
-  ##########################
-  ## OCN SEARCH ALGORITHM ##  
-  ##########################  
+  #%%%%%%%%%%%%%%%%%%%%%%%%%#
+  # OCN SEARCH ALGORITHM ####  
+  #%%%%%%%%%%%%%%%%%%%%%%%%%#  
   
   # initialize energy and temperatures
   Energy <- numeric(nIter)
@@ -379,9 +379,10 @@ create_OCN <- function(dimX,dimY,
       }
     }
   }
-  ######################
-  ## EXPORT VARIABLES ##
-  ######################
+  
+  #%%%%%%%%%%%%%%%%%%%%%#
+  # EXPORT VARIABLES ####
+  #%%%%%%%%%%%%%%%%%%%%%#
   
   #W <- as.dgCMatrix.spam(t(Wt)) # ensure compatibility with other functions
   W <- t(Wt)
@@ -404,9 +405,9 @@ create_OCN <- function(dimX,dimY,
 }
 
 
-#########################################
-## AUXILIARY FUNCTION initialstate_OCN ##
-#########################################
+#%%%%%%%%%%%%%%%%%%%%%%%%#
+# AUXILIARY FUNCTIONS ####
+#%%%%%%%%%%%%%%%%%%%%%%%%#
 
 initialstate_OCN <- function(dimX,dimY,nOutlet,outletSide,outletPos,typeInitialState){
   

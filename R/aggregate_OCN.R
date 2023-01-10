@@ -1,6 +1,6 @@
 
 aggregate_OCN <- function(OCN,
-                          thrA=0.002*OCN$dimX*OCN$dimY*OCN$cellsize^2,
+                          thrA=0.002*OCN$FD$nNodes*OCN$cellsize^2,
                           streamOrderType="Strahler",
                           maxReachLength=Inf){
   
@@ -13,9 +13,9 @@ aggregate_OCN <- function(OCN,
   }
   #t1 <- Sys.time()
   
-  ###############################
-  ## BUILD NETWORK AT RN LEVEL ##
-  ###############################
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+  # BUILD NETWORK AT RN LEVEL ####
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
   
   #print('Crop data at FD level to RN level...',quote=FALSE); 
   RN_mask <- as.vector(OCN$FD$A >= thrA)# RN_mask allows to sample RN-level values from matrices/vectors at FD level   
@@ -87,9 +87,9 @@ aggregate_OCN <- function(OCN,
   }
   
   
-  ###############################
-  ## BUILD NETWORK AT AG LEVEL ##
-  ###############################
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+  # BUILD NETWORK AT AG LEVEL ####
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
   
   # Vector that attributes reach ID to all river network pixels
   #print('Define nodes of aggregated network...',quote=FALSE); 
@@ -197,9 +197,9 @@ aggregate_OCN <- function(OCN,
     SC_to_FD[[k]] <- c(SC_to_FD[[k]],sub_p)
   }
   
-  ######################################
-  ## CALCULATE PROPERTIES AT AG LEVEl ##
-  ######################################
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+  # CALCULATE PROPERTIES AT AG LEVEL ####
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
   
   #print('W matrix at AG level...',quote=FALSE); 
   # Adjacency matrix at reach level
@@ -283,9 +283,9 @@ aggregate_OCN <- function(OCN,
   }
   
   
-  ######################################
-  ## CALCULATE PROPERTIES AT SC LEVEL ##
-  ######################################
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+  # CALCULATE PROPERTIES AT SC LEVEL ####
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
   
   #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE) 
   #t1 <- Sys.time()
@@ -370,9 +370,9 @@ aggregate_OCN <- function(OCN,
   }
   
   
-  ######################
-  ## EXPORT VARIABLES ##
-  ######################
+  #%%%%%%%%%%%%%%%%%%%%%#
+  # EXPORT VARIABLES ####
+  #%%%%%%%%%%%%%%%%%%%%%#
   
   #FD level
   OCN$FD[["toRN"]] <- FD_to_RN

@@ -2,7 +2,7 @@
 \alias{aggregate_OCN}
 \title{Aggregate an Optimal Channel Network}
 \usage{
-aggregate_OCN(OCN, thrA = 0.002 * OCN$dimX * OCN$dimY *
+aggregate_OCN(OCN, thrA = 0.002 * OCN$nNodes *
   OCN$cellsize^2, streamOrderType = "Strahler", maxReachLength = Inf)
 }
 \arguments{
