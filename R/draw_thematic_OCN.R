@@ -56,6 +56,9 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
   if (typeof(colPalette)=="closure") {
     colPalette <- colPalette(N_colLevels)
   } else if (typeof(colPalette)=="character") {
+    if (length(colPalette) < N_colLevels){
+      stop(sprintf('Length of colPalette (%d) is lower than number of colors (%d).',length(colPalette),N_colLevels))
+    }
     colPalette <- colPalette[1:N_colLevels] }
   
   if (length(theme)==OCN$RN$nNodes && (length(theme)==OCN$AG$nNodes)){
