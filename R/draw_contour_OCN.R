@@ -1,6 +1,6 @@
 
 draw_contour_OCN <- function(OCN,
-                             thrADraw=0.002*OCN$dimX*OCN$dimY*OCN$cellsize^2,
+                             thrADraw=0.002*OCN$FD$nNodes*OCN$cellsize^2,
                              exactDraw=TRUE,
                              drawContours=TRUE,
                              colPalRiver=NULL,
