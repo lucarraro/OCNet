@@ -151,8 +151,8 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
     rn <- OCN$FD$toRN[i]
     reach <- OCN$RN$toAGReach[OCN$FD$toRN[i]]
     if (OCN$FD$A[i]>=OCN$thrA & 
-        abs(X[i]-X[OCN$FD$downNode[i]]) <= OCN$cellsize & 
-        abs(Y[i]-Y[OCN$FD$downNode[i]]) <= OCN$cellsize  ) {
+        abs(X[i]-X[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize & 
+        abs(Y[i]-Y[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize  ) {
       if ( (byRN==TRUE && (is.nan(theme[rn])==TRUE | is.na(theme[rn])==TRUE)) ||
            (byRN==FALSE && (is.nan(theme[reach])==TRUE | is.na(theme[reach])==TRUE)) ||
            (byRN==TRUE && cutoff==TRUE && (theme[rn] < min(Breakpoints) || theme[rn] > max(Breakpoints))) ||
