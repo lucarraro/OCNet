@@ -43,3 +43,4 @@ Suggests:
     rmarkdown,
     bookdown
 VignetteBuilder: knitr
+URL: https://lucarraro.github.io/OCNet/
