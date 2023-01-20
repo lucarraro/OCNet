@@ -3,6 +3,8 @@
 ## Major changes
 
 * `create_general_contour_OCN`: function added. 
+* `draw_thematic_OCN`: `...` argument and relative example added.
+* `aggregate_OCN`: `breakpoints` argument and relative example added.
 
 ## Minor changes
 

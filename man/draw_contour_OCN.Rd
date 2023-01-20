@@ -2,7 +2,7 @@
 \alias{draw_contour_OCN}
 \title{Draw Optimal Channel Network with catchment contours}
 \usage{
-draw_contour_OCN(OCN, thrADraw = 0.002 * OCN$dimX * OCN$dimY *
+draw_contour_OCN(OCN, thrADraw = 0.002 * OCN$FD$nNodes *
   OCN$cellsize^2, exactDraw = TRUE, drawContours = TRUE, colPalRiver = NULL, 
   colPalCont = "#000000", drawOutlets = 0, pch = 15, colPalOut = "#000000")
 }

@@ -2,8 +2,9 @@
 \alias{aggregate_OCN}
 \title{Aggregate an Optimal Channel Network}
 \usage{
-aggregate_OCN(OCN, thrA = 0.002 * OCN$nNodes *
-  OCN$cellsize^2, streamOrderType = "Strahler", maxReachLength = Inf)
+aggregate_OCN(OCN, thrA = 0.002 * OCN$FD$nNodes *
+  OCN$cellsize^2, streamOrderType = "Strahler", maxReachLength = Inf,
+  breakpoints = NULL)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{landscape_OCN}}.}
@@ -17,6 +18,10 @@ such as \code{OCN$AG$streamOrder}.}
 \item{maxReachLength}{Maximum reach length allowed (in planar units). If the path length between a channel head and the downstream confluence 
 is higher than \code{maxReachLength}, the reach starting from the channel head will have a length up to \code{maxReachLength}, while the next downstream 
 pixel is considered as a new channel head, from which a new reach departs.}
+
+\item{breakpoints}{Indices of additional nodes at the RN level that should be also nodes at the AG level (beyond source, confluence, outlet nodes 
+and AG nodes determined via \code{maxReachLength}). To determine such indices, a preliminary run of \code{aggregate_OCN} with the same \code{thrA} 
+would be required (see example 3).}
 }
 \value{
 A list that contains all objects contained in \code{OCN}, in addition to the objects listed below. 
@@ -137,4 +142,14 @@ title(paste("No. AG nodes = ", as.character(OCN_c$AG$nNodes),
 		sep=""))
 par(old.par)
 }
+
+# 3) use of breakpoints
+OCN <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 5)
+draw_thematic_OCN(OCN, drawNodes=TRUE)
+# add an AG node downstream of node 1 at AG level
+new_node_RN <- OCN$RN$downNode[OCN$AG$toRN[1]]
+OCN2 <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 5, breakpoints = new_node_RN)
+draw_thematic_OCN(OCN2, drawNodes = TRUE)
+points(OCN$RN$X[new_node_RN], OCN$RN$Y[new_node_RN], 
+	pch = 19, col = "red") # this node has been added
 }

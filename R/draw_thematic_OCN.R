@@ -11,10 +11,20 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
                               nodeType="upstream",
                               cex=2,
                               pch=21,
-                              nanColor="#0099FF",
-                              riverColor="#0099FF",
+                              nanColor="#00BFFF",
+                              riverColor="#00BFFF",
                               backgroundColor="#999999",
-                              addLegend=TRUE){
+                              addLegend=TRUE,
+                              ...){
+  
+  dots <- list(...)
+  if (is.null(dots$axes)){
+    if ("xlim" %in% names(dots) | "ylim" %in% names(dots)) {dots$axes <- TRUE} else {dots$axes <- FALSE}}
+  if (is.null(dots$xlab)){dots$xlab <- ""}
+  if (is.null(dots$ylab)){dots$ylab <- ""}
+  if (is.null(dots$type)){dots$type <- "n"}
+  if (is.null(dots$asp)){dots$asp <- 1}
+
   
   # initialization
   if (!("RN" %in% names(OCN))){ # try to swap arguments if in wrong order
@@ -77,22 +87,6 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
     stop('theme has invalid length')
   }
   
-  
-  #  tmp <- "TMP"
-  #  if (length(theme)==OCN$RN$nNodes && (length(theme)==OCN$AG$nNodes)){
-  #    while ((tmp != "RN") && (tmp != "AG"))
-  #      tmp <- readline(prompt="theme can be interpreted as a vector both at the RN and AG levels. Choose desired level by typing RN or AG: ")
-  #    if (tmp == "RN"){
-  #      byRN = TRUE
-  #    } else if (tmp == "AG"){
-  #      byRN = FALSE
-  #    } else {
-  #      print('Wrong input!')
-  #    }
-  #  } 
-  
-  
-  
   if (length(cex)>1 && length(cex) != length(theme)){
     stop('cex has invalid length')
   }
@@ -128,12 +122,19 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
   } else {pch_vec <- pch}
   
   AvailableNodes <- setdiff(which(OCN$FD$toCM %in% chooseCM),OCN$FD$outlet)
-  #old.par <- par(no.readonly = TRUE)
-  #on.exit(par(old.par))
-  #par(bty="n")
-  plot(c(min(X[OCN$FD$toCM %in% chooseCM]),max(X[OCN$FD$toCM %in% chooseCM])),
-       c(min(Y[OCN$FD$toCM %in% chooseCM]),max(Y[OCN$FD$toCM %in% chooseCM])),
-       type="n",xlab=" ",ylab=" ",axes=FALSE,asp=1)
+
+  if (is.null(dots$xlim)){ dots$xlim <- c(min(X[OCN$FD$toCM %in% chooseCM]),max(X[OCN$FD$toCM %in% chooseCM])) }
+  if (is.null(dots$ylim)){ dots$ylim <- c(min(Y[OCN$FD$toCM %in% chooseCM]),max(Y[OCN$FD$toCM %in% chooseCM])) }
+  dots$x <- dots$xlim
+  dots$y <- dots$ylim
+  
+  do.call(plot, dots)
+              
+  xy_lim <- par("usr")
+  
+  # plot(c(min(X[OCN$FD$toCM %in% chooseCM]),max(X[OCN$FD$toCM %in% chooseCM])),
+  #      c(min(Y[OCN$FD$toCM %in% chooseCM]),max(Y[OCN$FD$toCM %in% chooseCM])),
+  #      type="n",xlab=" ",ylab=" ",axes=FALSE,asp=1)
   
   if (!is.null(backgroundColor)){
     if ((length(chooseCM) > 1) && (length(backgroundColor)==1) ){
@@ -149,10 +150,14 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
   
   for (i in AvailableNodes){
     rn <- OCN$FD$toRN[i]
-    reach <- OCN$RN$toAGReach[OCN$FD$toRN[i]]
+    reach <- OCN$RN$toAGReach[rn]
     if (OCN$FD$A[i]>=OCN$thrA & 
         abs(X[i]-X[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize & 
-        abs(Y[i]-Y[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize  ) {
+        abs(Y[i]-Y[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize &
+        X[i] >= xy_lim[1]-1*OCN$cellsize &
+        X[i] <= xy_lim[2]+1*OCN$cellsize &
+        Y[i] >= xy_lim[3]-1*OCN$cellsize & 
+        Y[i] <= xy_lim[4]+1*OCN$cellsize) {
       if ( (byRN==TRUE && (is.nan(theme[rn])==TRUE | is.na(theme[rn])==TRUE)) ||
            (byRN==FALSE && (is.nan(theme[reach])==TRUE | is.na(theme[reach])==TRUE)) ||
            (byRN==TRUE && cutoff==TRUE && (theme[rn] < min(Breakpoints) || theme[rn] > max(Breakpoints))) ||
@@ -164,10 +169,6 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
         colvalue <- which(Breakpoints > val)[1] - 1  
         if (isTRUE(colvalue==0)) {colvalue <- 1}
         if (is.na(colvalue)) {colvalue <- N_colLevels}
-        # if (byRN==TRUE){
-        #   
-        #   colvalue <- 1+round((N_colLevels-1)*max(0,min(1,(theme[rn]-minval)/(maxval-minval))))
-        # } else {colvalue <- 1+round((N_colLevels-1)*max(0,min(1,(theme[reach]-minval)/(maxval-minval))))}
         
         hexcolor <- colPalette[colvalue]
       }

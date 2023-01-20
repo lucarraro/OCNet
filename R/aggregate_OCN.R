@@ -2,7 +2,8 @@
 aggregate_OCN <- function(OCN,
                           thrA=0.002*OCN$FD$nNodes*OCN$cellsize^2,
                           streamOrderType="Strahler",
-                          maxReachLength=Inf){
+                          maxReachLength=Inf,
+                          breakpoints=NULL){
   
   if (!("slope" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to aggregate_OCN.')
@@ -59,6 +60,7 @@ aggregate_OCN <- function(OCN,
   
   OutletNotChannelHead <- (DownNode_RN==0)&(!ChannelHeads)
   IsNodeAG <- SourceOrConfluence|OutletNotChannelHead
+  IsNodeAG[breakpoints] <- TRUE
   whichNodeAG <- which(IsNodeAG)
   
   # Calculate slope for each pixel of the river network 

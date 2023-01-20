@@ -8,9 +8,9 @@ draw_thematic_OCN(OCN,theme=NA*numeric(OCN$AG$nNodes),
   colLevels = NULL, cutoff = FALSE,
   colPalette = colorRampPalette(c("yellow","red","black")),
   exactDraw = FALSE, chooseCM = FALSE, drawNodes = FALSE,  
-  nodeType = "upstream", cex = 2, pch = 21, nanColor = "#0099FF",
-  riverColor = "#0099FF", backgroundColor = "#999999", 
-  addLegend = TRUE)
+  nodeType = "upstream", cex = 2, pch = 21, nanColor = "#00BFFF",
+  riverColor = "#00BFFF", backgroundColor = "#999999", 
+  addLegend = TRUE, ...)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{aggregate_OCN}}. The order of arguments between \code{OCN} and \code{theme} can be swapped freely.}
@@ -53,6 +53,8 @@ equal to \code{length(chooseCM)}. If \code{length(backgroundColor) == length(cho
 \code{backgroundColor}.}
 
 \item{addLegend}{Logical. If \code{TRUE}, add legend to the plot. If also \code{discreteLevels = FALSE}, \code{\link{image.plot}} is used to display the legend, which appears as a colorbar; as a result, elements (e.g. node coordinates) subsequently plotted of on top of the 2D elevation map might be wrongly positioned. }
+
+\item{...}{Further arguments to be passed to \code{plot}.}
 }
 \value{
 No output is returned.
@@ -62,6 +64,8 @@ Function that draws OCNs with color of RN or AG nodes depending on an arbitrary 
 }
 \details{
 This function can be used to show how a certain spatial field varies along the river network.
+
+\emph{Default plot options.} By default, it is set \code{asp = 1}, \code{xlab = ""}, \code{ylab = ""}. If at least one between \code{xlim} and \code{ylim} is specified by the user, the default for \code{axes} is \code{TRUE}, and is \code{FALSE} if not. Specifying \code{xlim} and \code{ylim} helps zoom into a portion of the river network; however, due to the default \code{asp = 1}, the displayed region might be larger than what is expected if the ranges of \code{xlim} and \code{ylim} are different. To avoid this, set \code{asp = NA} (at the cost of producing a deformed river network).
 }
 \examples{
 # 1a) Six different ways to display contributing area at the AG level
@@ -107,7 +111,7 @@ par(old.par)
 # 2) Display distance to outlet (at the RN level) along the main stem
 # of an OCN
 OCN <- aggregate_OCN(landscape_OCN(OCN_250_T)) # this takes some seconds
-OCN <- paths_OCN(OCN, pathsRN = TRUE) # this takes some seconds
+OCN <- paths_OCN(OCN, includePaths = TRUE) # this takes some seconds
 
 distanceToOutlet <- OCN$RN$downstreamPathLength[,OCN$RN$outlet]
 farthestNode <- which(distanceToOutlet == max(distanceToOutlet))
@@ -118,4 +122,10 @@ theme[mainStem] <- distanceToOutlet[mainStem]
 draw_thematic_OCN(theme, OCN)
 title("Distance to outlet along the main stem [pixel units]")
 }
+
+# 3) Show an OCN without a theme
+OCN <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 4)
+draw_thematic_OCN(OCN)
+draw_thematic_OCN(OCN, xlim=c(3,8), ylim=c(0,5))# zoom closer at the outlet
+
 }

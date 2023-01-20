@@ -2,7 +2,7 @@
 \alias{draw_simple_OCN}
 \title{Draw an Optimal Channel Network}
 \usage{
-draw_simple_OCN(OCN, thrADraw = 0.002 * OCN$dimX * OCN$dimY *
+draw_simple_OCN(OCN, thrADraw = 0.002 * OCN$FD$nNodes *
   OCN$cellsize^2, riverColor = "#0066FF", easyDraw = NULL)
 }
 \arguments{
