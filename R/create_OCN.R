@@ -305,7 +305,10 @@ create_OCN <- function(dimX,dimY,
       Energy_new <- 100*Energy_0
       node <- sample(AvailableNodes,1)
       # change downstream connection from chosen node
-      down_new <- sample(NeighbouringNodes[[node]][NeighbouringNodes[[node]]!=DownNode[node]],1) # sample one node from list of neighbouring nodes, excluding the one that was previously connected to node
+      tmp <- NeighbouringNodes_FD[[node]][NeighbouringNodes_FD[[node]]!=DownNode[node]]
+      if (length(tmp)==1){tmp <- c(tmp,tmp)} # patch for sample's surprise
+      if (length(tmp)==0){tmp <- c(node,node)} # patch for no alternative directions
+      down_new <- sample(tmp,1) # sample one node from list of neighbouring nodes, excluding the one that was previously connected to node
       
       ind1 <- (X[NeighbouringNodes[[node]]]==X[node] & Y[NeighbouringNodes[[node]]]==Y[down_new])
       Node1 <- NeighbouringNodes[[node]][ind1]

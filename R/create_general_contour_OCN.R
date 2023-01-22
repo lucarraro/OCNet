@@ -203,7 +203,10 @@ if (nIter > 1){
     node <- sample(AvailableNodes,1)
     
     # change downstream connection from chosen node
-    down_new <- sample(NeighbouringNodes_FD[[node]][NeighbouringNodes_FD[[node]]!=DownNode[node]],1) # sample one node from list of neighbouring nodes, excluding the one that was previously connected to node
+    tmp <- NeighbouringNodes_FD[[node]][NeighbouringNodes_FD[[node]]!=DownNode[node]]
+    if (length(tmp)==1){tmp <- c(tmp,tmp)} # patch for sample's surprise
+    if (length(tmp)==0){tmp <- c(node,node)} # patch for no alternative directions
+    down_new <- sample(tmp,1) # sample one node from list of neighbouring nodes, excluding the one that was previously connected to node
     
     ind1 <- (X[NeighbouringNodes_FD[[node]]]==X[node] & Y[NeighbouringNodes_FD[[node]]]==Y[down_new])
     Node1 <- NeighbouringNodes_FD[[node]][ind1]
