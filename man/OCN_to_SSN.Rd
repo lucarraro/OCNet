@@ -12,10 +12,10 @@ OCN_to_SSN(OCN, level, obsDesign,
 must be equal to either \code{"FD"}, \code{"RN"} or \code{"AG"}.}
 
 \item{obsDesign}{Same as the argument of the same name in \code{\link{createSSN}}.
-Note that the length of the argument of the design function must be equal to \code{OCN$N_outlet}.}
+Note that the length of the argument of the design function must be equal to \code{OCN$nOutlet}.}
 
 \item{predDesign}{Same as the argument of the same name in \code{\link{createSSN}}. Note that, if
-a design function is specified, the length of its argument must be equal to \code{OCN$N_outlet}.}
+a design function is specified, the length of its argument must be equal to \code{OCN$nOutlet}.}
 
 \item{path}{Same as the argument of the same name in \code{\link{createSSN}}.}
 
@@ -29,15 +29,15 @@ Function that transforms an OCN into a SpatialStreamNetwork object. It is analog
 \code{\link{createSSN}} from package \code{\link{SSN}}.
 }
 \details{
-The generated SpatialStreamNetwork object consists of \code{OCN$N_outlet} networks. Note that an 
+The generated SpatialStreamNetwork object consists of \code{OCN$nOutlet} networks. Note that an 
 error is thrown if, at the selected aggregation \code{level}, at least one of these networks is degenerate
 (i.e. it has less than two nodes). This is typically the case for OCNs generated with option 
-\code{N_outlet = "All"}.
+\code{nOutlet = "All"}.
 
-If \code{OCN$PeriodicBoundaries == FALSE}, nodes' locations in the SpatialStreamNetwork object are 
+If \code{OCN$periodicBoundaries == FALSE}, nodes' locations in the SpatialStreamNetwork object are 
 given by the lattice coordinates (i.e. \code{OCN$level$X}, \code{OCN$level$Y}); if 
-\code{OCN$PeriodicBoundaries == TRUE}, real coordinates are used (i.e. those defined by
- \code{OCN$FD$X_draw}, \code{OCN$FD$Y_draw}, see \code{\link{landscape_OCN}}).}
+\code{OCN$periodicBoundaries == TRUE}, real coordinates are used (i.e. those defined by
+ \code{OCN$FD$Xdraw}, \code{OCN$FD$Ydraw}, see \code{\link{landscape_OCN}}).}
 \examples{
 # transform a 20x20 single-outlet OCN (aggregated at the AG level)
 # into a SSN object and plot it
