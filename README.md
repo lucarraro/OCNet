@@ -1,4 +1,7 @@
 # OCNet
+
+<img align="right" width="250" src="man/figures/OCNet_logo.png">
+
 An R-package to generate and analyze Optimal Channel Networks
 
 [![Linux Build Status](https://travis-ci.com/lucarraro/OCNet.svg?branch=master)](https://travis-ci.com/lucarraro/OCNet.svg?branch=master)
