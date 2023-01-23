@@ -14,10 +14,14 @@ draw_elev2D_OCN <- function(OCN,
   #old.par <- par(no.readonly =TRUE) 
   #on.exit(par(old.par))
   #par(bty="n")
+  
+  if (is.null(OCN$xllcorner)){xllcorner <- min(OCN$FD$x)} else {xllcorner <- OCN$xllcorner}
+  if (is.null(OCN$yllcorner)){yllcorner <- min(OCN$FD$Y)} else {yllcorner <- OCN$yllcorner}
+  
   Zmat<-matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
   if (addLegend==TRUE){
-  image.plot(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),
-             seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize),
+  image.plot(seq(xllcorner,xllcorner+OCN$dimX*OCN$cellsize,OCN$cellsize),
+             seq(yllcorner,yllcorner+OCN$dimY*OCN$cellsize,OCN$cellsize),
              t(Zmat),col=colPalette,xlab=" ",ylab=" ",axes=FALSE,asp=1)
   } else {
     image(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),

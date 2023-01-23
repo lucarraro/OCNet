@@ -285,7 +285,7 @@ W <- t(Wt)
 FD <- list(A=A*cellsize^2,W=W,downNode=DownNode,X=X,Y=Y,nNodes=Nnodes_FD,outlet=OutletPixel,perm=pl,toDEM=FD_to_DEM)
 OCN <- list(FD=FD,dimX=dimX,dimY=dimY,cellsize=cellsize,nOutlet=nOutlet,periodicBoundaries=periodicBoundaries,
             expEnergy=expEnergy,coolingRate=coolingRate,typeInitialState=typeInitialState,nIter=nIter,initialNoCoolingPhase=initialNoCoolingPhase,
-            energyInit=Energy_0)
+            energyInit=Energy_0,xllcorner=xllcorner,yllcorner=yllcorner)
 
 if (saveEnergy==TRUE) {OCN[["energy"]] <- Energy}
 if (saveExitFlag==TRUE) {OCN[["exitFlag"]] <- ExitFlag}
