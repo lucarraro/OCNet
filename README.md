@@ -1,6 +1,6 @@
-# OCNet
-
 <img align="right" width="250" src="man/figures/OCNet_logo.png">
+
+# OCNet
 
 An R-package to generate and analyze Optimal Channel Networks
 
