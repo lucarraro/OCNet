@@ -48,7 +48,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">draw_subcatchments_OCN</span><span class="op">(</span><span class="va">OCN</span>, drawRiver <span class="op">=</span> <span class="cn">TRUE</span>, colPalette <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">draw_subcatchments_OCN</span><span class="op">(</span><span class="va">OCN</span>, drawRiver <span class="op">=</span> <span class="cn">TRUE</span>, colPalette <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -64,12 +64,20 @@
 <dt>colPalette</dt>
 <dd><p>Color palette used. Default is <code>c("#009900", "#FFFF00",  "#FF9900", "#FF0000", "#FF00FF",  "#9900CC", "#555555", "#BBBBBB")</code>. Only the first <code>n</code> colors are used, where <code>n</code> is the number of different colors needed (calculated via a greedy coloring algorithm). <code>colPalette</code> accepts both functions creating color palettes and vectors of colors (see examples); in the latter case, the length of the vector cannot be lower than <code>n</code> (<code>n</code> cannot be predicted a priori, but generally 6 colors should suffice).</p></dd>
 
+
+<dt>...</dt>
+<dd><p>Further arguments to be passed to <code>plot</code>. Default plot options are as in <code>draw_thematic_OCN</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
 <p>No output is returned.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="draw_thematic_OCN.html">draw_thematic_OCN</a></code></p></div>
     </div>
 
     <div class="section level2">
