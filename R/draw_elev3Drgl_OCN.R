@@ -4,15 +4,12 @@ draw_elev3Drgl_OCN <- function(OCN,
                                chooseCM=FALSE,
                                addColorbar=FALSE,
                                drawRiver=FALSE,
-                               thrADraw=0.002*OCN$dimX*OCN$dimY*OCN$cellsize^2,
+                               thrADraw=0.002*OCN$FD$nNodes*OCN$cellsize^2,
                                riverColor="#00CCFF",
                                ...){
   #aspect=c(1,1,0.1),
   #ColPalette=terrain.colors(1000,alpha=1),
   
-  if (isTRUE(OCN$typeInitialState=="custom")){
-    stop('draw_elev3Drgl_OCN is not currently implemented for OCNs created via create_general_contour_OCN')
-  }
   
   # give default values to unspecified arguments
   args.def <- list(aspect=c(OCN$dimX/sqrt(OCN$dimX*OCN$dimY),OCN$dimY/sqrt(OCN$dimX*OCN$dimY),0.1),axes=FALSE,xlab="",ylab="",zlab="")
@@ -31,11 +28,19 @@ draw_elev3Drgl_OCN <- function(OCN,
     stop('coarseGrain[1] must be divisor of dimX; coarseGrain[2] must be divisor of dimY')
   }   
   
-  if ( !chooseCM || OCN$CM$A[chooseCM] == OCN$dimX*OCN$dimY*OCN$cellsize^2){ 
+  if ( (!chooseCM || OCN$CM$A[chooseCM] == OCN$nNodes*OCN$cellsize^2) && OCN$FD$nNodes==OCN$dimX*OCN$dimY){ 
     
-    Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
-    Xvec <- seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize)
-    Yvec <- seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize)
+    if (is.null(OCN$xllcorner)){xllcorner <- min(OCN$FD$X)[1]} else {xllcorner <- OCN$xllcorner}
+    if (is.null(OCN$yllcorner)){yllcorner <- min(OCN$FD$Y)[1]} else {yllcorner <- OCN$yllcorner}
+    
+    if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){
+      Zmat <- matrix(NaN,OCN$dimY,OCN$dimX)
+      Zmat[OCN$FD$toDEM] <- OCN$FD$Z
+      Zmat <- Zmat[seq(OCN$dimY,1,-1),]
+    } else {Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)}
+    
+    Xvec <- seq(xllcorner,xllcorner+(OCN$dimX-1)*OCN$cellsize,OCN$cellsize)
+    Yvec <- seq(yllcorner,yllcorner+(OCN$dimY-1)*OCN$cellsize,OCN$cellsize)
     
     Z_cg <- matrix(data=0,nrow=OCN$dimY/coarseGrain[2],ncol=OCN$dimX/coarseGrain[1])
     X_cg <- rep(0,OCN$dimX/coarseGrain[1])
@@ -46,16 +51,16 @@ draw_elev3Drgl_OCN <- function(OCN,
       X_cg[i] <- mean(Xvec[subX])
       for (j in 1:(OCN$dimY/coarseGrain[2])){
         subY <- ((j-1)*coarseGrain[2]+1):(j*coarseGrain[2])
-        Z_cg[j,i] <- mean(Zmat[subY,subX])
+        Z_cg[j,i] <- mean(Zmat[subY,subX],na.rm=T)
         Y_cg[j] <- mean(Yvec[subY])
       }
     }
     
     par3d(windowRect = c(0, 30, 1000, 1000))
-    Zmat <- Zmat + 0.005*mean(Zmat)
-    zlim <- range(Zmat)
+    Zmat <- Zmat + 0.005*mean(Zmat,na.rm=T)
+    zlim <- range(Zmat, na.rm=T)
     
-    zlim[1] <- floor(zlim[1]- 0.005*mean(Zmat)); zlim[2] <- ceiling(zlim[2]) 
+    zlim[1] <- floor(zlim[1]- 0.005*mean(Zmat,na.rm=T)); zlim[2] <- ceiling(zlim[2]) 
     zlen <- zlim[2] - zlim[1] + 1
     colorlut <- terrain.colors(zlen) # height color lookup table
     col <- colorlut[ t(Z_cg) - zlim[1] + 1 ] # assign colors to heights for each point
@@ -96,7 +101,7 @@ draw_elev3Drgl_OCN <- function(OCN,
     
   } else {
     
-    if (chooseCM==TRUE && is.logical(chooseCM)){
+    if (is.logical(chooseCM)){
       chooseCM <- which(OCN$CM$A==max(OCN$CM$A))
     }
     
@@ -104,15 +109,23 @@ draw_elev3Drgl_OCN <- function(OCN,
       
       mask <- which(OCN$FD$toCM!=chooseCM)
       
-      Xvec <- seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize)
-      Yvec <- seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize)
+      if (is.null(OCN$xllcorner)){xllcorner <- min(OCN$FD$X)[1]} else {xllcorner <- OCN$xllcorner}
+      if (is.null(OCN$yllcorner)){yllcorner <- min(OCN$FD$Y)[1]} else {yllcorner <- OCN$yllcorner}
       
-      Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
+      if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){
+        Zmat <- matrix(NaN,OCN$dimY,OCN$dimX)
+        Zmat[OCN$FD$toDEM] <- OCN$FD$Z
+        Zmat <- Zmat[seq(OCN$dimY,1,-1),]
+      } else {Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)}
+      
+      Xvec <- seq(xllcorner,xllcorner+(OCN$dimX-1)*OCN$cellsize,OCN$cellsize)
+      Yvec <- seq(yllcorner,yllcorner+(OCN$dimY-1)*OCN$cellsize,OCN$cellsize)
+      
       Zmat2 <- Zmat
       Zmat2[mask] <- NaN
       
       par3d(windowRect = c(0, 30, 1000, 1000))
-      zlim <- range(Zmat)
+      zlim <- range(Zmat,na.rm = T)
       zlim[1] <- floor(zlim[1]); zlim[2] <- ceiling(zlim[2]) 
       zlen <- zlim[2] - zlim[1] + 1
       colorlut <- terrain.colors(zlen) # height color lookup table

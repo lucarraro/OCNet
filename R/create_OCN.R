@@ -393,7 +393,7 @@ create_OCN <- function(dimX,dimY,
   FD <- list(A=A*cellsize^2,W=W,downNode=DownNode,X=X,Y=Y,nNodes=Nnodes,outlet=OutletPixel,perm=pl)
   OCN <- list(FD=FD,dimX=dimX,dimY=dimY,cellsize=cellsize,nOutlet=nOutlet,periodicBoundaries=periodicBoundaries,
               expEnergy=expEnergy,coolingRate=coolingRate,typeInitialState=typeInitialState,nIter=nIter,initialNoCoolingPhase=initialNoCoolingPhase,
-              energyInit=Energy_0)
+              energyInit=Energy_0,xllcorner=xllcorner,yllcorner=yllcorner)
   
   if (saveEnergy==TRUE) {OCN[["energy"]] <- Energy}
   if (saveExitFlag==TRUE) {OCN[["exitFlag"]] <- ExitFlag}

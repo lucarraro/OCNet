@@ -7,9 +7,6 @@ draw_subcatchments_OCN <- function(OCN,
     stop('Missing fields in OCN. You should run aggregate_OCN prior to draw_subcatchments_OCN.')
   }
   
-  if (isTRUE(OCN$typeInitialState=="custom")){
-    stop('draw_subcatchments_OCN is not currently implemented for OCNs created via create_general_contour_OCN')
-  }
   
   ## Greedy algorithm for coloring subcatchment map
   ## Create list of nodes for the greedy algorithm
@@ -45,9 +42,17 @@ draw_subcatchments_OCN <- function(OCN,
   }
   
   ## plot subcatchment map
-  Color_SC <- matrix(data=OCN$FD$toSC,nrow=OCN$dimY,ncol=OCN$dimX)
+  kol <- numeric(OCN$FD$nNodes)
   for (k in 1:OCN$SC$nNodes){
-    Color_SC[OCN$SC$toFD[[k]]] <- ColorID[k]
+    kol[OCN$SC$toFD[[k]]] <- ColorID[k]
+  }
+  
+  if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){
+    Color_SC <- matrix(NaN,OCN$dimY,OCN$dimX)
+    Color_SC[OCN$FD$toDEM] <- kol
+    Color_SC <- Color_SC[seq(OCN$dimY,1,-1),]
+  } else {
+    Color_SC <- matrix(data=kol,nrow=OCN$dimY,ncol=OCN$dimX)
   }
   
   
@@ -68,12 +73,17 @@ draw_subcatchments_OCN <- function(OCN,
     colPalette <- colPalette[1:length(ColorList)]
   }
   
+  if (is.null(OCN$xllcorner)){xllcorner <- min(OCN$FD$X)[1]} else {xllcorner <- OCN$xllcorner}
+  if (is.null(OCN$yllcorner)){yllcorner <- min(OCN$FD$Y)[1]} else {yllcorner <- OCN$yllcorner}
+  
+  Xvec <- seq(xllcorner,xllcorner+(OCN$dimX-1)*OCN$cellsize,OCN$cellsize)
+  Yvec <- seq(yllcorner,yllcorner+(OCN$dimY-1)*OCN$cellsize,OCN$cellsize)
+  
   #old.par <- par(no.readonly = TRUE)
   #on.exit(par(old.par))
   #par(bty="n")
-  image(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),
-        seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize),
-        t(Color_SC),col=colPalette,xlab=" ",ylab=" ",asp=1,axes=FALSE)
+  image(Xvec, Yvec,
+        t(Color_SC),col=colPalette,xlab=" ",ylab=" ",asp=1, axes=FALSE) #
   # attributing colors in reverse order should increase overall contrast
   
   if (drawRiver==TRUE){

@@ -115,8 +115,8 @@ It is saved only if \code{saveN4 = TRUE}.}
 between pixels: \code{N8$W[i,j] = 1} if pixel \code{j} shares an edge or a vertex with \code{i}, and is null otherwise. 
 It is saved only if \code{saveN8 = TRUE}.}  
 Finally, \code{dimX}, \code{dimY}, \code{cellsize}, \code{nOutlet}, \code{periodicBoundaries}, \code{expEnergy}, 
-\code{coolingRate}, \code{typeInitialState}, \code{nIter} are passed to the list as they were included in the input (except \code{nOutlet = "All"} which is converted to
- \code{2*(dimX + dimY - 2))}.
+\code{coolingRate}, \code{typeInitialState}, \code{nIter}, \code{xllcorner}, \code{yllcorner} are passed to the list as they were included in the input 
+(except \code{nOutlet = "All"} which is converted to \code{2*(dimX + dimY - 2))}.
 }
 \description{
 Function that performs the OCN search algorithm on a rectangular lattice and creates OCN at the flow direction (FD) level.

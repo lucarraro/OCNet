@@ -327,7 +327,7 @@ aggregate_OCN <- function(OCN,
   # build neighbouring nodes at FD level
   # find list of possible neighbouring pixels
   movement <- matrix(c(0,-1,-1,-1,0,1,1,1,1,1,0,-1,-1,-1,0,1),nrow=2,byrow=TRUE)
-  NeighbouringNodes <- vector("list", OCN$FD$nNodes)
+  NeighbouringNodes <- vector("list", OCN$dimX*OCN$dimY)
   cont_node <- 0
   for (cc in 1:OCN$dimX) {
     for (rr in 1:OCN$dimY) {
@@ -344,6 +344,18 @@ aggregate_OCN <- function(OCN,
       NeighbouringNodes[[cont_node]] <- neigh_r[NotAboundary] + (neigh_c[NotAboundary]-1)*OCN$dimY
     }
   } 
+  
+  if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){
+    NeighbouringNodes_FD <- vector("list", OCN$FD$nNodes)
+    DEM_to_FD <- numeric(OCN$dimX*OCN$dimY)
+    DEM_to_FD[OCN$FD$toDEM] <- 1:OCN$FD$nNodes
+    for (i in 1:OCN$FD$nNodes){
+      indDEM <- OCN$FD$toDEM[i]
+      tmp <- DEM_to_FD[NeighbouringNodes[[indDEM]]]
+      NeighbouringNodes_FD[[i]] <- tmp[tmp != 0]
+    }
+    NeighbouringNodes <- NeighbouringNodes_FD
+  }
   
   # Subcatchment adjacency matrix: find which subcatchments have borders in common
   #W_SC <- sparseMatrix(i=1,j=1,x=0,dims=c(Nnodes_SC,Nnodes_SC))

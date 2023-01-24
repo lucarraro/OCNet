@@ -72,7 +72,7 @@ for (i in 1:Nnodes_FD){
   rr <- indDEM %% dimY + ((indDEM %% dimY)==0)*dimY
   cc <- (indDEM - rr)/dimY + 1
   X[i] <- Xvec[cc]
-  Y[i] <- Yvec[dimY-rr]
+  Y[i] <- Yvec[dimY-rr+1]
 }
 
 # find list of possible neighbouring pixels

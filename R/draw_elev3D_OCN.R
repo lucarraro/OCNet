@@ -18,13 +18,17 @@ draw_elev3D_OCN <- function(OCN,
     stop('coarseGrain[1] must be divisor of dimX; coarseGrain[2] must be divisor of dimY')
   }  
   
-  if (isTRUE(OCN$typeInitialState=="custom")){
-    stop('draw_elev3D_OCN is not currently implemented for OCNs created via create_general_contour_OCN')
-  }
+  if (is.null(OCN$xllcorner)){xllcorner <- min(OCN$FD$X)[1]} else {xllcorner <- OCN$xllcorner}
+  if (is.null(OCN$yllcorner)){yllcorner <- min(OCN$FD$Y)[1]} else {yllcorner <- OCN$yllcorner}
   
-  Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
-  Xvec <- seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize)
-  Yvec <- seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize)
+  if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){
+    Zmat <- matrix(NaN,OCN$dimY,OCN$dimX)
+    Zmat[OCN$FD$toDEM] <- OCN$FD$Z
+    Zmat <- Zmat[seq(OCN$dimY,1,-1),]
+  } else {Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)}
+  
+  Xvec <- seq(xllcorner,xllcorner+(OCN$dimX-1)*OCN$cellsize,OCN$cellsize)
+  Yvec <- seq(yllcorner,yllcorner+(OCN$dimY-1)*OCN$cellsize,OCN$cellsize)
   
   Z_cg <- matrix(data=0,nrow=OCN$dimY/coarseGrain[2],ncol=OCN$dimX/coarseGrain[1])
   X_cg <- rep(0,OCN$dimX/coarseGrain[1])

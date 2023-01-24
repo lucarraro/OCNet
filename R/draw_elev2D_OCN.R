@@ -6,26 +6,28 @@ draw_elev2D_OCN <- function(OCN,
   if (!("Z" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_elev2D_OCN.')
   }
-  if (isTRUE(OCN$typeInitialState=="custom")){
-    stop('draw_elev2D_OCN is not currently implemented for OCNs created via create_general_contour_OCN')
-  }
-  
+
   # plot elevation map
   #old.par <- par(no.readonly =TRUE) 
   #on.exit(par(old.par))
   #par(bty="n")
   
-  if (is.null(OCN$xllcorner)){xllcorner <- min(OCN$FD$x)} else {xllcorner <- OCN$xllcorner}
-  if (is.null(OCN$yllcorner)){yllcorner <- min(OCN$FD$Y)} else {yllcorner <- OCN$yllcorner}
+  if (is.null(OCN$xllcorner)){xllcorner <- min(OCN$FD$X)[1]} else {xllcorner <- OCN$xllcorner}
+  if (is.null(OCN$yllcorner)){yllcorner <- min(OCN$FD$Y)[1]} else {yllcorner <- OCN$yllcorner}
   
-  Zmat<-matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)
+  if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){
+    Zmat <- matrix(NaN,OCN$dimY,OCN$dimX)
+    Zmat[OCN$FD$toDEM] <- OCN$FD$Z
+    Zmat <- Zmat[seq(OCN$dimY,1,-1),]
+  } else {Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)}
+  
   if (addLegend==TRUE){
-  image.plot(seq(xllcorner,xllcorner+OCN$dimX*OCN$cellsize,OCN$cellsize),
-             seq(yllcorner,yllcorner+OCN$dimY*OCN$cellsize,OCN$cellsize),
+  image.plot(seq(xllcorner,xllcorner+(OCN$dimX-1)*OCN$cellsize,OCN$cellsize),
+             seq(yllcorner,yllcorner+(OCN$dimY-1)*OCN$cellsize,OCN$cellsize),
              t(Zmat),col=colPalette,xlab=" ",ylab=" ",axes=FALSE,asp=1)
   } else {
-    image(seq(min(OCN$FD$X),max(OCN$FD$X),OCN$cellsize),
-               seq(min(OCN$FD$Y),max(OCN$FD$Y),OCN$cellsize),
+    image(seq(xllcorner,xllcorner+(OCN$dimX-1)*OCN$cellsize,OCN$cellsize),
+          seq(yllcorner,yllcorner+(OCN$dimY-1)*OCN$cellsize,OCN$cellsize),
                t(Zmat),col=colPalette,xlab=" ",ylab=" ",axes=FALSE,asp=1)
   }
   invisible()
