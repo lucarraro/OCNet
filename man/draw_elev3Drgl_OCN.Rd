@@ -4,7 +4,7 @@
 \usage{
 draw_elev3Drgl_OCN(OCN, coarseGrain = c(1, 1), chooseCM = FALSE,
   addColorbar = FALSE, drawRiver = FALSE, thrADraw = 0.002 *
-  OCN$dimX * OCN$dimY * OCN$cellsize^2, riverColor = "#00CCFF", ...)
+  OCN$FD$nNodes* OCN$cellsize^2, riverColor = "#00CCFF", ...)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{landscape_OCN}}.}

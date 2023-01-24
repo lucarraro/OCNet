@@ -1,7 +1,15 @@
 
 draw_subcatchments_OCN <- function(OCN,
                                    drawRiver = TRUE,
-                                   colPalette = NULL){
+                                   colPalette = NULL,
+                                   ...){
+  
+  dots <- list(...)
+  if (is.null(dots$axes)){
+    if ("xlim" %in% names(dots) | "ylim" %in% names(dots)) {dots$axes <- TRUE} else {dots$axes <- FALSE}}
+  if (is.null(dots$xlab)){dots$xlab <- ""}
+  if (is.null(dots$ylab)){dots$ylab <- ""}
+  if (is.null(dots$asp)){dots$asp <- 1}
   
   if (!("SC" %in% names(OCN))){
     stop('Missing fields in OCN. You should run aggregate_OCN prior to draw_subcatchments_OCN.')
@@ -48,13 +56,17 @@ draw_subcatchments_OCN <- function(OCN,
   }
   
   if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){
-    Color_SC <- matrix(NaN,OCN$dimY,OCN$dimX)
-    Color_SC[OCN$FD$toDEM] <- kol
-    Color_SC <- Color_SC[seq(OCN$dimY,1,-1),]
-  } else {
-    Color_SC <- matrix(data=kol,nrow=OCN$dimY,ncol=OCN$dimX)
-  }
-  
+    if (isTRUE(OCN$typeInitialState=="custom")){
+      Color_SC <- matrix(NaN,OCN$dimY,OCN$dimX)
+      Color_SC[OCN$FD$toDEM] <- kol
+      Color_SC <- Color_SC[seq(OCN$dimY,1,-1), ]
+    } else { # real river
+      Color_SC <- matrix(NaN,OCN$dimX,OCN$dimY)
+      Color_SC[OCN$FD$toDEM] <- kol
+      Color_SC <- Color_SC[,seq(OCN$dimY,1,-1)]
+      Color_SC <- t(Color_SC)
+    }
+  } else {Color_SC <- matrix(data=kol,nrow=OCN$dimY,ncol=OCN$dimX)}
   
   if (is.null(colPalette)){
   colPalette <- c("#009900", # green
@@ -82,8 +94,12 @@ draw_subcatchments_OCN <- function(OCN,
   #old.par <- par(no.readonly = TRUE)
   #on.exit(par(old.par))
   #par(bty="n")
-  image(Xvec, Yvec,
-        t(Color_SC),col=colPalette,xlab=" ",ylab=" ",asp=1, axes=FALSE) #
+  dots$x <- Xvec; dots$y <- Yvec; dots$z <- t(Color_SC); dots$col <- colPalette
+  
+  do.call(image,dots)
+  
+  # image(Xvec, Yvec,
+  #       t(Color_SC),col=colPalette,xlab=" ",ylab=" ",asp=1, axes=FALSE) #
   # attributing colors in reverse order should increase overall contrast
   
   if (drawRiver==TRUE){
@@ -92,7 +108,8 @@ draw_subcatchments_OCN <- function(OCN,
     #points(OCN$FD$X[OCN$FD$outlet],OCN$FD$Y[OCN$FD$outlet],pch=22,col="#000000",bg="#000000")
 
     for (i in AvailableNodes){
-      if (OCN$FD$A[i]>=OCN$thrA  & abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]])<=OCN$cellsize & abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]])<=OCN$cellsize  ) {
+      if (OCN$FD$A[i]>=OCN$thrA  & abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]])<=1.001*OCN$cellsize & 
+          abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]])<=1.001*OCN$cellsize  ) {
         lines(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$downNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$downNode[i]]),lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col="black")}
     }
   }

@@ -34,9 +34,16 @@ draw_elev3Drgl_OCN <- function(OCN,
     if (is.null(OCN$yllcorner)){yllcorner <- min(OCN$FD$Y)[1]} else {yllcorner <- OCN$yllcorner}
     
     if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){
-      Zmat <- matrix(NaN,OCN$dimY,OCN$dimX)
-      Zmat[OCN$FD$toDEM] <- OCN$FD$Z
-      Zmat <- Zmat[seq(OCN$dimY,1,-1),]
+      if (isTRUE(OCN$typeInitialState=="custom")){
+        Zmat <- matrix(NaN,OCN$dimY,OCN$dimX)
+        Zmat[OCN$FD$toDEM] <- OCN$FD$Z
+        Zmat <- Zmat[seq(OCN$dimY,1,-1), ]
+      } else { # real river
+        Zmat <- matrix(NaN,OCN$dimX,OCN$dimY)
+        Zmat[OCN$FD$toDEM] <- OCN$FD$Z
+        Zmat <- Zmat[,seq(OCN$dimY,1,-1)]
+        Zmat <- t(Zmat)
+      }
     } else {Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)}
     
     Xvec <- seq(xllcorner,xllcorner+(OCN$dimX-1)*OCN$cellsize,OCN$cellsize)
@@ -87,8 +94,8 @@ draw_elev3Drgl_OCN <- function(OCN,
       AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)
       for (i in AvailableNodes){
         if (OCN$FD$A[i]>=thrADraw & 
-            abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]]) <= OCN$cellsize & 
-            abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]]) <= OCN$cellsize) {
+            abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize & 
+            abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize) {
           lines3d(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$downNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$downNode[i]]),
                   offset + c(OCN$FD$Z[i],OCN$FD$Z[OCN$FD$downNode[i]]),
                   lwd=1+7*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=riverColor)}
@@ -113,9 +120,16 @@ draw_elev3Drgl_OCN <- function(OCN,
       if (is.null(OCN$yllcorner)){yllcorner <- min(OCN$FD$Y)[1]} else {yllcorner <- OCN$yllcorner}
       
       if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){
-        Zmat <- matrix(NaN,OCN$dimY,OCN$dimX)
-        Zmat[OCN$FD$toDEM] <- OCN$FD$Z
-        Zmat <- Zmat[seq(OCN$dimY,1,-1),]
+        if (isTRUE(OCN$typeInitialState=="custom")){
+          Zmat <- matrix(NaN,OCN$dimY,OCN$dimX)
+          Zmat[OCN$FD$toDEM] <- OCN$FD$Z
+          Zmat <- Zmat[seq(OCN$dimY,1,-1), ]
+        } else { # real river
+          Zmat <- matrix(NaN,OCN$dimX,OCN$dimY)
+          Zmat[OCN$FD$toDEM] <- OCN$FD$Z
+          Zmat <- Zmat[,seq(OCN$dimY,1,-1)]
+          Zmat <- t(Zmat)
+        }
       } else {Zmat <- matrix(data=OCN$FD$Z,nrow=OCN$dimY,ncol=OCN$dimX)}
       
       Xvec <- seq(xllcorner,xllcorner+(OCN$dimX-1)*OCN$cellsize,OCN$cellsize)
@@ -138,8 +152,8 @@ draw_elev3Drgl_OCN <- function(OCN,
         AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)
         for (i in AvailableNodes){
           if (OCN$FD$A[i]>=thrADraw & OCN$FD$toCM[i] == chooseCM &
-              abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]]) <= OCN$cellsize & 
-              abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]]) <= OCN$cellsize) {
+              abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize & 
+              abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize) {
             lines3d(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$downNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$downNode[i]]),
                     offset + c(OCN$FD$Z[i],OCN$FD$Z[OCN$FD$downNode[i]]),
                     lwd=0.5+7*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col="#00CCFF")}

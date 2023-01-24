@@ -61,7 +61,8 @@ Note that, for large lattices, \code{showIntermediatePlots = TRUE} might slow do
 A list as in \code{\link{create_OCN}}, to which the reader is referred for detailed documentation.
 However, note that in this case \code{dimX} and \code{dimY} are equal to the number of columns and rows of \code{flowDirStart}, respectively, 
 while \code{nNodes} is the number of non-\code{NaN} pixels in \code{flowDirStart}. Hence, \code{nNodes} is generally lower than
-\code{dimX*dimY}.
+\code{dimX*dimY}. The additionally exported vector \code{FD$toDEM} identifies the indices of the pixels of the landscape/flow direction matrix
+that belong to the catchment (i.e., they are not \code{NaN}).
 }
 \description{
 Function that performs the OCN search algorithm on a general contour and creates OCN at the flow direction (FD) level.

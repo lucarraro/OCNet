@@ -326,24 +326,44 @@ aggregate_OCN <- function(OCN,
   
   # build neighbouring nodes at FD level
   # find list of possible neighbouring pixels
-  movement <- matrix(c(0,-1,-1,-1,0,1,1,1,1,1,0,-1,-1,-1,0,1),nrow=2,byrow=TRUE)
-  NeighbouringNodes <- vector("list", OCN$dimX*OCN$dimY)
-  cont_node <- 0
-  for (cc in 1:OCN$dimX) {
+  if (length(OCN$typeInitialState)!=0){
+    movement <- matrix(c(0,-1,-1,-1,0,1,1,1,1,1,0,-1,-1,-1,0,1),nrow=2,byrow=TRUE)
+    NeighbouringNodes <- vector("list", OCN$dimX*OCN$dimY)
+    cont_node <- 0
+    for (cc in 1:OCN$dimX) {
+      for (rr in 1:OCN$dimY) {
+        cont_node <- cont_node + 1
+        neigh_r <- rep(rr,8)+movement[1,]
+        neigh_c <- rep(cc,8)+movement[2,]
+        if (OCN$periodicBoundaries == TRUE){
+          neigh_r[neigh_r==0] <- OCN$dimY
+          neigh_c[neigh_c==0] <- OCN$dimX
+          neigh_r[neigh_r>OCN$dimY] <- 1
+          neigh_c[neigh_c>OCN$dimX] <- 1
+        }
+        NotAboundary <- neigh_r>0 & neigh_r<=OCN$dimY & neigh_c>0 & neigh_c<=OCN$dimX # only effective when periodicBoundaries=FALSE
+        NeighbouringNodes[[cont_node]] <- neigh_r[NotAboundary] + (neigh_c[NotAboundary]-1)*OCN$dimY
+      }}
+  } else {
+    # build neighbouring nodes at FD level (for real rivers)
+    movement <- matrix(c(0,-1,-1,-1,0,1,1,1,1,1,0,-1,-1,-1,0,1),nrow=2,byrow=TRUE)
+    NeighbouringNodes <- vector("list", OCN$dimX*OCN$dimY)
+    cont_node <- 0
     for (rr in 1:OCN$dimY) {
-      cont_node <- cont_node + 1
-      neigh_r <- rep(rr,8)+movement[1,]
-      neigh_c <- rep(cc,8)+movement[2,]
-      if (OCN$periodicBoundaries == TRUE){
-        neigh_r[neigh_r==0] <- OCN$dimY
-        neigh_c[neigh_c==0] <- OCN$dimX
-        neigh_r[neigh_r>OCN$dimY] <- 1
-        neigh_c[neigh_c>OCN$dimX] <- 1
-      }
-      NotAboundary <- neigh_r>0 & neigh_r<=OCN$dimY & neigh_c>0 & neigh_c<=OCN$dimX # only effective when periodicBoundaries=FALSE
-      NeighbouringNodes[[cont_node]] <- neigh_r[NotAboundary] + (neigh_c[NotAboundary]-1)*OCN$dimY
-    }
-  } 
+      for (cc in 1:OCN$dimX) {
+        cont_node <- cont_node + 1
+        neigh_r <- rep(rr,8)+movement[1,]
+        neigh_c <- rep(cc,8)+movement[2,]
+        if (OCN$periodicBoundaries == TRUE){
+          neigh_r[neigh_r==0] <- OCN$dimY
+          neigh_c[neigh_c==0] <- OCN$dimX
+          neigh_r[neigh_r>OCN$dimY] <- 1
+          neigh_c[neigh_c>OCN$dimX] <- 1
+        }
+        NotAboundary <- neigh_r>0 & neigh_r<=OCN$dimY & neigh_c>0 & neigh_c<=OCN$dimX # only effective when periodicBoundaries=FALSE
+        NeighbouringNodes[[cont_node]] <- (neigh_r[NotAboundary]-1)*OCN$dimX + neigh_c[NotAboundary]
+      }}
+  }
   
   if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){
     NeighbouringNodes_FD <- vector("list", OCN$FD$nNodes)

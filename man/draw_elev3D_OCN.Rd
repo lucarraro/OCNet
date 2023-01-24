@@ -4,7 +4,7 @@
 \usage{
 draw_elev3D_OCN(OCN, coarseGrain = c(1,1), colPalette = terrain.colors(1000, alpha = 1),
   addColorbar = TRUE, drawRiver = TRUE, thrADraw = 0.002 *
-  OCN$dimX * OCN$dimY * OCN$cellsize^2, riverColor = "#00CCFF",
+  OCN$FD$nNodes * OCN$cellsize^2, riverColor = "#00CCFF",
   theta = -20, phi = 30, expand = 0.05, shade = 0.5)
 }
 \arguments{
