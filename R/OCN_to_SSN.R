@@ -1,9 +1,15 @@
-OCN_to_SSN <- function (OCN, level, obsDesign, predDesign = noPoints, path, importToR = FALSE) 
+OCN_to_SSN <- function (OCN, level, obsDesign, obsSites, predDesign, predSites,
+                         path, randomAllocation = FALSE, importToR = FALSE) 
 {
 
   # check input
-  if (missing(obsDesign)) 
-    stop("Input obsDesign cannot be missing")
+  if (missing(obsDesign) & missing(obsSites) ) 
+    stop("At least one between obsDesign and obsSites must be specified")
+  if (!missing(obsDesign) & !missing(obsSites) ) 
+    stop("Only one between obsDesign and obsSites must be specified")
+  if (missing(predDesign) & missing(predSites)){predDesign <- noPoints}
+  if (!missing(predDesign) & !missing(predSites))
+    stop("predDesign and predSites cannot both be specified")
   if (missing(path)) 
     stop("Path cannot be missing")
   if (missing(OCN)) {
@@ -320,8 +326,34 @@ OCN_to_SSN <- function (OCN, level, obsDesign, predDesign = noPoints, path, impo
   }
   
   # observation sites
+  if (missing(obsSites)){
   obs_sites <- obsDesign(tree.graphs, edge_lengths, locations,  edge_updist, distance_matrices)
-  pred_sites <- predDesign(tree.graphs, edge_lengths, locations,  edge_updist, distance_matrices)
+  } else { obs_sites <- list(n_networks); k <- 0
+    for (i in 1:n_networks){
+      nodes <- obsSites[which(sub_OCN$toCM[obsSites]==i)]
+      # identify corresponding nodes in igraph
+      for (j in 1:length(nodes)){nodes[j] <- which(locations[[i]][,1]==sub_OCN$X[nodes[j]] & locations[[i]][,2]==sub_OCN$Y[nodes[j]])[1]}
+      edge_vec  <- numeric(0)
+      for (s in nodes){
+        edge_vec <- c(edge_vec, rids[[i]][which(edges[[i]][,2]==s)])
+        k <- k+1}
+      if (randomAllocation){ratio_vec <- runif(length(edge_vec))} else {ratio_vec <- 1+numeric(length(edge_vec))}
+      obs_sites[[i]] <- data.frame(edge=edge_vec, ratio=ratio_vec, locID=((k-length(edge_vec)+1):k))
+    }}
+  if (missing(predSites)){
+    pred_sites <- predDesign(tree.graphs, edge_lengths, locations,  edge_updist, distance_matrices)
+  } else { pred_sites <- list(n_networks); k <- 0
+  for (i in 1:n_networks){
+    nodes <- predSites[which(sub_OCN$toCM[predSites]==i)]
+    # identify corresponding nodes in igraph
+    for (j in 1:length(nodes)){nodes[j] <- which(locations[[i]][,1]==sub_OCN$X[nodes[j]] & locations[[i]][,2]==sub_OCN$Y[nodes[j]])[1]}
+    edge_vec  <- numeric(0)
+    for (s in nodes){
+      edge_vec <- c(edge_vec, rids[[i]][which(edges[[i]][,2]==s)])
+      k <- k+1}
+    if (randomAllocation){ratio_vec <- runif(length(edge_vec))} else {ratio_vec <- 1+numeric(length(edge_vec))}
+    pred_sites[[i]] <- data.frame(edge=edge_vec, ratio=ratio_vec, locID=((k-length(edge_vec)+1):k))
+  }}
   max_observed_locID <- max(unlist(lapply(obs_sites, function(x) max(x$locID))))
   for (i in 1:length(pred_sites)) {
     pred_sites[[i]]$locID <- pred_sites[[i]]$locID + max_observed_locID

@@ -31,6 +31,7 @@ paths_OCN <- function(OCN,
   for (i in 1:OCN$RN$nNodes){
 
     if(includePaths){RN_DownstreamPath[[i]][[i]] <- i}
+    if(includeDownstreamNode){RN_DownstreamPathLength[i, i] <- OCN$RN$leng[i]}
     Path <- i
     j <- i
     while (j != OCN$RN$outlet){
@@ -111,6 +112,8 @@ paths_OCN <- function(OCN,
   for (i in 1:OCN$AG$nNodes){
     
     if(includePaths){AG_DownstreamPath[[i]][[i]] <- i}
+    if(includeDownstreamNode){AG_DownstreamPathLength[i, i] <- OCN$AG$leng[i]}
+    
     Path <- i
     j <- i
     while (j != OCN$AG$outlet){

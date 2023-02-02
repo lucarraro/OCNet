@@ -5,11 +5,16 @@
 * `create_general_contour_OCN`: function added. 
 * `draw_thematic_OCN`: `...` argument and relative example added.
 * `aggregate_OCN`: `breakpoints` argument and relative example added.
+* `OCN_to_SSN`: `obsSites`, `predSites`, `randomAllocation` arguments added.
 
 ## Minor changes
 
 * All functions have been updated for consistence/compatibility with `create_general_contour_OCN`.
 * `draw_thematic_OCN`: default option for `theme` added; inverted order of input variables (with backward compatibility maintained); functioning of `colLevels` improved.
+
+## Bugs fixed
+
+* `paths_OCN`: corrected bug for `includeDownstreamNode = TRUE`.
 
 # OCNet 0.5.1
 

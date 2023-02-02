@@ -2,8 +2,8 @@
 \alias{OCN_to_SSN}
 \title{Transform OCN into SSN object}
 \usage{
-OCN_to_SSN(OCN, level, obsDesign,
-  predDesign = noPoints, path, importToR = FALSE)
+OCN_to_SSN(OCN, level, obsDesign, obsSites, predDesign, 
+  predSites, path, randomAllocation = FALSE, importToR = FALSE)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{aggregate_OCN}}.}
@@ -12,12 +12,23 @@ OCN_to_SSN(OCN, level, obsDesign,
 must be equal to either \code{"FD"}, \code{"RN"} or \code{"AG"}.}
 
 \item{obsDesign}{Same as the argument of the same name in \code{\link{createSSN}}.
-Note that the length of the argument of the design function must be equal to \code{OCN$nOutlet}.}
+Note that the length of the argument of the design function must be equal to \code{OCN$nOutlet}.
+Only one between \code{obsDesign} and \code{obsSites} must be specified.} 
+
+\item{obsSites}{Identifier of nodes at the aggregation \code{level} where observation sites are 
+to be located. Only one between \code{obsDesign} and \code{obsSites} must be specified.}
 
 \item{predDesign}{Same as the argument of the same name in \code{\link{createSSN}}. Note that, if
 a design function is specified, the length of its argument must be equal to \code{OCN$nOutlet}.}
 
+\item{predSites}{Identifier of nodes at the aggregation \code{level} where prediction sites are 
+to be located. Both \code{predDesign} and \code{predSites} are optional, but they cannot be both specified.}
+
 \item{path}{Same as the argument of the same name in \code{\link{createSSN}}.}
+
+\item{randomAllocation}{Logical. If \code{FALSE}, observation and prediction nodes (when \code{obsSites} and
+\code{predSites} are specified, respectively) are located at the exact position of the corresponding nodes.
+If \code{TRUE}, they are located at a random position along the edge departing from the selected nodes.}
 
 \item{importToR}{Same as the argument of the same name in \code{\link{createSSN}}.}
 }
@@ -64,4 +75,14 @@ plot(ssn2, xlab = "X", ylab = "Y")
 par(old.par)
 }
 
+# 2) An OCN with 3 outlets transformed into a SSN, with obsSites
+# attributed at given locations
+set.seed(2)
+OCN <- aggregate_OCN(landscape_OCN(create_OCN(20, 20, nOutlet = 3)), thrA = 4)
+obsSites <- c(1, 7, 12, 15, 21, 28, 34, 41, 50)
+ssn3 <- OCN_to_SSN(OCN, "AG", obsSites=obsSites, 
+                    path = paste(tempdir(),"/OCN3.ssn", sep = ""), importToR = TRUE)
+draw_thematic_OCN(OCN)
+points(OCN$AG$X[obsSites], OCN$AG$Y[obsSites])
+plot(ssn3)
 }
