@@ -1,4 +1,4 @@
-# OCNet 0.5.1.9000
+# OCNet 0.6.0
 
 ## Major changes
 
