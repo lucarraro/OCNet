@@ -71,7 +71,7 @@
 
 
 <dt>displayUpdates</dt>
-<dd><p>Logical. State if updates are printed on the console while <code>landscape_OCN</code> runs.</p></dd>
+<dd><p>Logical. State if updates are printed on the console while <code>paths_OCN</code> runs.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -92,12 +92,12 @@ Note that <code>RN$downstreamPathLength[i,i] = 0</code> if <code>includeDownstre
 It is a <code>spam</code> object.</p></dd>
 
 <dt><code>RN$downstreamLengthUnconnected</code></dt>
-<dd><p>Sparse matrix (<code>OCN$RN$nNodes</code> by <code>OCN$RN$nNodes</code>). <code>RN$downstreamLengthUnconnected[i,j]</code> is 
+<dd><p>Matrix (<code>OCN$RN$nNodes</code> by <code>OCN$RN$nNodes</code>). <code>RN$downstreamLengthUnconnected[i,j]</code> is 
 the length of the downstream portion of a path joining node <code>i</code> to <code>j</code> if <code>i</code> and <code>j</code> are not connected by a downstream path.
 Specifically, <code>RN$downstreamLengthUnconnected[i,j] = RN$downstreamPathLength[i,k]</code>, where <code>k</code> is a node such that there exist a downstream 
 path from <code>i</code> to <code>k</code> and from <code>j</code> to <code>k</code>, and these paths are the shortest possible. Note that the length of the upstream portion 
 of the path joining <code>i</code> to <code>j</code> is given by <code>RN$downstreamLengthUnconnected[j,i]</code>. If instead <code>i</code> and <code>j</code> are joined by a 
-downstream path, then <code>RN$downstreamLengthUnconnected[i,j] = 0</code>. It is a <code>spam</code> object. Only present if <code>includeUnconnectedPaths = TRUE</code>.</p></dd>
+downstream path, then <code>RN$downstreamLengthUnconnected[i,j] = 0</code>. Only present if <code>includeUnconnectedPaths = TRUE</code>.</p></dd>
 
 <dt><code>AG$downstreamPath</code></dt>
 <dd><p>List (of length <code>OCN$AG$nNodes</code>) whose object <code>i</code> is a list (of length <code>OCN$AG$nNodes</code>). 
@@ -112,12 +112,12 @@ Note that <code>AG$downstreamPathLength[i,i] = 0</code> if <code>includeDownstre
 It is a <code>spam</code> object.</p></dd>
 
 <dt><code>AG$downstreamLengthUnconnected</code></dt>
-<dd><p>Sparse matrix (<code>OCN$AG$nNodes</code> by <code>OCN$AG$nNodes</code>). <code>AG$downstreamLengthUnconnected[i,j]</code> is 
+<dd><p>Matrix (<code>OCN$AG$nNodes</code> by <code>OCN$AG$nNodes</code>). <code>AG$downstreamLengthUnconnected[i,j]</code> is 
 the length of the downstream portion of a path joining node <code>i</code> to <code>j</code> if <code>i</code> and <code>j</code> are not connected by a downstream path.
 Specifically, <code>AG$downstreamLengthUnconnected[i,j] = AG$downstreamPathLength[i,k]</code>, where <code>k</code> is a node such that there exist a downstream 
 path from <code>i</code> to <code>k</code> and from <code>j</code> to <code>k</code>, and these paths are the shortest possible. Note that the length of the upstream portion 
 of the path joining <code>i</code> to <code>j</code> is given by <code>AG$downstreamLengthUnconnected[j,i]</code>. If instead <code>i</code> and <code>j</code> are joined by a 
-downstream path, then <code>AG$downstreamLengthUnconnected[i,j] = 0</code>. It is a <code>spam</code> object. Only present if <code>includeUnconnectedPaths = TRUE</code>.</p></dd>
+downstream path, then <code>AG$downstreamLengthUnconnected[i,j] = 0</code>. Only present if <code>includeUnconnectedPaths = TRUE</code>.</p></dd>
 
 </dl></div>
 
