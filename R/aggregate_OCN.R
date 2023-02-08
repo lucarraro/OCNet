@@ -85,7 +85,7 @@ aggregate_OCN <- function(OCN,
     Upstream_RN[[i]] <- c(Upstream_RN[[i]],i)
     Nupstream_RN[i] <- length(Upstream_RN[[i]])
     if (displayUpdates){
-      if ((i %% round(Nnodes_RN*0.001)==0){
+      if ((i %% round(Nnodes_RN*0.001))==0){
       message(sprintf("Calculating network at RN level... %.1f%%\r",i/Nnodes_RN*100), appendLF = FALSE)}}
   }
   # RN_to_CM[i] indicates outlet to which reach i drains
@@ -247,7 +247,7 @@ aggregate_OCN <- function(OCN,
     Upstream_AG[[i]] <- c(Upstream_AG[[i]],i)
     Nupstream_AG[i] <- length(Upstream_AG[[i]])
     if (displayUpdates){
-      if ((i %% round(Nnodes_AG*0.001)==0){
+      if ((i %% round(Nnodes_AG*0.001))==0){
       message(sprintf("Calculating network at AG level... %.1f%%\r",i/Nnodes_AG*100), appendLF = FALSE)}}
   }
   # AG_to_CM[i] indicates outlet to which reach i drains
@@ -408,7 +408,7 @@ aggregate_OCN <- function(OCN,
           }}
     }
     if (displayUpdates){
-      if ((i %% round(Nnodes_SC*0.001)==0){
+      if ((i %% round(Nnodes_SC*0.001))==0){
       message(sprintf("Calculating network at SC level... %.1f%%\r",i/Nnodes_AG*100), appendLF = FALSE)}}
   }
   

@@ -2,7 +2,7 @@
 \alias{paths_OCN}
 \title{Calculate paths between nodes in an Optimal Channel Network}
 \usage{
-paths_OCN(OCN, includePaths = FALSE, level=c("RN","AG"),
+paths_OCN(OCN, level = c("RN","AG"), includePaths = FALSE, 
 includeDownstreamNode = FALSE, includeUnconnectedPaths = FALSE, displayUpdates = FALSE)
 }
 \arguments{

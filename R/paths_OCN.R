@@ -75,7 +75,7 @@ paths_OCN <- function(OCN,
         }
       }
       if (displayUpdates){
-        if ((i %% round(OCN$RN$nNodes*0.001)==0){
+        if ((i %% round(OCN$RN$nNodes*0.001))==0){
           message(sprintf("RN downstream paths... %.1f%%\r",i/(1.001*OCN$RN$nNodes)*100), appendLF = FALSE)}}
     }
     indices_down <- indices_down[1:(counter_down-1), ]
@@ -150,7 +150,7 @@ paths_OCN <- function(OCN,
         }
       }
       if (displayUpdates){
-        if ((i %% round(OCN$AG$nNodes*0.001)==0){
+        if ((i %% round(OCN$AG$nNodes*0.001))==0){
           message(sprintf("AG downstream paths... %.1f%%\r",i/(1.001*OCN$AG$nNodes)*100), appendLF = FALSE)}}
     }
     indices_down <- indices_down[1:(counter_down-1), ]
