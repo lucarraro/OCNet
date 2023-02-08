@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OCNet</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aggregate_OCN</span><span class="op">(</span><span class="va">OCN</span>, thrA <span class="op">=</span> <span class="fl">0.002</span> <span class="op">*</span> <span class="va">OCN</span><span class="op">$</span><span class="va">FD</span><span class="op">$</span><span class="va">nNodes</span> <span class="op">*</span></span>
 <span>  <span class="va">OCN</span><span class="op">$</span><span class="va">cellsize</span><span class="op">^</span><span class="fl">2</span>, streamOrderType <span class="op">=</span> <span class="st">"Strahler"</span>, maxReachLength <span class="op">=</span> <span class="cn">Inf</span>,</span>
-<span>  breakpoints <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span>  breakpoints <span class="op">=</span> <span class="cn">NULL</span>, displayUpdates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -79,6 +79,11 @@ pixel is considered as a new channel head, from which a new reach departs.</p></
 <dd><p>Indices of additional nodes at the RN level that should be also nodes at the AG level (beyond source, confluence, outlet nodes 
 and AG nodes determined via <code>maxReachLength</code>). To determine such indices, a preliminary run of <code>aggregate_OCN</code> with the same <code>thrA</code> 
 would be required (see example 3).</p></dd>
+
+
+<dt>displayUpdates</dt>
+<dd><p>Logical. State if updates are printed on the console while <code>landscape_OCN</code> runs.</p></dd>
+
 
 </dl></div>
     <div class="section level2">
