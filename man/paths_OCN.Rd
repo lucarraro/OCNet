@@ -2,11 +2,13 @@
 \alias{paths_OCN}
 \title{Calculate paths between nodes in an Optimal Channel Network}
 \usage{
-paths_OCN(OCN, includePaths = FALSE, 
+paths_OCN(OCN, includePaths = FALSE, level=c("RN","AG"),
 includeDownstreamNode = FALSE, includeUnconnectedPaths = FALSE, displayUpdates = FALSE)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{aggregate_OCN}}.}
+
+\item{level}{Character vector. At which level should paths be calculated? Possible values are \code{"RN"}, \code{"AG"}, or both.}
 
 \item{includePaths}{Logical. If \code{TRUE}, \code{RN$downstreamPath} and \code{AG$downstreamPath} are included to the output list. Note that this might slow down the function execution considerably, and create RAM issues for very large OCNs.}
 

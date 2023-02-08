@@ -1,17 +1,11 @@
-citHeader("To cite 'OCNet' in publications use:")
-
-citEntry(entry="article",
-	 title="Generation and application of river network analogues for use in ecology and evolution",
-         author=personList(as.person("Luca Carraro"),
-			   as.person("Enrico Bertuzzo"),
-			   as.person("Emanuel A. Fronhofer"),
-			   as.person("Reinhard Furrer"),
-			   as.person("Isabelle Gounand"),
-			   as.person("Andrea Rinaldo"),
-			   as.person("Florian Altermatt")),
-	 journal="Ecology and Evolution",
-     year="2020",
-	 doi="10.1002/ece3.6479",
-	 textVersion=paste("Carraro L, Bertuzzo E, Fronhofer EA, Furrer R, Gounand I, Rinaldo A, Altermatt F: Generation",
-                        " and application of river network analogues for use in ecology and evolution, Ecology and Evolution. ",
-                        "2020. doi:10.1002/ece3.6479", sep=""))
+bibentry(bibtype = "article", header = "To cite 'OCNet' in publications use:",
+         title = "Generation and application of river network analogues for use in ecology and evolution",
+         author = c(person("Luca", "Carraro"),
+                    person("Enrico", "Bertuzzo"),
+					person(c("Emanuel","A."), "Fronhofer"),
+					person("Reinhard", "Furrer"),
+					person("Isabelle", "Gounand"),
+					person("Andrea", "Rinaldo"),
+					person("Florian", "Altermatt")),
+         year = "2020", journal = "Ecology and Evolution", 
+         doi = "10.1002/ece3.6479")

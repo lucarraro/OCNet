@@ -3,7 +3,8 @@ aggregate_OCN <- function(OCN,
                           thrA=0.002*OCN$FD$nNodes*OCN$cellsize^2,
                           streamOrderType="Strahler",
                           maxReachLength=Inf,
-                          breakpoints=NULL){
+                          breakpoints=NULL,
+                          displayUpdates=FALSE){
   
   if (!("slope" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to aggregate_OCN.')
@@ -17,6 +18,8 @@ aggregate_OCN <- function(OCN,
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
   # BUILD NETWORK AT RN LEVEL ####
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+  
+  if(displayUpdates){message("Calculating network at RN level...      \r", appendLF = FALSE)}
   
   #print('Crop data at FD level to RN level...',quote=FALSE); 
   RN_mask <- as.vector(OCN$FD$A >= thrA)# RN_mask allows to sample RN-level values from matrices/vectors at FD level   
@@ -81,17 +84,22 @@ aggregate_OCN <- function(OCN,
     }
     Upstream_RN[[i]] <- c(Upstream_RN[[i]],i)
     Nupstream_RN[i] <- length(Upstream_RN[[i]])
+    if (displayUpdates){
+      if ((i %% round(Nnodes_RN*0.001)==0){
+      message(sprintf("Calculating network at RN level... %.1f%%\r",i/Nnodes_RN*100), appendLF = FALSE)}}
   }
   # RN_to_CM[i] indicates outlet to which reach i drains
   RN_to_CM <- numeric(Nnodes_RN)
   for (i in 1:OCN$nOutlet){
     RN_to_CM[Upstream_RN[[Outlet_RN[i]]]] <- i
   }
-  
+  if (displayUpdates){message("Calculating network at RN level... 100.0%\n", appendLF = FALSE)}
   
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
   # BUILD NETWORK AT AG LEVEL ####
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+  
+  if(displayUpdates){message("Calculating network at AG level...      \r", appendLF = FALSE)}
   
   # Vector that attributes reach ID to all river network pixels
   #print('Define nodes of aggregated network...',quote=FALSE); 
@@ -238,6 +246,9 @@ aggregate_OCN <- function(OCN,
     }
     Upstream_AG[[i]] <- c(Upstream_AG[[i]],i)
     Nupstream_AG[i] <- length(Upstream_AG[[i]])
+    if (displayUpdates){
+      if ((i %% round(Nnodes_AG*0.001)==0){
+      message(sprintf("Calculating network at AG level... %.1f%%\r",i/Nnodes_AG*100), appendLF = FALSE)}}
   }
   # AG_to_CM[i] indicates outlet to which reach i drains
   AG_to_CM <- numeric(Nnodes_AG)
@@ -284,10 +295,13 @@ aggregate_OCN <- function(OCN,
     Slope_AG[i] <- (Slope_RN[RN_to_AG==i] %*% Length_RN[RN_to_AG==i])/Length_AG[i] # scalar product between vector of slopes and lengths of nodes at RN level belonging to reach i 
   }
   
+  if(displayUpdates){message("Calculating network at AG level... 100.0%\n", appendLF = FALSE)}
   
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
   # CALCULATE PROPERTIES AT SC LEVEL ####
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+  
+  if(displayUpdates){message("Calculating network at SC level...      \r", appendLF = FALSE)}
   
   #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE) 
   #t1 <- Sys.time()
@@ -393,6 +407,9 @@ aggregate_OCN <- function(OCN,
           W_SC[i,unique(NeighSubcatch[Border])] <- 1
           }}
     }
+    if (displayUpdates){
+      if ((i %% round(Nnodes_SC*0.001)==0){
+      message(sprintf("Calculating network at SC level... %.1f%%\r",i/Nnodes_AG*100), appendLF = FALSE)}}
   }
   
   # X,Y of subcatchment centroids
@@ -403,6 +420,7 @@ aggregate_OCN <- function(OCN,
     Y_SC[i] <- mean(OCN$FD$Y[SC_to_FD[[i]]])
   }
   
+  if(displayUpdates){message("Calculating network at SC level... 100.0%\n", appendLF = FALSE)}
   
   #%%%%%%%%%%%%%%%%%%%%%#
   # EXPORT VARIABLES ####

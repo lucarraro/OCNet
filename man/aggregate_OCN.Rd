@@ -4,7 +4,7 @@
 \usage{
 aggregate_OCN(OCN, thrA = 0.002 * OCN$FD$nNodes *
   OCN$cellsize^2, streamOrderType = "Strahler", maxReachLength = Inf,
-  breakpoints = NULL)
+  breakpoints = NULL, displayUpdates = FALSE)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{landscape_OCN}}.}
@@ -22,6 +22,9 @@ pixel is considered as a new channel head, from which a new reach departs.}
 \item{breakpoints}{Indices of additional nodes at the RN level that should be also nodes at the AG level (beyond source, confluence, outlet nodes 
 and AG nodes determined via \code{maxReachLength}). To determine such indices, a preliminary run of \code{aggregate_OCN} with the same \code{thrA} 
 would be required (see example 3).}
+
+\item{displayUpdates}{Logical. State if updates are printed on the console while \code{landscape_OCN} runs.}
+
 }
 \value{
 A list that contains all objects contained in \code{OCN}, in addition to the objects listed below. 

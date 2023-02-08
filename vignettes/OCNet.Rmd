@@ -59,7 +59,7 @@ In graph theory, an oriented spanning tree is a subgraph of a graph $G$ such tha
 - it is *spanning*: it contains all nodes of $G$;
 - it is a *tree*: it is weakly connected (there exists a path between any pair of nodes, if edges' directions are neglected) and acyclic (no loops are present).
 
-At the simplest aggregation level (flow direction - FD; see Section \@ref(sec:agg) below), OCNs are oriented spanning trees whose nodes are the pixels consituting the lattice and whose edges represent flow directions.
+At the simplest aggregation level (flow direction - FD; see Section \@ref(sec:agg) below), OCNs are oriented spanning trees whose nodes are the pixels constituting the lattice and whose edges represent flow directions.
 
 Moreover, OCNs, just like real rivers, are constituted of nodes whose *indegree* (i.e. the number of edges pointing towards a node) can assume any value while the *outdegree* (number of edges exiting from the node) is equal to 1, except for the *root* (or *outlet* node), whose outdegree is equal to 0. Nodes with null indegree are termed *sources*. Nodes with indegree larger than 1 are *confluences*. 
 

@@ -1,3 +1,14 @@
+# OCNet 0.6.0.9000
+
+## Major changes
+
+* `aggregate_OCN`: `displayUpdates` argument added.
+* `paths_OCN`: `level` argument added.
+
+## Bugs fixed
+
+* `paths_OCN`: Fixed bug when number of nodes is very large
+
 # OCNet 0.6.0
 
 ## Major changes
