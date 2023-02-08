@@ -33,7 +33,7 @@ aggregate_OCN <- function(OCN,
   W_RN <- W_RN[,RN_mask,drop=FALSE]
   
   Outlet_RN <- FD_to_RN[OCN$FD$outlet]
-  Outlet_RN <- Outlet_RN[Outlet_RN!=0] # remove outlets if the corresponding catchment size is lower than thrAeshold
+  Outlet_RN <- Outlet_RN[Outlet_RN!=0] # remove outlets if the corresponding catchment size is lower than threshold
   DownNode_RN <- numeric(Nnodes_RN)
   # for (i in 1:Nnodes_RN){
   #   if (!(i %in% Outlet_RN)){
@@ -42,6 +42,12 @@ aggregate_OCN <- function(OCN,
   tmp <- W_RN@rowpointers
   NotOutlet <- which((tmp[-1] - tmp[-length(tmp)])==1)
   DownNode_RN[NotOutlet] <- W_RN@colindices
+  
+  # reverse downNode_RN
+  DownNode_RN_rev <- vector("list",Nnodes_RN)
+  for (i in 1:Nnodes_RN){
+    d <- DownNode_RN[i]
+    if (d!=0){DownNode_RN_rev[[d]] <- c(DownNode_RN_rev[[d]],i)  }}
   
   A_RN <- OCN$FD$A[RN_mask]
   X_RN <- OCN$FD$X[RN_mask]
@@ -71,23 +77,69 @@ aggregate_OCN <- function(OCN,
   #print(sprintf('Elapsed time %.2f s',difftime(Sys.time(),t1,units='secs')),quote=FALSE)
   #t1 <- Sys.time()
   
-  # Upstream_RN : list containing IDs of all nodes upstream of each node (plus node itself)
+  # # Upstream_RN : list containing IDs of all nodes upstream of each node (plus node itself)
+  # # old version
+  # t0 <- Sys.time()
+  # Upstream_RN <- vector("list",Nnodes_RN)
+  # Nupstream_RN <- numeric(Nnodes_RN)
+  # for (i in 1:Nnodes_RN){
+  #   #UpOneLevel <- DownNode_RN_rev[[i]]
+  #   UpOneLevel <- which(DownNode_RN==i) # find reaches at one level upstream
+  #   Upstream_RN[[i]] <- UpOneLevel      # add them to the list
+  #   while (length(UpOneLevel)!=0) { # continue until there are no more reaches upstream
+  #     ContinuePath <- UpOneLevel # jump 1 level above
+  #     #UpOneLevel <- numeric(0)
+  #     #for (k in ContinuePath){UpOneLevel <- c(UpOneLevel, DownNode_RN_rev[[k]])}
+  #     UpOneLevel <- which(DownNode_RN %in% ContinuePath) # find reaches at one level upstream
+  #     Upstream_RN[[i]] <- c(Upstream_RN[[i]],UpOneLevel) # add them to the list
+  #   }
+  #   Upstream_RN[[i]] <- c(Upstream_RN[[i]],i)
+  #   Nupstream_RN[i] <- length(Upstream_RN[[i]])
+  #   if (displayUpdates){
+  #     if ((i %% round(Nnodes_RN*0.01))==0){
+  #       message(sprintf("Calculating network at RN level... %.1f%%\r",i/Nnodes_RN*100), appendLF = FALSE)}}
+  # }
+  # t1 <- Sys.time()
+  # Upstream_RN_old <- Upstream_RN; Nupstream_RN_old <- Nupstream_RN
+  # t2 <- Sys.time()
+  # # new version
+  # Upstream_RN <- vector("list",Nnodes_RN)
+  # Nupstream_RN <- numeric(Nnodes_RN)
+  # for (i in 1:Nnodes_RN){
+  #   UpOneLevel <- as.numeric(DownNode_RN_rev[[i]])
+  #   #UpOneLevel <- which(DownNode_RN==i) # find reaches at one level upstream
+  #   Upstream_RN[[i]] <- UpOneLevel      # add them to the list
+  #   while (length(UpOneLevel)!=0) { # continue until there are no more reaches upstream
+  #     ContinuePath <- UpOneLevel # jump 1 level above
+  #     UpOneLevel <- numeric(0)
+  #     for (k in ContinuePath){UpOneLevel <- c(UpOneLevel, DownNode_RN_rev[[k]])}
+  #     #UpOneLevel <- which(DownNode_RN %in% ContinuePath) # find reaches at one level upstream
+  #     Upstream_RN[[i]] <- c(Upstream_RN[[i]],UpOneLevel) # add them to the list
+  #   }
+  #   Upstream_RN[[i]] <- c(Upstream_RN[[i]],i)
+  #   Nupstream_RN[i] <- length(Upstream_RN[[i]])
+  #   if (displayUpdates){
+  #     if ((i %% round(Nnodes_RN*0.01))==0){
+  #     message(sprintf("Calculating network at RN level... %.1f%%\r",i/Nnodes_RN*100), appendLF = FALSE)}}
+  #   if (length(Upstream_RN)<Nnodes_RN){ stop("Length issue")}
+  # }
+  # t3 <- Sys.time()
+  # difftime(t1,t0)
+  # difftime(t3,t2)
+  
+  # sort nodes in downstream direction
+  ind_sort <- sort(A_RN, index.return=TRUE)
+  ind_sort <- ind_sort$ix
   Upstream_RN <- vector("list",Nnodes_RN)
   Nupstream_RN <- numeric(Nnodes_RN)
   for (i in 1:Nnodes_RN){
-    UpOneLevel <- which(DownNode_RN==i) # find reaches at one level upstream
-    Upstream_RN[[i]] <- UpOneLevel      # add them to the list
-    while (length(UpOneLevel)!=0) { # continue until there are no more reaches upstream
-      ContinuePath <- UpOneLevel # jump 1 level above
-      UpOneLevel <- which(DownNode_RN %in% ContinuePath) # find reaches at one level upstream
-      Upstream_RN[[i]] <- c(Upstream_RN[[i]],UpOneLevel) # add them to the list
-    }
-    Upstream_RN[[i]] <- c(Upstream_RN[[i]],i)
-    Nupstream_RN[i] <- length(Upstream_RN[[i]])
-    if (displayUpdates){
-      if ((i %% round(Nnodes_RN*0.001))==0){
-      message(sprintf("Calculating network at RN level... %.1f%%\r",i/Nnodes_RN*100), appendLF = FALSE)}}
+    ups <- as.numeric(DownNode_RN_rev[[ind_sort[i]]])
+    nodes <- numeric(0)
+    for (u in ups){ nodes <- c(nodes, Upstream_RN[[u]])}
+    Upstream_RN[[ind_sort[i]]] <- c(nodes, ind_sort[i])
+    Nupstream_RN[ind_sort[i]] <- length(Upstream_RN[[ind_sort[i]]])
   }
+  
   # RN_to_CM[i] indicates outlet to which reach i drains
   RN_to_CM <- numeric(Nnodes_RN)
   for (i in 1:OCN$nOutlet){
@@ -233,23 +285,41 @@ aggregate_OCN <- function(OCN,
   W_AG[ind] <- 1
   Outlet_AG <- RN_to_AG[Outlet_RN]
   
+  # reverse downNode_AG
+  DownNode_RN_rev <- vector("list",Nnodes_AG)
+  for (i in 1:Nnodes_AG){
+    d <- DownNode_RN[i]
+    if (d!=0){DownNode_AG_rev[[d]] <- c(DownNode_AG_rev[[d]],i)  }}
+  
   # Upstream_AG : list containing IDs of all reaches upstream of each reach (plus reach itself)
+  # sort nodes in downstream direction
+  ind_sort <- sort(A_AG, index.return=TRUE)
+  ind_sort <- ind_sort$ix
   Upstream_AG <- vector("list",Nnodes_AG)
   Nupstream_AG <- numeric(Nnodes_AG)
   for (i in 1:Nnodes_AG){
-    UpOneLevel <- which(DownNode_AG==i) # find reaches at one level upstream
-    Upstream_AG[[i]] <- UpOneLevel      # add them to the list
-    while (length(UpOneLevel)!=0) { # continue until there are no more reaches upstream
-      ContinuePath <- UpOneLevel # jump 1 level above
-      UpOneLevel <- which(DownNode_AG %in% ContinuePath) # find reaches at one level upstream
-      Upstream_AG[[i]] <- c(Upstream_AG[[i]],UpOneLevel) # add them to the list
-    }
-    Upstream_AG[[i]] <- c(Upstream_AG[[i]],i)
-    Nupstream_AG[i] <- length(Upstream_AG[[i]])
-    if (displayUpdates){
-      if ((i %% round(Nnodes_AG*0.001))==0){
-      message(sprintf("Calculating network at AG level... %.1f%%\r",i/Nnodes_AG*100), appendLF = FALSE)}}
+    ups <- as.numeric(DownNode_AG_rev[[ind_sort[i]]])
+    nodes <- numeric(0)
+    for (u in ups){ nodes <- c(nodes, Upstream_AG[[u]])}
+    Upstream_AG[[ind_sort[i]]] <- c(nodes, ind_sort[i])
+    Nupstream_AG[ind_sort[i]] <- length(Upstream_AG[[ind_sort[i]]])
   }
+  # Upstream_AG <- vector("list",Nnodes_AG)
+  # Nupstream_AG <- numeric(Nnodes_AG)
+  # for (i in 1:Nnodes_AG){
+  #   UpOneLevel <- which(DownNode_AG==i) # find reaches at one level upstream
+  #   Upstream_AG[[i]] <- UpOneLevel      # add them to the list
+  #   while (length(UpOneLevel)!=0) { # continue until there are no more reaches upstream
+  #     ContinuePath <- UpOneLevel # jump 1 level above
+  #     UpOneLevel <- which(DownNode_AG %in% ContinuePath) # find reaches at one level upstream
+  #     Upstream_AG[[i]] <- c(Upstream_AG[[i]],UpOneLevel) # add them to the list
+  #   }
+  #   Upstream_AG[[i]] <- c(Upstream_AG[[i]],i)
+  #   Nupstream_AG[i] <- length(Upstream_AG[[i]])
+  #   if (displayUpdates){
+  #     if ((i %% round(Nnodes_AG*0.001))==0){
+  #     message(sprintf("Calculating network at AG level... %.1f%%\r",i/Nnodes_AG*100), appendLF = FALSE)}}
+  # }
   # AG_to_CM[i] indicates outlet to which reach i drains
   AG_to_CM <- numeric(Nnodes_AG)
   for (i in 1:OCN$nOutlet){
