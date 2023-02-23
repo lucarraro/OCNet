@@ -179,7 +179,8 @@ create_OCN <- function(dimX,dimY,
   cont_node <- 0
   W <- spam(0,Nnodes,Nnodes)
   ind <- matrix(0,Nnodes,2)
-  DownNode <- numeric(Nnodes)   
+  DownNode <- numeric(Nnodes) 
+  downNode_rev <- vector("list",Nnodes)
   for (cc in 1:dimX) {
     for (rr in 1:dimY) {
       cont_node <- cont_node + 1
@@ -196,6 +197,7 @@ create_OCN <- function(dimX,dimY,
         ind[cont_node, ] <- c(cont_node,(DownPixel[2]-1)*dimY+DownPixel[1])
         #W[cont_node,(DownPixel[2]-1)*dimY+DownPixel[1]] <- 1
         DownNode[cont_node] <- (DownPixel[2]-1)*dimY+DownPixel[1]
+        downNode_rev[[(DownPixel[2]-1)*dimY+DownPixel[1]]] <- c(downNode_rev[[(DownPixel[2]-1)*dimY+DownPixel[1]]], cont_node)
       }
     }
   }
@@ -228,7 +230,7 @@ create_OCN <- function(dimX,dimY,
   AvailableNodes <- setdiff(1:Nnodes, union(OutletPixel,semiOutlet))
   AvailableNodesPlot <- setdiff(1:Nnodes, OutletPixel)
   
-  pl <- initial_permutation(DownNode)  # calculate permutation vector
+  pl <- initial_permutation_rev(downNode_rev, OutletPixel)  # calculate permutation vector
   
   pas <- permuteAddSolve(Wt, pl$perm, 1L, numeric(Nnodes), expEnergy)
   A <- pas[[1]]
@@ -727,6 +729,37 @@ initialstate_OCN <- function(dimX,dimY,nOutlet,outletSide,outletPos,typeInitialS
 }
 
 
+initial_permutation_rev <- function(downNode_rev, Outlet){
+  
+  nNodes <- length(downNode_rev)
+  NodesToExplore <- Outlet # start from outlets
+  reverse_perm <- numeric(nNodes) # build permutation vector from outlets to headwaters, then flip it
+  
+  k <- 0
+  while (length(NodesToExplore)>0){ # continue until all the network has been explored
+    k <- k + 1
+    node <- NodesToExplore[1] # explore a node
+    reverse_perm[k] <- node # assign position in the permutation vector
+    NodesToExplore <- NodesToExplore[-1] # remove explored node
+    UpNodes <- downNode_rev[[node]] # find nodes upstream of node
+    while (length(UpNodes)>0){ # continue upstream until a headwater is found
+      k <- k + 1
+      node <- UpNodes[1] # explore first upstream node
+      reverse_perm[k] <- node
+      if (length(UpNodes)>1){ # if there is a bifurcation upstream, add the other upstream connections at the top of NodesToExplore
+        NodesToExplore <- c(UpNodes[2:length(UpNodes)],NodesToExplore)
+      }
+      UpNodes <- downNode_rev[[node]]
+    }
+  }
+  
+  perm <- reverse_perm[nNodes:1] # flip permutation
+  
+  OutList = list(perm=perm,noDAG=0)
+  
+  invisible(OutList)
+}
+
 initial_permutation <- function(DownNode){
   
   Outlet <- which(DownNode==0)
@@ -757,5 +790,3 @@ initial_permutation <- function(DownNode){
   
   invisible(OutList)
 }
-
-

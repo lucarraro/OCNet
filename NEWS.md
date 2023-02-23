@@ -2,8 +2,13 @@
 
 ## Major changes
 
-* `aggregate_OCN`: `displayUpdates` argument added.
+* `create_OCN`: initialization algorithm improved.
+* `landscape_OCN`: algorithm improved.
+* `aggregate_OCN`: `displayUpdates` argument added. Improved algorithm.
 * `paths_OCN`: `level` argument added.
+* `draw_thematic_OCN`: algorithm improved.
+* `draw_subcatchments_OCN`: `theme` argument and relative example added.
+* `min_lwd` and `max_lwd` added to all drawing functions.
 
 ## Bugs fixed
 

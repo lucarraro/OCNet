@@ -2,7 +2,9 @@
 draw_simple_OCN <- function(OCN,
                             thrADraw=0.002*OCN$FD$nNodes*OCN$cellsize^2,
                             riverColor="#0066FF",
-                            easyDraw=NULL){
+                            easyDraw=NULL,
+                            min_lwd=0.5,
+                            max_lwd=5){
   
   if (is.null(easyDraw)){
   if (OCN$FD$nNodes>4e4) {
@@ -22,12 +24,12 @@ draw_simple_OCN <- function(OCN,
   if (easyDraw==FALSE){
     for (i in AvailableNodes){
       if (OCN$FD$A[i]<thrADraw  & abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize & abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize  ) {
-        lines(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$downNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$downNode[i]]),lwd=0.5,col="#E0E0E0")}
+        lines(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$downNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$downNode[i]]),lwd=min_lwd,col="#E0E0E0")}
     } 
   } 
   for (i in AvailableNodes){
     if (OCN$FD$A[i]>=thrADraw  & abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize & abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize) {
       lines(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$downNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$downNode[i]]),
-            lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=riverColor)}}
+            lwd=min_lwd+(max_lwd-min_lwd)*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=riverColor)}}
   invisible()
 }

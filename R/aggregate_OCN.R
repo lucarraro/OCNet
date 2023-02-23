@@ -286,9 +286,9 @@ aggregate_OCN <- function(OCN,
   Outlet_AG <- RN_to_AG[Outlet_RN]
   
   # reverse downNode_AG
-  DownNode_RN_rev <- vector("list",Nnodes_AG)
+  DownNode_AG_rev <- vector("list",Nnodes_AG)
   for (i in 1:Nnodes_AG){
-    d <- DownNode_RN[i]
+    d <- DownNode_AG[i]
     if (d!=0){DownNode_AG_rev[[d]] <- c(DownNode_AG_rev[[d]],i)  }}
   
   # Upstream_AG : list containing IDs of all reaches upstream of each reach (plus reach itself)
@@ -410,7 +410,7 @@ aggregate_OCN <- function(OCN,
   
   # build neighbouring nodes at FD level
   # find list of possible neighbouring pixels
-  if (length(OCN$typeInitialState)!=0){
+  if (length(OCN$typeInitialState)!=0 | OCN$FD$nNodes==OCN$dimX*OCN$dimY){ # all OCNs
     movement <- matrix(c(0,-1,-1,-1,0,1,1,1,1,1,0,-1,-1,-1,0,1),nrow=2,byrow=TRUE)
     NeighbouringNodes <- vector("list", OCN$dimX*OCN$dimY)
     cont_node <- 0
@@ -429,27 +429,45 @@ aggregate_OCN <- function(OCN,
         NeighbouringNodes[[cont_node]] <- neigh_r[NotAboundary] + (neigh_c[NotAboundary]-1)*OCN$dimY
       }}
   } else {
-    # build neighbouring nodes at FD level (for real rivers)
     movement <- matrix(c(0,-1,-1,-1,0,1,1,1,1,1,0,-1,-1,-1,0,1),nrow=2,byrow=TRUE)
     NeighbouringNodes <- vector("list", OCN$dimX*OCN$dimY)
-    cont_node <- 0
-    for (rr in 1:OCN$dimY) {
-      for (cc in 1:OCN$dimX) {
-        cont_node <- cont_node + 1
-        neigh_r <- rep(rr,8)+movement[1,]
-        neigh_c <- rep(cc,8)+movement[2,]
-        if (OCN$periodicBoundaries == TRUE){
-          neigh_r[neigh_r==0] <- OCN$dimY
-          neigh_c[neigh_c==0] <- OCN$dimX
-          neigh_r[neigh_r>OCN$dimY] <- 1
-          neigh_c[neigh_c>OCN$dimX] <- 1
-        }
-        NotAboundary <- neigh_r>0 & neigh_r<=OCN$dimY & neigh_c>0 & neigh_c<=OCN$dimX # only effective when periodicBoundaries=FALSE
-        NeighbouringNodes[[cont_node]] <- (neigh_r[NotAboundary]-1)*OCN$dimX + neigh_c[NotAboundary]
-      }}
+    for (i in 1:OCN$FD$nNodes){
+      nodeDEM <- OCN$FD$toDEM[i]
+      cc <- (nodeDEM %% OCN$dimX); if (cc==0) cc <- OCN$dimX
+      rr <- (nodeDEM - cc)/OCN$dimX + 1
+      neigh_r <- rep(rr,8)+movement[1,]
+      neigh_c <- rep(cc,8)+movement[2,]
+      if (OCN$periodicBoundaries == TRUE){
+        neigh_r[neigh_r==0] <- OCN$dimY
+        neigh_c[neigh_c==0] <- OCN$dimX
+        neigh_r[neigh_r>OCN$dimY] <- 1
+        neigh_c[neigh_c>OCN$dimX] <- 1
+      }
+      NotAboundary <- neigh_r>0 & neigh_r<=OCN$dimY & neigh_c>0 & neigh_c<=OCN$dimX # only effective when periodicBoundaries=FALSE
+      NeighbouringNodes[[nodeDEM]] <- (neigh_r[NotAboundary]-1)*OCN$dimX + neigh_c[NotAboundary]
+    }
+    # # build neighbouring nodes at FD level (for real rivers)
+    # movement <- matrix(c(0,-1,-1,-1,0,1,1,1,1,1,0,-1,-1,-1,0,1),nrow=2,byrow=TRUE)
+    # NeighbouringNodes <- vector("list", OCN$dimX*OCN$dimY)
+    # cont_node <- 0
+    # for (rr in 1:OCN$dimY) {
+    #   for (cc in 1:OCN$dimX) {
+    #     cont_node <- cont_node + 1
+    #     neigh_r <- rep(rr,8)+movement[1,]
+    #     neigh_c <- rep(cc,8)+movement[2,]
+    #     if (OCN$periodicBoundaries == TRUE){
+    #       neigh_r[neigh_r==0] <- OCN$dimY
+    #       neigh_c[neigh_c==0] <- OCN$dimX
+    #       neigh_r[neigh_r>OCN$dimY] <- 1
+    #       neigh_c[neigh_c>OCN$dimX] <- 1
+    #     }
+    #     NotAboundary <- neigh_r>0 & neigh_r<=OCN$dimY & neigh_c>0 & neigh_c<=OCN$dimX # only effective when periodicBoundaries=FALSE
+    #     NeighbouringNodes[[cont_node]] <- (neigh_r[NotAboundary]-1)*OCN$dimX + neigh_c[NotAboundary]
+    #   }}
+
   }
-  
-  if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){
+
+  if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){ # general contour OCNs and real rivers
     NeighbouringNodes_FD <- vector("list", OCN$FD$nNodes)
     DEM_to_FD <- numeric(OCN$dimX*OCN$dimY)
     DEM_to_FD[OCN$FD$toDEM] <- 1:OCN$FD$nNodes
@@ -461,26 +479,46 @@ aggregate_OCN <- function(OCN,
     NeighbouringNodes <- NeighbouringNodes_FD
   }
   
-  # Subcatchment adjacency matrix: find which subcatchments have borders in common
-  #W_SC <- sparseMatrix(i=1,j=1,x=0,dims=c(Nnodes_SC,Nnodes_SC))
+  # # Subcatchment adjacency matrix: find which subcatchments have borders in common
+  # #W_SC <- sparseMatrix(i=1,j=1,x=0,dims=c(Nnodes_SC,Nnodes_SC))
+  # W_SC <- spam(0,Nnodes_SC,Nnodes_SC)
+  # indices <- matrix(0,Nnodes_SC,2)
+  # for (i in 1:Nnodes_SC){
+  #   for (k in 1:length(SC_to_FD[[i]])){
+  #     ind <- SC_to_FD[[i]][k]
+  #     if (length(ind)>0) {
+  #       set <- NeighbouringNodes[[ind]]
+  #       NeighSubcatch <- FD_to_SC[set]
+  #       NeighSubcatch <- NeighSubcatch[!is.nan(NeighSubcatch)]
+  #       Border <- which(NeighSubcatch!=i)
+  #       if (length(Border)>0) {
+  #         W_SC[i,unique(NeighSubcatch[Border])] <- 1
+  #         }}
+  #   }
+  #   if (displayUpdates){
+  #     if ((i %% max(1,round(Nnodes_SC*0.01)))==0){
+  #     message(sprintf("Calculating network at SC level... %.1f%%\r",i/Nnodes_AG*100), appendLF = FALSE)}}
+  # }
+  
+  # alternative
   W_SC <- spam(0,Nnodes_SC,Nnodes_SC)
-  indices <- matrix(0,Nnodes_SC,2)
+  indices <- matrix(0,Nnodes_SC*20,2)
+  k <- 1
   for (i in 1:Nnodes_SC){
-    for (k in 1:length(SC_to_FD[[i]])){
-      ind <- SC_to_FD[[i]][k]
-      if (length(ind)>0) {
-        set <- NeighbouringNodes[[ind]]
-        NeighSubcatch <- FD_to_SC[set]
-        NeighSubcatch <- NeighSubcatch[!is.nan(NeighSubcatch)]
-        Border <- which(NeighSubcatch!=i)
-        if (length(Border)>0) {
-          W_SC[i,unique(NeighSubcatch[Border])] <- 1
-          }}
-    }
+    set <- SC_to_FD[[i]]
+    nodes <- numeric(0)
+    for (s in set){ nodes <- c(nodes, NeighbouringNodes[[s]])}
+    NeighSubcatch <- setdiff(unique(FD_to_SC[nodes]), i)
+    indices[k:(k+length(NeighSubcatch)-1),1] <- i
+    indices[k:(k+length(NeighSubcatch)-1),2] <- NeighSubcatch
+    k <- k + length(NeighSubcatch)
     if (displayUpdates){
-      if ((i %% round(Nnodes_SC*0.001))==0){
-      message(sprintf("Calculating network at SC level... %.1f%%\r",i/Nnodes_AG*100), appendLF = FALSE)}}
+      if ((i %% max(1,round(Nnodes_SC*0.01)))==0){
+        message(sprintf("Calculating network at SC level... %.1f%%\r",i/Nnodes_AG*100), appendLF = FALSE)}}
   }
+  indices <- indices[1:(k-1),]
+  W_SC[indices] <- 1  
+  
   
   # X,Y of subcatchment centroids
   X_SC <- numeric(Nnodes_SC)

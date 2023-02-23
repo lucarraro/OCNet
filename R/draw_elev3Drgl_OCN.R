@@ -6,6 +6,8 @@ draw_elev3Drgl_OCN <- function(OCN,
                                drawRiver=FALSE,
                                thrADraw=0.002*OCN$FD$nNodes*OCN$cellsize^2,
                                riverColor="#00CCFF",
+                               min_lwd=1,
+                               max_lwd=8,
                                ...){
   #aspect=c(1,1,0.1),
   #ColPalette=terrain.colors(1000,alpha=1),
@@ -98,7 +100,7 @@ draw_elev3Drgl_OCN <- function(OCN,
             abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize) {
           lines3d(c(OCN$FD$X[i],OCN$FD$X[OCN$FD$downNode[i]]),c(OCN$FD$Y[i],OCN$FD$Y[OCN$FD$downNode[i]]),
                   offset + c(OCN$FD$Z[i],OCN$FD$Z[OCN$FD$downNode[i]]),
-                  lwd=1+7*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=riverColor)}
+                  lwd=min_lwd+(max_lwd-min_lwd)*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=riverColor)}
       }
     }
     # add colorbar

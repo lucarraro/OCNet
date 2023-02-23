@@ -27,7 +27,7 @@ rivergeometry_OCN <- function(OCN,
     stop('expWidth + expDepth + expVelocity must be equal to 1.')
   }
 
-  if (!("AG" %in% names(OCN))){
+  if (length(OCN$RN$nNodes)==0){
     stop('Missing fields in OCN. You should run aggregate_OCN prior to rivergeometry_OCN.')
   }
 

@@ -4,7 +4,8 @@
 \usage{
 draw_elev3Drgl_OCN(OCN, coarseGrain = c(1, 1), chooseCM = FALSE,
   addColorbar = FALSE, drawRiver = FALSE, thrADraw = 0.002 *
-  OCN$FD$nNodes* OCN$cellsize^2, riverColor = "#00CCFF", ...)
+  OCN$FD$nNodes* OCN$cellsize^2, riverColor = "#00CCFF", 
+  min_lwd = 1, max_lwd = 8, ...)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{landscape_OCN}}.}
@@ -24,6 +25,8 @@ If \code{TRUE}, the catchment with largest area is displayed. Note that, if the 
 \item{thrADraw}{Threshold drainage area value used to display the network.}
 
 \item{riverColor}{Color used to plot the river.}
+
+\item{min_lwd, max_lwd}{Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).}
 
 \item{...}{Further parameters passed to function \code{\link{persp3d}}. The default value for \code{aspect} is \code{c(OCN$dimX/sqrt(OCN$dimX*OCN$dimY, OCN$dimY/sqrt(OCN$dimX*OCN$dimY, 1))}.}
 }

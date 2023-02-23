@@ -7,9 +7,11 @@ draw_contour_OCN <- function(OCN,
                              colPalCont="#000000",
                              drawOutlets=0,
                              pch=15,
-                             colPalOut="#000000"){
+                             colPalOut="#000000",
+                             min_lwd=0.5,
+                             max_lwd=5){
   
-  if (!("XDraw" %in% names(OCN$FD))){
+  if (!("Z" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_contour_OCN.')
   }
   
@@ -83,7 +85,7 @@ draw_contour_OCN <- function(OCN,
   if (EasyDraw==FALSE){
     for (i in AvailableNodes){
       if (OCN$FD$A[i]<thrADraw & abs(XDraw[i]-XDraw[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize & abs(YDraw[i]-YDraw[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize) {
-        lines(c(XDraw[i],XDraw[OCN$FD$downNode[i]]),c(YDraw[i],YDraw[OCN$FD$downNode[i]]),lwd=0.5,col="#E0E0E0")} 
+        lines(c(XDraw[i],XDraw[OCN$FD$downNode[i]]),c(YDraw[i],YDraw[OCN$FD$downNode[i]]),lwd=min_lwd,col="#E0E0E0")} 
     }
   }
   for (i in AvailableNodes){
@@ -91,7 +93,7 @@ draw_contour_OCN <- function(OCN,
         abs(XDraw[i]-XDraw[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize & 
         abs(YDraw[i]-YDraw[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize  ) {
       lines(c(XDraw[i],XDraw[OCN$FD$downNode[i]]),c(YDraw[i],YDraw[OCN$FD$downNode[i]]),
-            lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=colPalRiver[OCN$FD$toCM[i]])}
+            lwd=min_lwd+(max_lwd-min_lwd)*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=colPalRiver[OCN$FD$toCM[i]])}
   }
   if (drawContours){
     for (j in 1:OCN$nOutlet){

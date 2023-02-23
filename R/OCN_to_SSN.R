@@ -27,7 +27,7 @@ OCN_to_SSN <- function (OCN, level, obsDesign, obsSites, predDesign, predSites,
   } else if (isdir == FALSE) {
     stop("Unable to create directory")
   }
-  if (!("RN" %in% names(OCN)) && (level %in% c("RN","AG"))){
+  if (length(OCN$RN$nNodes)==0 && (level %in% c("RN","AG"))){
     stop('Missing aggregation level in OCN. Run landscape_OCN and/or aggregate_OCN prior to OCN_to_SSN.')
   }
 

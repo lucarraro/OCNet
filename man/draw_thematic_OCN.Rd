@@ -8,9 +8,9 @@ draw_thematic_OCN(OCN,theme=NA*numeric(OCN$AG$nNodes),
   colLevels = NULL, cutoff = FALSE,
   colPalette = colorRampPalette(c("yellow","red","black")),
   exactDraw = FALSE, chooseCM = FALSE, drawNodes = FALSE,  
-  nodeType = "upstream", cex = 2, pch = 21, nanColor = "#00BFFF",
+  nodeType = "upstream",  nanColor = "#00BFFF",
   riverColor = "#00BFFF", backgroundColor = "#999999", 
-  addLegend = TRUE, ...)
+  addLegend = TRUE, min_lwd = 0.5, max_lwd = 5, ...)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{aggregate_OCN}}. The order of arguments between \code{OCN} and \code{theme} can be swapped freely.}
@@ -22,7 +22,7 @@ The vector can contain \code{NA} and \code{NaN} values to identify RN or AG node
 
 \item{discreteLevels}{Logical. If \code{FALSE}, a continuous color scheme is used. If \code{TRUE}, discrete color levels are applied. See also \code{colLevels} and examples.}
 
-\item{colLevels}{Number of colors in the palette. If \code{discreteLevels == FALSE}, \code{colLevels} must be a vector of the form \code{c(minval, maxval, N_levels)}. The vector of breakpoints used to attribute \code{theme} values to a given color is then defined as \code{seq(minval, maxval, N_levels)}. Default is \code{minval = min(theme[!(is.nan(theme))])}, \code{maxval = max(theme[!(is.nan(theme))])}, \code{N_levels = 1000}. If \code{discreteLevels == TRUE} and \code{is.null(colLevels) == TRUE}, each unique value of \code{theme} is attributed a different color. If \code{discreteLevels == TRUE} and \code{colLevels} is a vector, \code{colLevels} is used as vector of breakpoints. In this case, the number of discrete colors is equal to \code{length(colLevels) - 1}.} 
+\item{colLevels}{Number of colors in the palette. If \code{discreteLevels == FALSE}, \code{colLevels} must be a vector of the form \code{c(minval, maxval)} or \code{c(minval, maxval, N_levels)}. The vector of breakpoints used to attribute \code{theme} values to a given color is then defined as \code{seq(minval, maxval, N_levels)}. Default is \code{minval = min(theme[!(is.nan(theme))])}, \code{maxval = max(theme[!(is.nan(theme))])}, \code{N_levels = 1000}. If \code{discreteLevels == TRUE} and \code{is.null(colLevels) == TRUE}, each unique value of \code{theme} is attributed a different color. If \code{discreteLevels == TRUE} and \code{colLevels} is a vector, \code{colLevels} is used as vector of breakpoints. In this case, the number of discrete colors is equal to \code{length(colLevels) - 1}.} 
 
 \item{cutoff}{Logical. If \code{FALSE}, nodes whose \code{theme} value is beyond the range established by the vector of breakpoints are attributed the color corresponding to the lowest (or highest) value in the color scheme. If \code{TRUE}, such nodes are attributed the color \code{NaNcolor}.}
 
@@ -37,12 +37,6 @@ In this case, \code{nanColor} can be used to define the color of the river netwo
 
 \item{nodeType}{Only effective if \code{drawNodes == TRUE} and \code{length(theme) == OCN$RN$nNodes}. Can assume values \code{"upstream"} or \code{"downstream"}. If \code{"upstream"}, nodes are drawn at the upstream ends of the corresponding edges (i.e. at the coordinates defined by \code{OCN$AG$X}, \code{OCN$AG$Y}). If \code{"downstream"}, nodes are drawn at the downstream ends of the corresponding edges (i.e. at the coordinates defined by \code{OCN$AG$XReach}, \code{OCN$AG$YReach}).}
 
-\item{cex}{Only effective if \code{drawNodes == TRUE}. It sets the dimension of the markers (equivalent to 
-parameter \code{cex} of function \code{\link{points}}). It can be a scalar or a vector of length \code{length(theme)}.}
-
-\item{pch}{Only effective if \code{drawNodes == TRUE}. It sets the type of the markers (equivalent to 
-parameter \code{pch} of function \code{\link{points}}). It can be a scalar or a vector of length \code{length(theme)}.}
-
 \item{nanColor}{Color attributed to RN or AG nodes whose theme value is \code{NA} or \code{NaN}.}
 
 \item{riverColor}{Only effective if \code{drawNodes == TRUE}. Color used to display the OCN below the nodes.}
@@ -53,6 +47,8 @@ equal to \code{length(chooseCM)}. If \code{length(backgroundColor) == length(cho
 \code{backgroundColor}.}
 
 \item{addLegend}{Logical. If \code{TRUE}, add legend to the plot. If also \code{discreteLevels = FALSE}, \code{\link{image.plot}} is used to display the legend, which appears as a colorbar; as a result, elements (e.g. node coordinates) subsequently plotted of on top of the 2D elevation map might be wrongly positioned. }
+
+\item{min_lwd, max_lwd}{Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).}
 
 \item{...}{Further arguments to be passed to \code{plot}.}
 }

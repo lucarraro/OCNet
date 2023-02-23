@@ -9,7 +9,9 @@ draw_elev3D_OCN <- function(OCN,
                             theta=-20,
                             phi=30,
                             expand=0.05,
-                            shade=0.5){
+                            shade=0.5,
+                            min_lwd=0.5,
+                            max_lwd=5){
 
   if (!("Z" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_elev3D_OCN.')
@@ -74,7 +76,7 @@ draw_elev3D_OCN <- function(OCN,
           abs(OCN$FD$X[i]-OCN$FD$X[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize & 
           abs(OCN$FD$Y[i]-OCN$FD$Y[OCN$FD$downNode[i]]) <= 1.001*OCN$cellsize) {
         lines(c(river[[1]][i],river[[1]][OCN$FD$downNode[i]]),c(river[[2]][i],river[[2]][OCN$FD$downNode[i]]),
-              lwd=0.5+4.5*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=riverColor)}
+              lwd=min_lwd+(max_lwd-min_lwd)*(OCN$FD$A[i]/(OCN$FD$nNodes*OCN$cellsize^2))^0.5,col=riverColor)}
     }
   }
   invisible()

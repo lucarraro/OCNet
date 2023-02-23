@@ -19,8 +19,10 @@ landscape_OCN <- function(OCN,
   for (i in AvailableNodes){
     Length[i] <- sqrt((abs(OCN$FD$X[OCN$FD$downNode[i]]-OCN$FD$X[i]) %% ((OCN$dimX-1)*OCN$cellsize-2*min(OCN$FD$X)))^2 + 
                         (abs(OCN$FD$Y[OCN$FD$downNode[i]]-OCN$FD$Y[i]) %% ((OCN$dimY-1)*OCN$cellsize-2*min(OCN$FD$Y)))^2)
-    kount <- kount + 1
-    if (displayUpdates==2){message(sprintf("Calculating lengths and slopes... %.1f%%\r",kount/length(AvailableNodes)*100), appendLF = FALSE)}
+    if (displayUpdates==2){
+      kount <- kount + 1
+      if (kount && round(0.01*length(AvailableNodes))){
+      message(sprintf("Calculating lengths and slopes... %.1f%%\r",kount/length(AvailableNodes)*100), appendLF = FALSE)}}
   }
   DeltaZ <- Slope*Length
   
@@ -47,6 +49,10 @@ landscape_OCN <- function(OCN,
   if (displayUpdates>0){message("Calculating lengths and slopes...   100%\n", appendLF = FALSE)}
   
   # find elevation pattern with respect to main outlet
+  DownNode_rev <- vector("list",OCN$FD$nNodes)
+  for (i in 1:OCN$FD$nNodes){
+    d <- OCN$FD$downNode[i]
+    if (d!=0){DownNode_rev[[d]] <- c(DownNode_rev[[d]],i)  }}
   if (displayUpdates>0){message("Determining elevation... \r", appendLF = FALSE)}
   kount <- 0
   Z <- numeric(OCN$FD$nNodes)
@@ -62,15 +68,18 @@ landscape_OCN <- function(OCN,
       next_nodes <- integer(0) # empty next_nodes
       for (i in 1:length(current_nodes)){
         node <- current_nodes[i]
-        neighbours <- which(OCN$FD$downNode==node)
+        neighbours <- DownNode_rev[[node]] 
         Z[neighbours] <- Z[node] + DeltaZ[neighbours]
         FD_to_CM[neighbours] <- outlet
         CM_to_FD[[outlet]] <- c(CM_to_FD[[outlet]],neighbours)
         next_nodes <- c(next_nodes,neighbours)
       }
-      if (displayUpdates==2){message(sprintf("Determining elevation... %.1f%%\r",kount/OCN$FD$nNodes*100), appendLF = FALSE)}
+      if (displayUpdates==2){
+        if (kount && round(0.01*OCN$FD$nNodes)){
+        message(sprintf("Determining elevation... %.1f%%\r",kount/OCN$FD$nNodes*100), appendLF = FALSE)}}
     }
   }
+
   
   # determine catchment area
   A <- numeric(OCN$nOutlet)

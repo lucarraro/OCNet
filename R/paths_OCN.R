@@ -5,7 +5,7 @@ paths_OCN <- function(OCN,
                       includeUnconnectedPaths=FALSE,
                       displayUpdates=FALSE){
   
-  if (!("RN" %in% names(OCN))){
+  if (length(OCN$RN$nNodes)==0){
     stop('Missing fields in OCN. You should run aggregate_OCN prior to paths_OCN.')
   }
   
@@ -150,7 +150,7 @@ paths_OCN <- function(OCN,
         }
       }
       if (displayUpdates){
-        if ((i %% round(OCN$AG$nNodes*0.001))==0){
+        if ((i %% max(1,round(OCN$AG$nNodes*0.01)))==0){
           message(sprintf("AG downstream paths... %.1f%%\r",i/(1.001*OCN$AG$nNodes)*100), appendLF = FALSE)}}
     }
     indices_down <- indices_down[1:(counter_down-1), ]
