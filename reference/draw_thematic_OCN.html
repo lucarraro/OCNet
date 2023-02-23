@@ -54,9 +54,9 @@
 <span>  colLevels <span class="op">=</span> <span class="cn">NULL</span>, cutoff <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  colPalette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html" class="external-link">colorRampPalette</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"yellow"</span>,<span class="st">"red"</span>,<span class="st">"black"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  exactDraw <span class="op">=</span> <span class="cn">FALSE</span>, chooseCM <span class="op">=</span> <span class="cn">FALSE</span>, drawNodes <span class="op">=</span> <span class="cn">FALSE</span>,  </span>
-<span>  nodeType <span class="op">=</span> <span class="st">"upstream"</span>, cex <span class="op">=</span> <span class="fl">2</span>, pch <span class="op">=</span> <span class="fl">21</span>, nanColor <span class="op">=</span> <span class="st">"#00BFFF"</span>,</span>
+<span>  nodeType <span class="op">=</span> <span class="st">"upstream"</span>,  nanColor <span class="op">=</span> <span class="st">"#00BFFF"</span>,</span>
 <span>  riverColor <span class="op">=</span> <span class="st">"#00BFFF"</span>, backgroundColor <span class="op">=</span> <span class="st">"#999999"</span>, </span>
-<span>  addLegend <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>  addLegend <span class="op">=</span> <span class="cn">TRUE</span>, min_lwd <span class="op">=</span> <span class="fl">0.5</span>, max_lwd <span class="op">=</span> <span class="fl">5</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -79,7 +79,7 @@ The vector can contain <code>NA</code> and <code>NaN</code> values to identify R
 
 
 <dt>colLevels</dt>
-<dd><p>Number of colors in the palette. If <code>discreteLevels == FALSE</code>, <code>colLevels</code> must be a vector of the form <code>c(minval, maxval, N_levels)</code>. The vector of breakpoints used to attribute <code>theme</code> values to a given color is then defined as <code>seq(minval, maxval, N_levels)</code>. Default is <code>minval = min(theme[!(is.nan(theme))])</code>, <code>maxval = max(theme[!(is.nan(theme))])</code>, <code>N_levels = 1000</code>. If <code>discreteLevels == TRUE</code> and <code>is.null(colLevels) == TRUE</code>, each unique value of <code>theme</code> is attributed a different color. If <code>discreteLevels == TRUE</code> and <code>colLevels</code> is a vector, <code>colLevels</code> is used as vector of breakpoints. In this case, the number of discrete colors is equal to <code>length(colLevels) - 1</code>.</p></dd>
+<dd><p>Number of colors in the palette. If <code>discreteLevels == FALSE</code>, <code>colLevels</code> must be a vector of the form <code>c(minval, maxval)</code> or <code>c(minval, maxval, N_levels)</code>. The vector of breakpoints used to attribute <code>theme</code> values to a given color is then defined as <code>seq(minval, maxval, N_levels)</code>. Default is <code>minval = min(theme[!(is.nan(theme))])</code>, <code>maxval = max(theme[!(is.nan(theme))])</code>, <code>N_levels = 1000</code>. If <code>discreteLevels == TRUE</code> and <code>is.null(colLevels) == TRUE</code>, each unique value of <code>theme</code> is attributed a different color. If <code>discreteLevels == TRUE</code> and <code>colLevels</code> is a vector, <code>colLevels</code> is used as vector of breakpoints. In this case, the number of discrete colors is equal to <code>length(colLevels) - 1</code>.</p></dd>
  
 
 <dt>cutoff</dt>
@@ -107,16 +107,6 @@ In this case, <code>nanColor</code> can be used to define the color of the river
 <dd><p>Only effective if <code>drawNodes == TRUE</code> and <code>length(theme) == OCN$RN$nNodes</code>. Can assume values <code>"upstream"</code> or <code>"downstream"</code>. If <code>"upstream"</code>, nodes are drawn at the upstream ends of the corresponding edges (i.e. at the coordinates defined by <code>OCN$AG$X</code>, <code>OCN$AG$Y</code>). If <code>"downstream"</code>, nodes are drawn at the downstream ends of the corresponding edges (i.e. at the coordinates defined by <code>OCN$AG$XReach</code>, <code>OCN$AG$YReach</code>).</p></dd>
 
 
-<dt>cex</dt>
-<dd><p>Only effective if <code>drawNodes == TRUE</code>. It sets the dimension of the markers (equivalent to 
-parameter <code>cex</code> of function <code><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></code>). It can be a scalar or a vector of length <code>length(theme)</code>.</p></dd>
-
-
-<dt>pch</dt>
-<dd><p>Only effective if <code>drawNodes == TRUE</code>. It sets the type of the markers (equivalent to 
-parameter <code>pch</code> of function <code><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></code>). It can be a scalar or a vector of length <code>length(theme)</code>.</p></dd>
-
-
 <dt>nanColor</dt>
 <dd><p>Color attributed to RN or AG nodes whose theme value is <code>NA</code> or <code>NaN</code>.</p></dd>
 
@@ -134,6 +124,10 @@ equal to <code>length(chooseCM)</code>. If <code>length(backgroundColor) == leng
 
 <dt>addLegend</dt>
 <dd><p>Logical. If <code>TRUE</code>, add legend to the plot. If also <code>discreteLevels = FALSE</code>, <code>image.plot</code> is used to display the legend, which appears as a colorbar; as a result, elements (e.g. node coordinates) subsequently plotted of on top of the 2D elevation map might be wrongly positioned.</p></dd>
+
+
+<dt>min_lwd, max_lwd</dt>
+<dd><p>Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).</p></dd>
 
 
 <dt>...</dt>
