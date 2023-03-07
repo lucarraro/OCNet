@@ -73,7 +73,7 @@ old.par <- par(no.readonly = TRUE)
 par(mai = c(1, 1, 1, 1))
 plot(ssn2, xlab = "X", ylab = "Y")
 par(old.par)
-}
+
 
 # 2) An OCN with 3 outlets transformed into a SSN, with obsSites
 # attributed at given locations
@@ -85,4 +85,5 @@ ssn3 <- OCN_to_SSN(OCN, "AG", obsSites=obsSites,
 draw_thematic_OCN(OCN)
 points(OCN$AG$X[obsSites], OCN$AG$Y[obsSites])
 plot(ssn3)
+}
 }
