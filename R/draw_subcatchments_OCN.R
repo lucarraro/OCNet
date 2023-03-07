@@ -6,8 +6,10 @@ draw_subcatchments_OCN <- function(OCN,
                                    colLevels = NULL,
                                    riverColor = NULL,
                                    addLegend = NULL,
-                                   min_lwd=0.5,
-                                   max_lwd=5,
+                                   min_lwd = 0.5,
+                                   max_lwd = 5,
+                                   add = FALSE,
+                                   args_imagePlot = list(),
                                    ...){
   
   dots <- list(...)
@@ -16,6 +18,11 @@ draw_subcatchments_OCN <- function(OCN,
   if (is.null(dots$xlab)){dots$xlab <- ""}
   if (is.null(dots$ylab)){dots$ylab <- ""}
   if (is.null(dots$asp)){dots$asp <- 1}
+  
+  if (is.null(dev.list()) & add==TRUE){
+    add <- FALSE
+    warning("'add' will be ignored as there is no existing plot")
+  }
   
   if (length(OCN$RN$nNodes)==0){
     stop('Missing fields in OCN. You should run aggregate_OCN prior to draw_subcatchments_OCN.')
@@ -37,7 +44,7 @@ draw_subcatchments_OCN <- function(OCN,
   if (!is.null(theme)){
     if (length(colLevels)<3){N_colLevels <- 1000} else {N_colLevels <- colLevels[3]}
     if (typeof(colPalette)=="closure"){
-    colPalette <- colPalette(N_colLevels)
+      colPalette <- colPalette(N_colLevels)
     } else {
       if (length(colPalette) < N_colLevels){ stop(sprintf('Length of colPalette (%d) is lower than number of colors (%d).',length(colPalette),N_colLevels)) }
       colPalette <- colPalette[1:N_colLevels]}
@@ -131,6 +138,7 @@ draw_subcatchments_OCN <- function(OCN,
   #par(bty="n")
   dots$x <- Xvec; dots$y <- Yvec; dots$z <- t(Color_SC); dots$col <- colPalette
   dots$xlim <- range(OCN$FD$X); dots$ylim <- range(OCN$FD$Y)
+  dots$add <- add
   
   do.call(image,dots)
   
@@ -153,10 +161,14 @@ draw_subcatchments_OCN <- function(OCN,
   
   if (is.null(addLegend) & !is.null(theme)){addLegend <- TRUE} else {addLegend <- FALSE}
   if (addLegend) {
-    tmp <- par()$plt[2]
-    pr <- 1 - tmp
-    image.plot(col=colPalette,legend.only=TRUE,zlim=c(minval,maxval),
-               smallplot=c(0.88, 0.9,par()$plt[3],par()$plt[4]))
+    if (is.null(args_imagePlot$smallplot)){
+      args_imagePlot$smallplot <- c(0.88, 0.9,par()$plt[3],par()$plt[4])}
+    if (is.null(args_imagePlot$col)){args_imagePlot$col <- colPalette} 
+    if (is.null(args_imagePlot$legend.only)){args_imagePlot$legend.only <- TRUE}
+    if (is.null(args_imagePlot$zlim)){args_imagePlot$zlim <- c(minval, maxval)}
+    do.call(imagePlot, args_imagePlot)
+    # imagePlot(col=colPalette,legend.only=TRUE,zlim=c(minval,maxval),
+    #           smallplot=c(0.88, 0.9,par()$plt[3],par()$plt[4]))
   }
   invisible()
 }

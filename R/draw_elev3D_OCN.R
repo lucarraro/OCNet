@@ -11,7 +11,8 @@ draw_elev3D_OCN <- function(OCN,
                             expand=0.05,
                             shade=0.5,
                             min_lwd=0.5,
-                            max_lwd=5){
+                            max_lwd=5,
+                            args_imagePlot = list()){
 
   if (!("Z" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_elev3D_OCN.')
@@ -65,7 +66,11 @@ draw_elev3D_OCN <- function(OCN,
               border=NA,axes=FALSE)
   
   if (addColorbar==TRUE){
-  image.plot(col=colPalette,legend.only=TRUE,zlim=c(min(OCN$FD$Z),max(OCN$FD$Z)))
+  if(is.null(args_imagePlot$col)){args_imagePlot$col <- colPalette}
+  if(is.null(args_imagePlot$zlim)){args_imagePlot$zlim <- c(min(OCN$FD$Z),max(OCN$FD$Z))} 
+    args_imagePlot$legend.only <- TRUE
+    do.call(imagePlot, args_imagePlot)
+  #imagePlot(col=colPalette,legend.only=TRUE,zlim=c(min(OCN$FD$Z),max(OCN$FD$Z)))
   }
   # draw river
   if (drawRiver==TRUE){

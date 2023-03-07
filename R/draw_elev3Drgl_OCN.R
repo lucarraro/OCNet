@@ -105,7 +105,7 @@ draw_elev3Drgl_OCN <- function(OCN,
     }
     # add colorbar
     if (addColorbar==TRUE){  
-      bgplot3d(suppressWarnings(image.plot(legend.only=TRUE, zlim=zlim,col=colorlut)))
+      bgplot3d(suppressWarnings(imagePlot(legend.only=TRUE, zlim=zlim,col=colorlut)))
     }
     
   } else {
@@ -188,7 +188,7 @@ draw_elev3Drgl_OCN <- function(OCN,
       lines3d(c(OCN$FD$X[index_border],OCN$FD$X[index_border[1]]),c(OCN$FD$Y[index_border],OCN$FD$Y[index_border[1]]),numeric(length(index_border)+1),col="black")
       
       if (addColorbar==TRUE){  
-        bgplot3d(suppressWarnings(image.plot(legend.only=TRUE, zlim=zlim,col=colorlut)))
+        bgplot3d(suppressWarnings(imagePlot(legend.only=TRUE, zlim=zlim,col=colorlut)))
       }
       
       

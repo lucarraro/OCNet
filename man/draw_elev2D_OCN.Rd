@@ -4,7 +4,7 @@
 \usage{
 draw_elev2D_OCN(OCN, colPalette = terrain.colors(1000, alpha = 1),
 addLegend = TRUE, drawRiver = FALSE, thrADraw = 0.002*OCN$FD$nNodes*OCN$cellsize^2,
-riverColor = "#00BFFF", min_lwd = 0.5, max_lwd = 5)
+riverColor = "#00BFFF", min_lwd = 0.5, max_lwd = 5, args_imagePlot = list())
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{landscape_OCN}}.}
@@ -20,6 +20,8 @@ riverColor = "#00BFFF", min_lwd = 0.5, max_lwd = 5)
 \item{riverColor}{Color used to display the OCN (only effective if \code{drawRiver = TRUE}). }
 
 \item{min_lwd, max_lwd}{Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).}
+
+\item{args_imagePlot}{List of arguments passed to \code{\link{imagePlot}} (or to \code{\link{image}} if \code{addLegend = FALSE}). For example, argument \code{smallplot} can be used to specify the plot coordinates for the legend.}
 }
 \value{
 No output is returned.

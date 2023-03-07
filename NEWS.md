@@ -1,3 +1,11 @@
+# OCNet 0.7.0.9000
+
+## Minor changes
+
+* `draw_elev2D_OCN`, `draw_elev3D_OCN`: `args_imagePlot` argument added.
+* `draw_subcatchments_OCN`: `add` and `args_imagePlot` arguments added.
+* `draw_thematic_OCN`: `add`, `args_imagePlot`, `args_legend` arguments and relative examples added. 
+
 # OCNet 0.7.0
 
 ## Major changes

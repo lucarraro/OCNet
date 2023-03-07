@@ -23,9 +23,9 @@ import(spam)
 # import(bookdown)
 import(igraph)
 
-importFrom("fields", "image.plot")
+importFrom("fields", "imagePlot")
 importFrom("grDevices", "colorRampPalette", "contourLines", "rainbow",
-             "terrain.colors", "trans3d", "hcl.colors")
+             "terrain.colors", "trans3d", "hcl.colors","dev.list")
 importFrom("graphics", "lines", "par", "persp", "plot", "points",
 			 "polygon","legend")
 importFrom("methods", "new", "slot<-")

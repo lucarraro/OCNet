@@ -4,7 +4,7 @@
 \usage{
 draw_subcatchments_OCN(OCN, theme = NULL, drawRiver = TRUE,
  colPalette = NULL, colLevels = NULL, riverColor = NULL, addLegend = NULL, 
- min_lwd = 0.5, max_lwd = 5, ...)
+ min_lwd = 0.5, max_lwd = 5, add = FALSE, args_imagePlot = list(), ...)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{aggregate_OCN}}.}
@@ -23,7 +23,11 @@ draw_subcatchments_OCN(OCN, theme = NULL, drawRiver = TRUE,
 
 \item{min_lwd, max_lwd}{Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).}
 
-\item{...}{Further arguments to be passed to \code{plot}. Default plot options are as in \code{draw_thematic_OCN}.}
+\item{add}{Logical. If \code{TRUE}, add to an already existing plot. Taken as \code{FALSE} (with a warning if a different value is supplied) if no graphics device is open.}
+
+\item{args_imagePlot}{Only effective if \code{addLegend = TRUE}. List of arguments passed to \code{\link{imagePlot}} for drawing a continuous legend. For example, argument \code{smallplot} can be used to specify the plot coordinates for the legend.}
+
+\item{...}{Further arguments to be passed to \code{image}. Default plot options are as in \code{draw_thematic_OCN}.}
 }
 \value{
 No output is returned.

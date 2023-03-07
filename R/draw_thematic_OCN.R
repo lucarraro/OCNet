@@ -15,6 +15,9 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
                               addLegend=TRUE,
                               min_lwd=0.5,
                               max_lwd=5,
+                              add=FALSE,
+                              args_imagePlot=list(),
+                              args_legend=list(),
                               ...){
   
   dots <- list(...)
@@ -26,6 +29,11 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
   if (is.null(dots$asp)){dots$asp <- 1}
   if (is.null(dots$cex)){dots$cex <- 2}; cex <- dots$cex
   if (is.null(dots$pch)){dots$pch <- 21}; pch <- dots$pch
+  
+  if (is.null(dev.list()) & add==TRUE){
+    add <- FALSE
+    warning("'add' will be ignored as there is no existing plot")
+  }
   
   # initialization
   if (!("RN" %in% names(OCN))){ # try to swap arguments if in wrong order
@@ -125,7 +133,7 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
   dots$x <- dots$xlim
   dots$y <- dots$ylim
   
-  do.call(plot, dots)
+  if (!add) {do.call(plot, dots)}
               
   xy_lim <- par("usr")
   
@@ -230,10 +238,14 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
   
   if (addLegend) {
     if (discreteLevels==FALSE){
-      tmp <- par()$plt[2]
-      pr <- 1 - tmp
-      image.plot(col=colPalette,legend.only=TRUE,zlim=c(minval,maxval),
-                 smallplot=c(0.88, 0.9,par()$plt[3],par()$plt[4]))
+      if (is.null(args_imagePlot$smallplot)){
+      args_imagePlot$smallplot <- c(0.88, 0.9,par()$plt[3],par()$plt[4])}
+      if (is.null(args_imagePlot$col)){args_imagePlot$col <- colPalette} 
+      if (is.null(args_imagePlot$legend.only)){args_imagePlot$legend.only <- TRUE}
+      if (is.null(args_imagePlot$zlim)){args_imagePlot$zlim <- c(minval, maxval)}
+      do.call(imagePlot, args_imagePlot)
+      # imagePlot(col=colPalette,legend.only=TRUE,zlim=c(minval,maxval),
+      #            smallplot=smallplot)
     } else {
       if (is.null(colLevels)){
         str <- NULL
@@ -249,8 +261,18 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
                                   as.character(round(1000*Breakpoints[N_colLevels+1])/1000),"]",sep="")
       }
       
-      legend(x=1.01*max(X[OCN$RN$toCM %in% chooseCM]),y=max(Y[OCN$RN$toCM %in% chooseCM]),
-             str,fill=colPalette,ncol=ceiling(N_colLevels/20), xpd=TRUE, cex=0.8, bty="n")
+      if (is.null(args_legend$x)){args_legend$x <- 1.01*max(X[OCN$RN$toCM %in% chooseCM])}
+      if (is.null(args_legend$y)){args_legend$y <- max(Y[OCN$RN$toCM %in% chooseCM])}
+      if (is.null(args_legend$legend)){args_legend$legend <- str}
+      if (is.null(args_legend$fill)){args_legend$fill <- colPalette}
+      if (is.null(args_legend$ncol)){args_legend$ncol <- ceiling(N_colLevels/20)}
+      if (is.null(args_legend$xpd)){args_legend$xpd <- TRUE}
+      if (is.null(args_legend$cex)){args_legend$cex <- 0.8}
+      if (is.null(args_legend$bty)){args_legend$bty <- "n"}
+      
+      do.call(legend,args_legend)
+      # legend(x=1.01*max(X[OCN$RN$toCM %in% chooseCM]),y=max(Y[OCN$RN$toCM %in% chooseCM]),
+      #        str,fill=colPalette,ncol=ceiling(N_colLevels/20), xpd=TRUE, cex=0.8, bty="n")
     }
   }
   invisible()

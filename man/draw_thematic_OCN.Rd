@@ -10,7 +10,9 @@ draw_thematic_OCN(OCN,theme=NA*numeric(OCN$AG$nNodes),
   exactDraw = FALSE, chooseCM = FALSE, drawNodes = FALSE,  
   nodeType = "upstream",  nanColor = "#00BFFF",
   riverColor = "#00BFFF", backgroundColor = "#999999", 
-  addLegend = TRUE, min_lwd = 0.5, max_lwd = 5, ...)
+  addLegend = TRUE, min_lwd = 0.5, max_lwd = 5, 
+  add = FALSE, args_imagePlot = list(), args_legend = list(), 
+  ...)
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{aggregate_OCN}}. The order of arguments between \code{OCN} and \code{theme} can be swapped freely.}
@@ -49,6 +51,13 @@ equal to \code{length(chooseCM)}. If \code{length(backgroundColor) == length(cho
 \item{addLegend}{Logical. If \code{TRUE}, add legend to the plot. If also \code{discreteLevels = FALSE}, \code{\link{image.plot}} is used to display the legend, which appears as a colorbar; as a result, elements (e.g. node coordinates) subsequently plotted of on top of the 2D elevation map might be wrongly positioned. }
 
 \item{min_lwd, max_lwd}{Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).}
+
+\item{add}{Logical. If \code{TRUE}, add to an already existing plot. Taken as \code{FALSE} (with a warning if a different value is supplied) if no graphics device is open.}
+
+\item{args_imagePlot}{Only effective if \code{addLegend = TRUE} and \code{discreteLevels = FALSE}. List of arguments passed to \code{\link{imagePlot}} for drawing a continuous legend. For example, argument \code{smallplot} can be used to specify the plot coordinates for the legend.}
+
+\item{args_legend}{Only effective if \code{addLegend = TRUE} and \code{discreteLevels = TRUE}. List of arguments passed to \code{\link{legend}} for drawing a discrete legend.}
+
 
 \item{...}{Further arguments to be passed to \code{plot}.}
 }
@@ -122,6 +131,17 @@ title("Distance to outlet along the main stem [pixel units]")
 # 3) Show an OCN without a theme
 OCN <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 4)
 draw_thematic_OCN(OCN)
-draw_thematic_OCN(OCN, xlim=c(3,8), ylim=c(0,5))# zoom closer at the outlet
+draw_thematic_OCN(OCN, xlim=c(3,8), ylim=c(0,5)) # zoom closer at the outlet
 
+# 4) Adjust legend location
+draw_thematic_OCN(OCN, OCN$AG$A, 
+	args_imagePlot = list(smallplot = c(0.1, 0.11, 0.1, 0.3)))
+draw_thematic_OCN(OCN, OCN$AG$streamOrder, 
+	discreteLevels = TRUE, args_legend = list(x = -2, y = 1))
+
+# 5) add thematic OCN on top of map
+draw_elev2D_OCN(OCN)
+draw_thematic_OCN(OCN, OCN$AG$slope, backgroundColor = NULL, 
+add = TRUE, colPalette = hcl.colors(1000, "Grays", rev = TRUE),
+args_imagePlot = list(smallplot=c(0.05,0.07,0.1,0.9)))
 }

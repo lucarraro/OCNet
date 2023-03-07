@@ -5,7 +5,8 @@
 draw_elev3D_OCN(OCN, coarseGrain = c(1,1), colPalette = terrain.colors(1000, alpha = 1),
   addColorbar = TRUE, drawRiver = TRUE, thrADraw = 0.002 *
   OCN$FD$nNodes * OCN$cellsize^2, riverColor = "#00CCFF",
-  theta = -20, phi = 30, expand = 0.05, shade = 0.5, min_lwd = 0.5, max_lwd = 5)
+  theta = -20, phi = 30, expand = 0.05, shade = 0.5, min_lwd = 0.5, max_lwd = 5, 
+  args_imagePlot = list())
 }
 \arguments{
 \item{OCN}{List as produced by \code{\link{landscape_OCN}}.}
@@ -31,6 +32,8 @@ colatitude; \code{expand} is the expansion factor for the Z coordinates; \code{s
 the shade at a surface facet.}
 
 \item{min_lwd, max_lwd}{Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).}
+
+\item{args_imagePlot}{Only effective if \code{addColorbar = TRUE}. List of arguments passed to \code{\link{imagePlot}} for drawing a continuous legend. For example, argument \code{smallplot} can be used to specify the plot coordinates for the legend.}
 }
 \value{
 No output is returned.
