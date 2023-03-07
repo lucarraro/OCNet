@@ -51,7 +51,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">draw_elev3D_OCN</span><span class="op">(</span><span class="va">OCN</span>, coarseGrain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, colPalette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">terrain.colors</a></span><span class="op">(</span><span class="fl">1000</span>, alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  addColorbar <span class="op">=</span> <span class="cn">TRUE</span>, drawRiver <span class="op">=</span> <span class="cn">TRUE</span>, thrADraw <span class="op">=</span> <span class="fl">0.002</span> <span class="op">*</span></span>
 <span>  <span class="va">OCN</span><span class="op">$</span><span class="va">FD</span><span class="op">$</span><span class="va">nNodes</span> <span class="op">*</span> <span class="va">OCN</span><span class="op">$</span><span class="va">cellsize</span><span class="op">^</span><span class="fl">2</span>, riverColor <span class="op">=</span> <span class="st">"#00CCFF"</span>,</span>
-<span>  theta <span class="op">=</span> <span class="op">-</span><span class="fl">20</span>, phi <span class="op">=</span> <span class="fl">30</span>, expand <span class="op">=</span> <span class="fl">0.05</span>, shade <span class="op">=</span> <span class="fl">0.5</span>, min_lwd <span class="op">=</span> <span class="fl">0.5</span>, max_lwd <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<span>  theta <span class="op">=</span> <span class="op">-</span><span class="fl">20</span>, phi <span class="op">=</span> <span class="fl">30</span>, expand <span class="op">=</span> <span class="fl">0.05</span>, shade <span class="op">=</span> <span class="fl">0.5</span>, min_lwd <span class="op">=</span> <span class="fl">0.5</span>, max_lwd <span class="op">=</span> <span class="fl">5</span>, </span>
+<span>  args_imagePlot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -96,6 +97,10 @@ the shade at a surface facet.</p></dd>
 
 <dt>min_lwd, max_lwd</dt>
 <dd><p>Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).</p></dd>
+
+
+<dt>args_imagePlot</dt>
+<dd><p>Only effective if <code>addColorbar = TRUE</code>. List of arguments passed to <code>imagePlot</code> for drawing a continuous legend. For example, argument <code>smallplot</code> can be used to specify the plot coordinates for the legend.</p></dd>
 
 </dl></div>
     <div class="section level2">

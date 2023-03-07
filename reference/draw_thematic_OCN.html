@@ -56,7 +56,9 @@
 <span>  exactDraw <span class="op">=</span> <span class="cn">FALSE</span>, chooseCM <span class="op">=</span> <span class="cn">FALSE</span>, drawNodes <span class="op">=</span> <span class="cn">FALSE</span>,  </span>
 <span>  nodeType <span class="op">=</span> <span class="st">"upstream"</span>,  nanColor <span class="op">=</span> <span class="st">"#00BFFF"</span>,</span>
 <span>  riverColor <span class="op">=</span> <span class="st">"#00BFFF"</span>, backgroundColor <span class="op">=</span> <span class="st">"#999999"</span>, </span>
-<span>  addLegend <span class="op">=</span> <span class="cn">TRUE</span>, min_lwd <span class="op">=</span> <span class="fl">0.5</span>, max_lwd <span class="op">=</span> <span class="fl">5</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>  addLegend <span class="op">=</span> <span class="cn">TRUE</span>, min_lwd <span class="op">=</span> <span class="fl">0.5</span>, max_lwd <span class="op">=</span> <span class="fl">5</span>, </span>
+<span>  add <span class="op">=</span> <span class="cn">FALSE</span>, args_imagePlot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, args_legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, </span>
+<span>  <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -128,6 +130,19 @@ equal to <code>length(chooseCM)</code>. If <code>length(backgroundColor) == leng
 
 <dt>min_lwd, max_lwd</dt>
 <dd><p>Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).</p></dd>
+
+
+<dt>add</dt>
+<dd><p>Logical. If <code>TRUE</code>, add to an already existing plot. Taken as <code>FALSE</code> (with a warning if a different value is supplied) if no graphics device is open.</p></dd>
+
+
+<dt>args_imagePlot</dt>
+<dd><p>Only effective if <code>addLegend = TRUE</code> and <code>discreteLevels = FALSE</code>. List of arguments passed to <code>imagePlot</code> for drawing a continuous legend. For example, argument <code>smallplot</code> can be used to specify the plot coordinates for the legend.</p></dd>
+
+
+<dt>args_legend</dt>
+<dd><p>Only effective if <code>addLegend = TRUE</code> and <code>discreteLevels = TRUE</code>. List of arguments passed to <code><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></code> for drawing a discrete legend.</p></dd>
+
 
 
 <dt>...</dt>
@@ -209,9 +224,23 @@ equal to <code>length(chooseCM)</code>. If <code>length(backgroundColor) == leng
 <span class="r-in"><span><span class="va">OCN</span> <span class="op">&lt;-</span> <span class="fu"><a href="aggregate_OCN.html">aggregate_OCN</a></span><span class="op">(</span><span class="fu"><a href="landscape_OCN.html">landscape_OCN</a></span><span class="op">(</span><span class="va">OCN_20</span><span class="op">)</span>, thrA <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">draw_thematic_OCN</span><span class="op">(</span><span class="va">OCN</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="draw_thematic_OCN-3.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">draw_thematic_OCN</span><span class="op">(</span><span class="va">OCN</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">8</span><span class="op">)</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="co"># zoom closer at the outlet</span></span></span>
+<span class="r-in"><span><span class="fu">draw_thematic_OCN</span><span class="op">(</span><span class="va">OCN</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">8</span><span class="op">)</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="co"># zoom closer at the outlet</span></span></span>
 <span class="r-plt img"><img src="draw_thematic_OCN-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># 4) Adjust legend location</span></span></span>
+<span class="r-in"><span><span class="fu">draw_thematic_OCN</span><span class="op">(</span><span class="va">OCN</span>, <span class="va">OCN</span><span class="op">$</span><span class="va">AG</span><span class="op">$</span><span class="va">A</span>, </span></span>
+<span class="r-in"><span>  args_imagePlot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>smallplot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.11</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="draw_thematic_OCN-5.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">draw_thematic_OCN</span><span class="op">(</span><span class="va">OCN</span>, <span class="va">OCN</span><span class="op">$</span><span class="va">AG</span><span class="op">$</span><span class="va">streamOrder</span>, </span></span>
+<span class="r-in"><span>  discreteLevels <span class="op">=</span> <span class="cn">TRUE</span>, args_legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">-</span><span class="fl">2</span>, y <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="draw_thematic_OCN-6.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># 5) add thematic OCN on top of map</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="draw_elev2D_OCN.html">draw_elev2D_OCN</a></span><span class="op">(</span><span class="va">OCN</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">draw_thematic_OCN</span><span class="op">(</span><span class="va">OCN</span>, <span class="va">OCN</span><span class="op">$</span><span class="va">AG</span><span class="op">$</span><span class="va">slope</span>, backgroundColor <span class="op">=</span> <span class="cn">NULL</span>, </span></span>
+<span class="r-in"><span>add <span class="op">=</span> <span class="cn">TRUE</span>, colPalette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="st">"Grays"</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>args_imagePlot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>smallplot<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>,<span class="fl">0.07</span>,<span class="fl">0.1</span>,<span class="fl">0.9</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="draw_thematic_OCN-7.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

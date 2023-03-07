@@ -50,7 +50,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">draw_subcatchments_OCN</span><span class="op">(</span><span class="va">OCN</span>, theme <span class="op">=</span> <span class="cn">NULL</span>, drawRiver <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span> colPalette <span class="op">=</span> <span class="cn">NULL</span>, colLevels <span class="op">=</span> <span class="cn">NULL</span>, riverColor <span class="op">=</span> <span class="cn">NULL</span>, addLegend <span class="op">=</span> <span class="cn">NULL</span>, </span>
-<span> min_lwd <span class="op">=</span> <span class="fl">0.5</span>, max_lwd <span class="op">=</span> <span class="fl">5</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span> min_lwd <span class="op">=</span> <span class="fl">0.5</span>, max_lwd <span class="op">=</span> <span class="fl">5</span>, add <span class="op">=</span> <span class="cn">FALSE</span>, args_imagePlot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -87,8 +87,16 @@
 <dd><p>Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).</p></dd>
 
 
+<dt>add</dt>
+<dd><p>Logical. If <code>TRUE</code>, add to an already existing plot. Taken as <code>FALSE</code> (with a warning if a different value is supplied) if no graphics device is open.</p></dd>
+
+
+<dt>args_imagePlot</dt>
+<dd><p>Only effective if <code>addLegend = TRUE</code>. List of arguments passed to <code>imagePlot</code> for drawing a continuous legend. For example, argument <code>smallplot</code> can be used to specify the plot coordinates for the legend.</p></dd>
+
+
 <dt>...</dt>
-<dd><p>Further arguments to be passed to <code>plot</code>. Default plot options are as in <code>draw_thematic_OCN</code>.</p></dd>
+<dd><p>Further arguments to be passed to <code>image</code>. Default plot options are as in <code>draw_thematic_OCN</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
