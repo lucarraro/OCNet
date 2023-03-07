@@ -53,12 +53,6 @@ draw_elev2D_OCN <- function(OCN,
     do.call(imagePlot, args_imagePlot)
   } else {do.call(image, args_imagePlot)}
   
-  # image(seq(xllcorner,xllcorner+(OCN$dimX-1)*OCN$cellsize,OCN$cellsize),
-  #       seq(yllcorner,yllcorner+(OCN$dimY-1)*OCN$cellsize,OCN$cellsize),
-  #       t(Zmat),col=colPalette,xlab=" ",ylab=" ",axes=FALSE,asp=1,
-  #       xlim=range(OCN$FD$X), ylim=range(OCN$FD$Y))
-  
-  
   if (drawRiver==TRUE){
     AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)
     for (i in AvailableNodes){
