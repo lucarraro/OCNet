@@ -2,7 +2,7 @@
 \name{OCN_300_4out_PB_hot}
 \alias{OCN_300_4out_PB_hot}
 \title{Example of multiple-outlet OCN with periodic boundaries}
-\format{A list. See \code{\link{create_OCN}} documentation for details.}
+\format{A \code{river} object. See \code{\link{create_OCN}} documentation for details.}
 \usage{
 data(OCN_300_4out_PB_hot)
 }

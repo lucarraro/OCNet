@@ -6,11 +6,11 @@ paths_OCN(OCN, level = c("RN","AG"), includePaths = FALSE,
 includeDownstreamNode = FALSE, includeUnconnectedPaths = FALSE, displayUpdates = FALSE)
 }
 \arguments{
-\item{OCN}{List as produced by \code{\link{aggregate_OCN}}.}
+\item{OCN}{A \code{river} object as produced by \code{\link{aggregate_OCN}}.}
 
 \item{level}{Character vector. At which level should paths be calculated? Possible values are \code{"RN"}, \code{"AG"}, or both.}
 
-\item{includePaths}{Logical. If \code{TRUE}, \code{RN$downstreamPath} and \code{AG$downstreamPath} are included to the output list. Note that this might slow down the function execution considerably, and create RAM issues for very large OCNs.}
+\item{includePaths}{Logical. If \code{TRUE}, \code{RN$downstreamPath} and \code{AG$downstreamPath} are included to the output object. Note that this might slow down the function execution considerably, and create RAM issues for very large OCNs.}
 
 \item{includeDownstreamNode}{Logical. If \code{TRUE}, path lengths include the length of the edge departing from the last downstream node of the path.}
 
@@ -19,7 +19,7 @@ includeDownstreamNode = FALSE, includeUnconnectedPaths = FALSE, displayUpdates =
 \item{displayUpdates}{Logical. State if updates are printed on the console while \code{paths_OCN} runs.}
 }
 \value{
-A list that contains all objects contained in \code{OCN}, in addition to the objects listed below. 
+A \code{river} object that contains all objects contained in \code{OCN}, in addition to the objects listed below. 
 \item{\code{RN$downstreamPath}}{List (of length \code{OCN$RN$nNodes}) whose object \code{i} is a list (of length \code{OCN$RN$nNodes}). 
 If nodes \code{i} and \code{j} are connected by a downstream path, then \code{RN$downstreamPath[[i]][[j]]} is a vector 
 containing the indices of the nodes constituting such path (\code{i} and \code{j} are included). If \code{i} and \code{j} are not connected 

@@ -290,5 +290,9 @@ OCN <- list(FD=FD,dimX=dimX,dimY=dimY,cellsize=cellsize,nOutlet=nOutlet,periodic
 if (saveEnergy==TRUE) {OCN[["energy"]] <- Energy}
 if (saveExitFlag==TRUE) {OCN[["exitFlag"]] <- ExitFlag}
 
-invisible(OCN)
+OCN_S4 <- new("river")
+fieldnames <- names(OCN)
+for (i in 1:length(fieldnames)){slot(OCN_S4, fieldnames[i]) <- OCN[[fieldnames[i]]]}
+
+invisible(OCN_S4)
 }

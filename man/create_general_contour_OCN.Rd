@@ -58,7 +58,7 @@ Note that, for large lattices, \code{showIntermediatePlots = TRUE} might slow do
 }}
 }
 \value{
-A list as in \code{\link{create_OCN}}, to which the reader is referred for detailed documentation.
+A \code{river} object as in \code{\link{create_OCN}}, to which the reader is referred for detailed documentation.
 However, note that in this case \code{dimX} and \code{dimY} are equal to the number of columns and rows of \code{flowDirStart}, respectively, 
 while \code{nNodes} is the number of non-\code{NaN} pixels in \code{flowDirStart}. Hence, \code{nNodes} is generally lower than
 \code{dimX*dimY}. The additionally exported vector \code{FD$toDEM} identifies the indices of the pixels of the landscape/flow direction matrix

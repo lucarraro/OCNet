@@ -8,7 +8,7 @@ draw_contour_OCN(OCN, thrADraw = 0.002 * OCN$FD$nNodes *
   min_lwd = 0.5, max_lwd = 5)
 }
 \arguments{
-\item{OCN}{List as produced by \code{\link{landscape_OCN}}.}
+\item{OCN}{A \code{river} object as produced by \code{\link{landscape_OCN}}.}
 
 \item{thrADraw}{Threshold drainage area value used to display the network.}
 

@@ -279,13 +279,15 @@ continue_OCN <- function(OCN,nNewIter,
                   initialNoCoolingPhase=c(OCN$initialNoCoolingPhase,initialNoCoolingPhase),
                   energyInit=energyInit)
   
-  if (!is.null(OCN$energy)) {OCN_new[["energy"]] <- c(OCN$energy,Energy)}
-  if (!is.null(OCN$exitFlag)) {OCN_new[["exitFlag"]] <- c(OCN$exitFlag,ExitFlag)}
-  if (!(is.null(OCN$N8))) {
-    OCN_new[["N8"]] <- OCN$N8}
-  if (!(is.null(OCN$N4))) {
-    OCN_new[["N4"]] <- OCN$N4}
+  if (length(OCN$energy)>0) {OCN_new[["energy"]] <- c(OCN$energy,Energy)}
+  if (length(OCN$exitFlag)>0) {OCN_new[["exitFlag"]] <- c(OCN$exitFlag,ExitFlag)}
+  if (length(OCN$N8)>0) {OCN_new[["N8"]] <- OCN$N8}
+  if (length(OCN$N4)>0) {OCN_new[["N4"]] <- OCN$N4}
   
-  invisible(OCN_new)
+  OCN_new_S4 <- new("river")
+  fieldnames <- names(OCN_new)
+  for (i in 1:length(fieldnames)){slot(OCN_new_S4, fieldnames[i]) <- OCN_new[[fieldnames[i]]]}
+  
+  invisible(OCN_new_S4)
   
 }

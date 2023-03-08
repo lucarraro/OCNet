@@ -7,7 +7,7 @@ draw_subcatchments_OCN(OCN, theme = NULL, drawRiver = TRUE,
  min_lwd = 0.5, max_lwd = 5, add = FALSE, args_imagePlot = list(), ...)
 }
 \arguments{
-\item{OCN}{List as produced by \code{\link{aggregate_OCN}}.}
+\item{OCN}{A \code{river} object as produced by \code{\link{aggregate_OCN}}.}
 
 \item{theme}{Vector (of length \code{OCN$SC$Nnodes} expressing the spatial field of interest. }
 

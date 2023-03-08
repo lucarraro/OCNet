@@ -106,7 +106,11 @@ create_peano <- function(nIterPeano,
   # note: for peano networks, ExpEnergy only has the meaning of quantity related to the exponent of the slope-area relationship
   # s \propto A^(ExpEnergy-1)
   
-  invisible(peano)   
+  peano_S4 <- new("river")
+  fieldnames <- names(peano)
+  for (i in 1:length(fieldnames)){slot(peano_S4, fieldnames[i]) <- peano[[fieldnames[i]]]}
+  
+  invisible(peano_S4)   
 }
 
 # auxiliary functions

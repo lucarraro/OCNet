@@ -7,7 +7,7 @@ find_area_threshold_OCN(OCN, thrValues = seq(OCN$cellsize^2,
   streamOrderType = "Strahler", displayUpdates = 0)
 }
 \arguments{
-\item{OCN}{List as produced by \code{\link{landscape_OCN}}}
+\item{OCN}{A \code{river} object as produced by \code{\link{landscape_OCN}}}
 
 \item{thrValues}{Vector of values of threshold drainage area (in squared planar units) for which the respective number of nodes at the RN and AG levels are computed. Note that it must be \code{max(thrValues) <= min(OCN$CM$A)}, otherwise the catchment(s) with area lower than \code{max(thrValues)} degenerate to a network with zero nodes at the RN/AG level.}
 

@@ -7,7 +7,7 @@ addLegend = TRUE, drawRiver = FALSE, thrADraw = 0.002*OCN$FD$nNodes*OCN$cellsize
 riverColor = "#00BFFF", min_lwd = 0.5, max_lwd = 5, args_imagePlot = list())
 }
 \arguments{
-\item{OCN}{List as produced by \code{\link{landscape_OCN}}.}
+\item{OCN}{A \code{river} object as produced by \code{\link{landscape_OCN}}.}
 
 \item{colPalette}{Color palette used for the plot.}
 

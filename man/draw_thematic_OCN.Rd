@@ -15,7 +15,7 @@ draw_thematic_OCN(OCN,theme=NA*numeric(OCN$AG$nNodes),
   ...)
 }
 \arguments{
-\item{OCN}{List as produced by \code{\link{aggregate_OCN}}. The order of arguments between \code{OCN} and \code{theme} can be swapped freely.}
+\item{OCN}{A \code{river} object as produced by \code{\link{aggregate_OCN}}. The order of arguments between \code{OCN} and \code{theme} can be swapped freely.}
 
 \item{theme}{Vector (of length \code{OCN$AG$Nnodes} or \code{OCN$RN$Nnodes}) expressing the spatial field of interest. 
 The vector can contain \code{NA} and \code{NaN} values to identify RN or AG nodes where the theme is not defined. The order of arguments between \code{OCN} and \code{theme} can be swapped freely. }

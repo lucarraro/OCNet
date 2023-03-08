@@ -127,8 +127,8 @@ draw_subcatchments_OCN <- function(OCN,
   } else {Color_SC <- matrix(data=kol,nrow=OCN$dimY,ncol=OCN$dimX)}
   
   
-  if (is.null(OCN$xllcorner)){xllcorner <- min(OCN$FD$X)[1]} else {xllcorner <- OCN$xllcorner}
-  if (is.null(OCN$yllcorner)){yllcorner <- min(OCN$FD$Y)[1]} else {yllcorner <- OCN$yllcorner}
+  if (length(OCN$xllcorner)==0){xllcorner <- min(OCN$FD$X)[1]} else {xllcorner <- OCN$xllcorner}
+  if (length(OCN$yllcorner)==0){yllcorner <- min(OCN$FD$Y)[1]} else {yllcorner <- OCN$yllcorner}
   
   Xvec <- seq(xllcorner,xllcorner+(OCN$dimX-1)*OCN$cellsize,OCN$cellsize)
   Yvec <- seq(yllcorner,yllcorner+(OCN$dimY-1)*OCN$cellsize,OCN$cellsize)

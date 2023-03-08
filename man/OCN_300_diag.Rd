@@ -2,7 +2,7 @@
 \name{OCN_300_diag}
 \alias{OCN_300_diag}
 \title{Example of single-outlet OCN}
-\format{A list. See \code{\link{create_OCN}} documentation for details.}
+\format{A \code{river} object. See \code{\link{create_OCN}} documentation for details.}
 \usage{
 data(OCN_300_diag)
 }

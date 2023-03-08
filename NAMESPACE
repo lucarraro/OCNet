@@ -16,6 +16,8 @@ export(paths_OCN)
 export(rivergeometry_OCN)
 export(OCN_to_igraph)
 export(OCN_to_SSN)
+exportClasses(river)
+exportMethods(plot, show, names, "$<-", "$") 
 import(SSN)
 # import(fields)
 import(rgl)
@@ -28,7 +30,7 @@ importFrom("grDevices", "colorRampPalette", "contourLines", "rainbow",
              "terrain.colors", "trans3d", "hcl.colors","dev.list")
 importFrom("graphics", "lines", "par", "persp", "plot", "points",
 			 "polygon","legend")
-importFrom("methods", "new", "slot<-")
+importFrom("methods", "new", "slot", "slot<-", "slotNames", "show")
 importFrom("stats", "optim", "runif")
 importFrom("rgdal", "writeOGR")
 importFrom("sp", "Line", "Lines", "SpatialLines", "SpatialLinesDataFrame",

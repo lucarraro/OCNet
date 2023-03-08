@@ -2,7 +2,7 @@
 \name{OCN_300_7out}
 \alias{OCN_300_7out}
 \title{Example of multiple-outlet OCN}
-\format{A list. See \code{\link{create_OCN}} documentation for details.}
+\format{A \code{river} object. See \code{\link{create_OCN}} documentation for details.}
 \usage{
 data(OCN_300_7out)
 }

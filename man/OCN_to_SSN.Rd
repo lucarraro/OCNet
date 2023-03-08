@@ -6,7 +6,7 @@ OCN_to_SSN(OCN, level, obsDesign, obsSites, predDesign,
   predSites, path, randomAllocation = FALSE, importToR = FALSE)
 }
 \arguments{
-\item{OCN}{List as produced by \code{\link{aggregate_OCN}}.}
+\item{OCN}{A \code{river} object as produced by \code{\link{aggregate_OCN}}.}
 
 \item{level}{Aggregation level at which the OCN is converted into a SpatialStreamNetwork object. It 
 must be equal to either \code{"FD"}, \code{"RN"} or \code{"AG"}.}

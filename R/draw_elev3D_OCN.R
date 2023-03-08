@@ -21,8 +21,8 @@ draw_elev3D_OCN <- function(OCN,
     stop('coarseGrain[1] must be divisor of dimX; coarseGrain[2] must be divisor of dimY')
   }  
   
-  if (is.null(OCN$xllcorner)){xllcorner <- min(OCN$FD$X)[1]} else {xllcorner <- OCN$xllcorner}
-  if (is.null(OCN$yllcorner)){yllcorner <- min(OCN$FD$Y)[1]} else {yllcorner <- OCN$yllcorner}
+  if (length(OCN$xllcorner)==0){xllcorner <- min(OCN$FD$X)[1]} else {xllcorner <- OCN$xllcorner}
+  if (length(OCN$yllcorner)==0){yllcorner <- min(OCN$FD$Y)[1]} else {yllcorner <- OCN$yllcorner}
   
   if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){
     if (isTRUE(OCN$typeInitialState=="custom")){

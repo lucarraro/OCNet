@@ -8,7 +8,7 @@ draw_elev3Drgl_OCN(OCN, coarseGrain = c(1, 1), chooseCM = FALSE,
   min_lwd = 1, max_lwd = 8, ...)
 }
 \arguments{
-\item{OCN}{List as produced by \code{\link{landscape_OCN}}.}
+\item{OCN}{A \code{river} object as produced by \code{\link{landscape_OCN}}.}
 
 \item{coarseGrain}{2x1 vector (only effective if \code{chooseCM = FALSE}). For aesthetic purposes, the elevation map can be coarse-grained into a \code{OCN$dimX/coarseGrain[1]}-by-\code{OCN$dimX/coarseGrain[2]} 
 domain, where each cell's elevation is the average of elevations of the corresponding \code{coarseGrain[1]}-by-\code{coarseGrain[2]} cells of the original elevation field. 

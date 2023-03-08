@@ -2,7 +2,7 @@
 \name{OCN_400_Allout}
 \alias{OCN_400_Allout}
 \title{Example of OCN with all perimetric pixels as outlets}
-\format{A list. See \code{\link{create_OCN}} documentation for details.}
+\format{A \code{river} object. See \code{\link{create_OCN}} documentation for details.}
 \usage{
 data(OCN_400_Allout)
 }

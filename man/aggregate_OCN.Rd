@@ -7,7 +7,7 @@ aggregate_OCN(OCN, thrA = 0.002 * OCN$FD$nNodes *
   breakpoints = NULL, displayUpdates = FALSE)
 }
 \arguments{
-\item{OCN}{List as produced by \code{\link{landscape_OCN}}.}
+\item{OCN}{A \code{river} object as produced by \code{\link{landscape_OCN}}.}
 
 \item{thrA}{Threshold value on drainage area used to derive the aggregated network. If \code{thrA = 0}, no aggregation is performed: 
 every FD node is also a node at the RN and AG levels. In this case, the function \code{aggregate_OCN} can still be used to compute statistics 
@@ -23,12 +23,12 @@ pixel is considered as a new channel head, from which a new reach departs.}
 and AG nodes determined via \code{maxReachLength}). To determine such indices, a preliminary run of \code{aggregate_OCN} with the same \code{thrA} 
 would be required (see example 3).}
 
-\item{displayUpdates}{Logical. State if updates are printed on the console while \code{landscape_OCN} runs.}
+\item{displayUpdates}{Logical. State if updates are printed on the console while \code{aggregate_OCN} runs.}
 
 }
 \value{
-A list that contains all objects contained in \code{OCN}, in addition to the objects listed below. 
-New sublists RN, AG, SC, containing variables at the corresponding aggregation levels, are created.
+A \code{river} object that contains all objects contained in \code{OCN}, in addition to the objects listed below. 
+New sublists \code{RN}, \code{AG}, \code{SC}, containing variables at the corresponding aggregation levels, are created.
 Refer to section 4.2 of the \href{../doc/OCNet.html}{vignette} for a more detailed explanation on values \code{OCN$XX$toYY}, where \code{XX} and \code{YY} are two random aggregation levels.
 \item{\code{FD$toRN}}{Vector (of length \code{OCN$FD$nNodes}) whose values are equal to 0 if the FD node is not a node at the RN level. 
 If \code{FD$toRN[i] != 0}, then \code{FD$toRN[i]} is the index at the RN level of the node whose index at the FD level is \code{i}. Thereby, 
@@ -107,7 +107,7 @@ In this case, the indices from \code{AG$nNodes + 1} to \code{SC$nNodes} identify
 \item{\code{SC$toFD}}{List (of length \code{SC$nNodes}) whose object \code{i} is a vector of indices of FD pixels constituting the subcatchment \code{i}.}
 \item{\code{SC$X}, \code{SC$Y}}{Vectors (of length \code{SC$nNodes}) of X, Y coordinates (in planar units) of subcatchment centroids.}
 \item{\code{SC$Z}}{Vector (of length \code{SC$nNodes}) of average subcatchment elevation (in elevational units).}
-Finally, \code{thrA} is added to the list.
+Finally, \code{thrA} is added to the \code{river} object.
 }
 \description{
 Function that, given an OCN, builds the network at the river network (RN), aggregated (AG), subcatchment (SC), and catchment (CM) levels.

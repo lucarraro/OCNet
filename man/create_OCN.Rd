@@ -86,8 +86,8 @@ Note that, for large lattices, \code{showIntermediatePlots = TRUE} might slow do
 }}
 }
 \value{
-A list whose objects are listed below. Variables that define the network at the FD level are wrapped in the sublist \code{FD}.
-Adjacency matrices describing 4- or 8- nearest-neighbours connectivity among pixels are contained in lists N4 and N8, respectively. 
+A \code{\link{river}} object. It is de facto a list, whose objects are listed below. Variables that define the network at the FD level are wrapped in the sublist \code{FD}.
+Adjacency matrices describing 4- or 8- nearest-neighbours connectivity among pixels are contained in lists \code{N4} and \code{N8}, respectively. 
 \item{\code{FD$A}}{Vector (of length \code{dimX*dimY}) containing drainage area values for all FD pixels (in square planar units).}
 \item{\code{FD$W}}{Adjacency matrix (\code{dimX*dimY} by \code{dimX*dimY}) at the FD level. 
 It is a \code{\link{spam}} object.}
@@ -115,7 +115,7 @@ It is saved only if \code{saveN4 = TRUE}.}
 between pixels: \code{N8$W[i,j] = 1} if pixel \code{j} shares an edge or a vertex with \code{i}, and is null otherwise. 
 It is saved only if \code{saveN8 = TRUE}.}  
 Finally, \code{dimX}, \code{dimY}, \code{cellsize}, \code{nOutlet}, \code{periodicBoundaries}, \code{expEnergy}, 
-\code{coolingRate}, \code{typeInitialState}, \code{nIter}, \code{xllcorner}, \code{yllcorner} are passed to the list as they were included in the input 
+\code{coolingRate}, \code{typeInitialState}, \code{nIter}, \code{xllcorner}, \code{yllcorner} are passed to the \code{river} object as they were included in the input 
 (except \code{nOutlet = "All"} which is converted to \code{2*(dimX + dimY - 2))}.
 }
 \description{

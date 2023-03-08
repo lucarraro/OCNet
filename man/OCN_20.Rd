@@ -2,7 +2,7 @@
 \name{OCN_20}
 \alias{OCN_20}
 \title{Example of small OCN}
-\format{A list. See \code{\link{create_OCN}} documentation for details.}
+\format{A \code{river} object. See \code{\link{create_OCN}} documentation for details.}
 \usage{
 data(OCN_20)
 }

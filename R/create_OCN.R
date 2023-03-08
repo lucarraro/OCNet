@@ -406,7 +406,11 @@ create_OCN <- function(dimX,dimY,
     N4 <- list(W=W_N4)
     OCN[["N4"]] <- N4}
   
-  invisible(OCN)
+  OCN_S4 <- new("river")
+  fieldnames <- names(OCN)
+  for (i in 1:length(fieldnames)){slot(OCN_S4, fieldnames[i]) <- OCN[[fieldnames[i]]]}
+  
+  invisible(OCN_S4)
 }
 
 
@@ -790,3 +794,96 @@ initial_permutation <- function(DownNode){
   
   invisible(OutList)
 }
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%#
+# SET CLASS AND METHODS ####
+#%%%%%%%%%%%%%%%%%%%%%%%%%%#
+
+setClass("river",
+         slots= c(FD="list", dimX="numeric", dimY="numeric", cellsize="numeric", nOutlet="numeric",
+                  periodicBoundaries="logical", expEnergy="numeric", coolingRate="numeric",
+                  typeInitialState="character", nIter="numeric", initialNoCoolingPhase="numeric",
+                  energy="numeric", exitFlag="numeric", N4="list",N8="list", nIterSequence="numeric",
+                  energyInit="numeric", xllcorner="numeric", yllcorner="numeric",
+                  CM="list",RN="list",AG="list",OptList="list",SC="list",thrA="numeric",
+                  slope0="numeric", zMin="numeric",streamOrderType="character",maxReachLength="numeric",
+                  widthMax="numeric",depthMax="numeric",velocityMax="numeric",expWidth="numeric",expDepth="numeric",expVelocity="numeric"))
+
+setMethod("$","river",
+          function(x,name){
+            slot(x,name)
+          })
+
+
+setMethod("show", "river",
+          function(object){
+            isOCN <- length(object$coolingRate) > 0
+            isElev <- length(object$CM) > 0
+            isAggr <- length(object$RN) > 0
+            isPath <- length(object$AG$downstreamPath) > 0
+            isRivG <- length(object$AG$width) > 0
+            
+            cat("Class         : river \n")
+            if (isOCN){
+              if (object$typeInitialState=="custom"){
+                cat("Type          : Optimal Channel Network (general contour) \n")
+              } else {
+                cat("Type          : Optimal Channel Network \n")}
+            } else {
+              cat("Type          : Real river \n")
+            }
+            cat(sprintf("No. FD nodes  : %d \n", object$FD$nNodes))
+            cat(sprintf('Dimensions    : %d x %d \n',object$dimX,object$dimY))
+            cat(sprintf('Cell size     : %.2f \n',object$cellsize))
+            cat("Has elevation :",isElev,"\n" )
+            if (isElev){
+              cat("Aggregated    :",isAggr,"\n" )
+              if (isAggr){
+                cat(sprintf("   Threshold area  : %.2f \n",object$thrA))
+                cat(sprintf("   Max reach length: %.2f \n",object$maxReachLength))
+                cat(sprintf("   No. RN nodes    : %d \n",object$RN$nNodes))
+                cat(sprintf("   No. AG nodes    : %d \n",object$AG$nNodes))
+                cat(        "   Has paths       : ",isPath,"\n")
+                cat(        "   River geometry  : ",isRivG,"\n")
+              }}
+          })
+
+
+setMethod("names",signature=c(x="river"),
+          function(x){
+            slotNames(x)
+          })
+
+setMethod("$<-",signature=c(x="river"),
+          function(x,name,value){
+            slot(x, name) <- value
+            return(x)
+          })
+
+setMethod("plot", signature(x="river",y="missing"),
+          function(x, type, ...){
+            if (missing(type)) {type <- "RN"}
+            if (type=="elev2D") {OCNet::draw_elev2D_OCN(x, ...)}
+            else if (length(x$AG) > 0) {
+              if (type=="SC" | type=="subcatchments"){
+                OCNet::draw_subcatchments_OCN(x, ...)
+              } else {OCNet::draw_thematic_OCN(x, ...)}
+            } else if (length(x$CM) > 0) {
+              OCNet::draw_contour_OCN(x, ...)
+            } else {
+              OCNet::draw_simple_OCN(x, ...)}})
+
+setMethod("plot", signature(x="numeric",y="river"),
+          function(x, y, type, ...){
+            if (missing(type)) type <- "RN"
+            if (isTRUE(type=="SC" | type=="subcatchments")) {
+              OCNet::draw_subcatchments_OCN(y, x, ...)
+            } else { OCNet::draw_thematic_OCN(y, x, ...)}})
+
+setMethod("plot", signature(x="river",y="numeric"),
+          function(x, y, type, ...){
+            if (missing(type)) type <- "RN"
+            if (isTRUE(type=="SC" | type=="subcatchments")) {
+              OCNet::draw_subcatchments_OCN(x, y, ...)
+            } else { OCNet::draw_thematic_OCN(y, x, ...)}
+          })
