@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OCNet</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -203,8 +203,8 @@ Note that, for large lattices, <code>showIntermediatePlots = TRUE</code> might s
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list whose objects are listed below. Variables that define the network at the FD level are wrapped in the sublist <code>FD</code>.
-Adjacency matrices describing 4- or 8- nearest-neighbours connectivity among pixels are contained in lists N4 and N8, respectively.</p>
+<p>A <code><a href="river-class.html">river</a></code> object. It is de facto a list, whose objects are listed below. Variables that define the network at the FD level are wrapped in the sublist <code>FD</code>.
+Adjacency matrices describing 4- or 8- nearest-neighbours connectivity among pixels are contained in lists <code>N4</code> and <code>N8</code>, respectively.</p>
 <dl><dt><code>FD$A</code></dt>
 <dd><p>Vector (of length <code>dimX*dimY</code>) containing drainage area values for all FD pixels (in square planar units).</p></dd>
 
@@ -263,7 +263,7 @@ between pixels: <code>N8$W[i,j] = 1</code> if pixel <code>j</code> shares an edg
 It is saved only if <code>saveN8 = TRUE</code>.</p></dd>
   
 </dl><p>Finally, <code>dimX</code>, <code>dimY</code>, <code>cellsize</code>, <code>nOutlet</code>, <code>periodicBoundaries</code>, <code>expEnergy</code>, 
-<code>coolingRate</code>, <code>typeInitialState</code>, <code>nIter</code>, <code>xllcorner</code>, <code>yllcorner</code> are passed to the list as they were included in the input 
+<code>coolingRate</code>, <code>typeInitialState</code>, <code>nIter</code>, <code>xllcorner</code>, <code>yllcorner</code> are passed to the <code>river</code> object as they were included in the input 
 (except <code>nOutlet = "All"</code> which is converted to <code>2*(dimX + dimY - 2))</code>.</p>
     </div>
     <div class="section level2">

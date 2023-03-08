@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OCNet</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -156,7 +156,7 @@ Note that, for large lattices, <code>showIntermediatePlots = TRUE</code> might s
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list as in <code><a href="create_OCN.html">create_OCN</a></code>, to which the reader is referred for detailed documentation.
+<p>A <code>river</code> object as in <code><a href="create_OCN.html">create_OCN</a></code>, to which the reader is referred for detailed documentation.
 However, note that in this case <code>dimX</code> and <code>dimY</code> are equal to the number of columns and rows of <code>flowDirStart</code>, respectively, 
 while <code>nNodes</code> is the number of non-<code>NaN</code> pixels in <code>flowDirStart</code>. Hence, <code>nNodes</code> is generally lower than
 <code>dimX*dimY</code>. The additionally exported vector <code>FD$toDEM</code> identifies the indices of the pixels of the landscape/flow direction matrix

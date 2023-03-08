@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OCNet</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,7 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>OCN</dt>
-<dd><p>List as produced by <code><a href="landscape_OCN.html">landscape_OCN</a></code>.</p></dd>
+<dd><p>A <code>river</code> object as produced by <code><a href="landscape_OCN.html">landscape_OCN</a></code>.</p></dd>
 
 
 <dt>thrA</dt>
@@ -82,7 +82,7 @@ would be required (see example 3).</p></dd>
 
 
 <dt>displayUpdates</dt>
-<dd><p>Logical. State if updates are printed on the console while <code>landscape_OCN</code> runs.</p></dd>
+<dd><p>Logical. State if updates are printed on the console while <code>aggregate_OCN</code> runs.</p></dd>
 
 
 </dl></div>
@@ -90,8 +90,8 @@ would be required (see example 3).</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list that contains all objects contained in <code>OCN</code>, in addition to the objects listed below. 
-New sublists RN, AG, SC, containing variables at the corresponding aggregation levels, are created.
+<p>A <code>river</code> object that contains all objects contained in <code>OCN</code>, in addition to the objects listed below. 
+New sublists <code>RN</code>, <code>AG</code>, <code>SC</code>, containing variables at the corresponding aggregation levels, are created.
 Refer to section 4.2 of the <a href="../doc/OCNet.html">vignette</a> for a more detailed explanation on values <code>OCN$XX$toYY</code>, where <code>XX</code> and <code>YY</code> are two random aggregation levels.</p>
 <dl><dt><code>FD$toRN</code></dt>
 <dd><p>Vector (of length <code>OCN$FD$nNodes</code>) whose values are equal to 0 if the FD node is not a node at the RN level. 
@@ -258,7 +258,7 @@ In this case, the indices from <code>AG$nNodes + 1</code> to <code>SC$nNodes</co
 <dt><code>SC$Z</code></dt>
 <dd><p>Vector (of length <code>SC$nNodes</code>) of average subcatchment elevation (in elevational units).</p></dd>
 
-</dl><p>Finally, <code>thrA</code> is added to the list.</p>
+</dl><p>Finally, <code>thrA</code> is added to the <code>river</code> object.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

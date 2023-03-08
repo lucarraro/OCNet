@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OCNet</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,7 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>OCN</dt>
-<dd><p>List as produced by <code><a href="create_OCN.html">create_OCN</a></code>.</p></dd>
+<dd><p>A <code>river</code> object as produced by <code><a href="create_OCN.html">create_OCN</a></code>.</p></dd>
 
 
 <dt>slope0</dt>
@@ -99,8 +99,8 @@ This option is not effective for OCNs generated via <code><a href="create_genera
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list that contains all objects contained in <code>OCN</code>, in addition to the objects listed below. 
-A new sublist CM, containing variables at the catchment aggregation levels, is created.</p>
+<p>A <code>river</code> object that contains all objects contained in <code>OCN</code>, in addition to the objects listed below. 
+A new sublist <code>CM</code>, containing variables at the catchment aggregation levels, is created.</p>
 <dl><dt><code>FD$slope</code></dt>
 <dd><p>Vector (of length <code>OCN$FD$nNodes</code>) of slope values (in elevation units/planar units) 
 for each FD pixel, as derived by the slope/area relationship.</p></dd>
@@ -150,7 +150,7 @@ with X (Y) coordinates of the contour of catchment <code>i</code> for use in plo
 <dt><code>OptList</code></dt>
 <dd><p>List of output parameters produced by the optimization function <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></code> (only present if <code>optimizeDZ = TRUE</code>).</p></dd>
 
-</dl><p>Finally, <code>slope0</code> and <code>zMin</code> are passed to the list as they were included in the input.</p>
+</dl><p>Finally, <code>slope0</code> and <code>zMin</code> are passed to the <code>river</code> as they were included in the input.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
