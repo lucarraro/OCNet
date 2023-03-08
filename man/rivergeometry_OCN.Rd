@@ -7,7 +7,7 @@ rivergeometry_OCN(OCN, widthMax = 1, depthMax = 1,
   expVelocity = NaN)
 }
 \arguments{
-\item{OCN}{List as produced by \code{\link{aggregate_OCN}}.}
+\item{OCN}{A \code{river} object as produced by \code{\link{aggregate_OCN}}.}
 
 \item{widthMax}{Maximum river width allowed. If \code{nOutlet = 1}, it corresponds to the width at the outlet node.}
 
@@ -23,7 +23,7 @@ In this case, the missing exponent is calculated as the complement to one of the
 If all three exponents are specified by the user, their sum must be equal to one.}
 }
 \value{
-A list that contains all objects contained in \code{OCN}, in addition to the objects listed below. 
+AA \code{river} object that contains all objects contained in \code{OCN}, in addition to the objects listed below. 
 \item{\code{RN$width}}{Vector (of length \code{OCN$RN$nNodes}) of river width values for every RN node.}
 \item{\code{RN$depth}}{Vector (of length \code{OCN$RN$nNodes}) of river depth values for every RN node.}
 \item{\code{RN$velocity}}{Vector (of length \code{OCN$RN$nNodes}) of water velocity values for every RN node.}
