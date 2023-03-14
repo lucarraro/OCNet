@@ -814,6 +814,10 @@ setMethod("$","river",
             slot(x,name)
           })
 
+setMethod("[[",c("river","character","missing"),
+          function(x,i){
+            slot(x,i)
+          })
 
 setMethod("show", "river",
           function(object){
@@ -859,6 +863,13 @@ setMethod("$<-",signature=c(x="river"),
             slot(x, name) <- value
             return(x)
           })
+
+setMethod("[[<-",signature=c("river","character","missing"),
+          function(x,i,value){
+            slot(x, i) <- value
+            return(x)
+          })
+
 
 setMethod("plot", signature(x="river",y="missing"),
           function(x, type, ...){

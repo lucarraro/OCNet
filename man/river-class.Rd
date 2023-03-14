@@ -9,6 +9,8 @@
 \alias{$,river-method}
 \alias{$<-,river-method}
 \alias{names,river-method}
+\alias{[[,river,character,missing-method}
+\alias{[[<-,river,character,missing-method}
 
 
 \title{river class}
@@ -21,4 +23,17 @@ The content of a \code{river} object can be treated as a list, hence its objects
 
 For information on the aggregation levels and on the content of a 
 \code{river} object, see \code{\link{OCNet-package}}.
+}
+
+\examples{
+show(OCN_20)
+names(OCN_20)
+
+# extract or replace parts of a river object
+OCN_20$dimX
+OCN_20@dimX
+dim <- OCN_20[["dimX"]]
+OCN_20$dimX <- 1
+OCN_20[["dimX"]]
+OCN_20[["dimX"]] <- dim
 }

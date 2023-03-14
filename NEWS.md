@@ -3,7 +3,7 @@
 # Major changes
 
 * OCNs are objects of the `river` class 
-* `plot`, `show`, `names`, `"$<-"`, `"$"` methods for `river` class defined 
+* `plot`, `show`, `names`, `"$<-"`, `"$"`, `"[["`, `"[[<-"` methods for `river` class defined and examples added. 
 
 # OCNet 0.7.1
 
