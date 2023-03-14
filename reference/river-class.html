@@ -60,6 +60,41 @@ river object, see OCNet-package."><!-- mathjax --><script src="https://cdnjs.clo
 
 
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">show</span><span class="op">(</span><span class="va">OCN_20</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Class         : river </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Type          : Optimal Channel Network </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> No. FD nodes  : 400 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Dimensions    : 20 x 20 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cell size     : 1.00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Has elevation : FALSE </span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">OCN_20</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "FD"                    "dimX"                  "dimY"                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "cellsize"              "nOutlet"               "periodicBoundaries"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "expEnergy"             "coolingRate"           "typeInitialState"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "nIter"                 "initialNoCoolingPhase" "energy"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "exitFlag"              "N4"                    "N8"                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "nIterSequence"         "energyInit"            "xllcorner"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "yllcorner"             "CM"                    "RN"                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [22] "AG"                    "OptList"               "SC"                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "thrA"                  "slope0"                "zMin"                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [28] "streamOrderType"       "maxReachLength"        "widthMax"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31] "depthMax"              "velocityMax"           "expWidth"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [34] "expDepth"              "expVelocity"          </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># extract or replace parts of a river object</span></span></span>
+<span class="r-in"><span><span class="va">OCN_20</span><span class="op">$</span><span class="va">dimX</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 20</span>
+<span class="r-in"><span><span class="va">OCN_20</span><span class="op">@</span><span class="va">dimX</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 20</span>
+<span class="r-in"><span><span class="va">dim</span> <span class="op">&lt;-</span> <span class="va">OCN_20</span><span class="op">[[</span><span class="st">"dimX"</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">OCN_20</span><span class="op">$</span><span class="va">dimX</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span><span class="va">OCN_20</span><span class="op">[[</span><span class="st">"dimX"</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-in"><span><span class="va">OCN_20</span><span class="op">[[</span><span class="st">"dimX"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">dim</span></span></span>
+</code></pre></div>
+    </div>
   </main></div>
 
 
