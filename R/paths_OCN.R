@@ -15,16 +15,11 @@ paths_OCN <- function(OCN,
     # RN
     RN_DownstreamPathLength <- spam(0,OCN$RN$nNodes,OCN$RN$nNodes)
     if (iDP){RN_DwnstrLength_unconnected <- matrix(0,OCN$RN$nNodes,OCN$RN$nNodes)}
-    # if (iDP){RN_DwnstrLength_unconnected <- spam(0,OCN$RN$nNodes,OCN$RN$nNodes)}
     
     indices_down <-  matrix(0,OCN$RN$nNodes*max(1000,ceiling(OCN$RN$nNodes*0.1)),2)
     values_down <-   numeric(OCN$RN$nNodes*max(1000,ceiling(OCN$RN$nNodes*0.1)))
     counter_down <-  1
-    # if (iDP){
-    #   indices_unc <- matrix(0,OCN$RN$nNodes^2,2)  # this might crash for large values 
-    #   values_unc <- numeric(OCN$RN$nNodes^2)   
-    #   counter_unc <- counter_down 
-    # }
+
     if(includePaths){
       RN_DownstreamPath <- vector("list",OCN$RN$nNodes)
       for (i in 1:OCN$RN$nNodes){RN_DownstreamPath[[i]] <- vector("list",OCN$RN$nNodes)}
@@ -62,16 +57,6 @@ paths_OCN <- function(OCN,
               RN_DwnstrLength_unconnected[i,u] <- sum(OCN$RN$leng[Path]) - OCN$RN$leng[j] # don't count the intersection node
             }
           }
-          
-          # for (u in Ups){
-          #   indices_unc[counter_unc, ] <- c(i, u)
-          #   if (includeDownstreamNode){
-          #   values_unc[counter_unc] <- sum(OCN$RN$leng[Path])  # count the intersection node
-          #   } else {
-          #   values_unc[counter_unc] <- sum(OCN$RN$leng[Path]) - OCN$RN$leng[j] # don't count the intersection node
-          #   }
-          #   counter_unc <- counter_unc + 1
-          # }
         }
       }
       if (displayUpdates){
@@ -82,11 +67,7 @@ paths_OCN <- function(OCN,
     values_down <- values_down[1:(counter_down-1)]
     RN_DownstreamPathLength[indices_down] <- values_down
     
-    # if (iDP){
-    # indices_unc <- indices_unc[1:(counter_unc-1), ]
-    # values_unc <- values_unc[1:(counter_unc-1)]
-    # RN_DwnstrLength_unconnected[indices_unc] <- values_unc
-    # }
+
     if (displayUpdates){
       message("RN downstream paths... 100.0%\n", appendLF = FALSE)}
   }
@@ -105,15 +86,7 @@ paths_OCN <- function(OCN,
     indices_down <-  matrix(0,OCN$AG$nNodes*max(1000,ceiling(OCN$AG$nNodes*0.1)),2)
     values_down <-  numeric(OCN$AG$nNodes*max(1000,ceiling(OCN$AG$nNodes*0.1)))
     counter_down <-  1
-    # if (iDP){
-    #   indices_unc <- matrix(0,OCN$AG$nNodes^2,2)  
-    #   values_unc <- numeric(OCN$AG$nNodes^2)  
-    #   counter_unc <- counter_down 
-    # }
-    
-    #AG_DownstreamPath <- vector("list",OCN$AG$nNodes)
-    
-    #for (i in 1:OCN$AG$nNodes){AG_DownstreamPath[[i]] <- vector("list",OCN$AG$nNodes)}
+
     for (i in 1:OCN$AG$nNodes){
       
       if(includePaths){AG_DownstreamPath[[i]][[i]] <- i}
@@ -156,11 +129,7 @@ paths_OCN <- function(OCN,
     indices_down <- indices_down[1:(counter_down-1), ]
     values_down <- values_down[1:(counter_down-1)]
     AG_DownstreamPathLength[indices_down] <- values_down
-    # if(iDP){
-    # indices_unc <- indices_unc[1:(counter_unc-1), ]
-    # values_unc <- values_unc[1:(counter_unc-1)]
-    # AG_DwnstrLength_unconnected[indices_unc] <- values_unc
-    # }
+
     if (displayUpdates){
       message("AG downstream paths... 100.0%\n", appendLF = FALSE)}
   }
