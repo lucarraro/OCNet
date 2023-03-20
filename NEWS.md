@@ -2,8 +2,10 @@
 
 # Major changes
 
-* OCNs are objects of the `river` class 
+* OCNs are objects of the `river` class. 
 * `plot`, `show`, `names`, `"$<-"`, `"$"`, `"[["`, `"[[<-"` methods for `river` class defined and examples added. 
+* `aggregate_OCN`: bug in use of option `maxReachLength` corrected. Note that location and number of AG nodes 
+in long reaches may be altered with respect to previous package versions. 
 
 # OCNet 0.7.1
 
