@@ -120,8 +120,16 @@ a subcatchment at the SC level that shares the same index: for instance, \code{S
 are also part of subcatchment \code{i}).
 }
 \examples{
-# 1) aggregate a 20x20 OCN by imposing thrA = 4
+# 1a) aggregate a 20x20 OCN by imposing thrA = 4. 
 OCN <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 4)
+draw_thematic_OCN(OCN, drawNodes = TRUE)
+
+\donttest{
+# 1b) same as above, but identify all RN nodes as AG nodes
+mrl <- 1.5*OCN_20$cellsize
+OCN2 <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 4, maxReachLength = mrl)
+draw_thematic_OCN(OCN2, drawNodes = TRUE)
+}
 
 \donttest{
 # 2) explore the effects of thrA and maxReachLength on a large OCN

@@ -82,7 +82,8 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
     } else if (isTRUE(chooseAggregation == "AG")){
       byRN = FALSE
     } else {
-      stop('RN$nNodes = AG$nNodes, and chooseAggregation has not been specified.')
+      byRN = FALSE
+      #stop('RN$nNodes = AG$nNodes, and chooseAggregation has not been specified.')
     }
   } else if (length(theme)==OCN$RN$nNodes){
     byRN = TRUE

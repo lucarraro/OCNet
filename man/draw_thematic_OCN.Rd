@@ -20,7 +20,7 @@ draw_thematic_OCN(OCN,theme=NA*numeric(OCN$AG$nNodes),
 \item{theme}{Vector (of length \code{OCN$AG$Nnodes} or \code{OCN$RN$Nnodes}) expressing the spatial field of interest. 
 The vector can contain \code{NA} and \code{NaN} values to identify RN or AG nodes where the theme is not defined. The order of arguments between \code{OCN} and \code{theme} can be swapped freely. }
 
-\item{chooseAggregation}{Only effective if \code{OCN$RN$nNodes == OCN$AG$nNodes}. In such case, it must be equal to either \code{"RN"} or \code{"AG"}; as a result, \code{theme} will be interpreted as a spatial field in the corresponding aggregation level.}
+\item{chooseAggregation}{Only effective if \code{OCN$RN$nNodes == OCN$AG$nNodes}. In such case, it must be equal to either \code{"RN"} or \code{"AG"}; as a result, \code{theme} will be interpreted as a spatial field in the corresponding aggregation level. Default is \code{"AG"}.}
 
 \item{discreteLevels}{Logical. If \code{FALSE}, a continuous color scheme is used. If \code{TRUE}, discrete color levels are applied. See also \code{colLevels} and examples.}
 
