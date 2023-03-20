@@ -72,7 +72,8 @@ such as <code>OCN$AG$streamOrder</code>.</p></dd>
 <dt>maxReachLength</dt>
 <dd><p>Maximum reach length allowed (in planar units). If the path length between a channel head and the downstream confluence 
 is higher than <code>maxReachLength</code>, the reach starting from the channel head will have a length up to <code>maxReachLength</code>, while the next downstream 
-pixel is considered as a new channel head, from which a new reach departs.</p></dd>
+pixel is considered as a new channel head, from which a new reach departs. Values lower than <code>OCN$cellsize*sqrt(2)</code> are not allowed. If 
+<code>maxReachLength &lt; 2*OCN$cellsize</code>, every RN node is also an AG node.</p></dd>
 
 
 <dt>breakpoints</dt>
