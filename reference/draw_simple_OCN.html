@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OCNet</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,10 +87,10 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># 1a) draw OCN with default settings</span></span></span>
 <span class="r-in"><span><span class="fu">draw_simple_OCN</span><span class="op">(</span><span class="va">OCN_250_T</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="draw_simple_OCN-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># 1b) same as above, but with decreased thrADraw</span></span></span>
 <span class="r-in"><span><span class="fu">draw_simple_OCN</span><span class="op">(</span><span class="va">OCN_250_T</span>, thrADraw <span class="op">=</span> <span class="fl">0.001</span> <span class="op">*</span> <span class="va">OCN_250_T</span><span class="op">$</span><span class="va">dimX</span> <span class="op">*</span> <span class="va">OCN_250_T</span><span class="op">$</span><span class="va">dimY</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="draw_simple_OCN-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># 1c) same as the first example, but include the portion of network  </span></span></span>
 <span class="r-in"><span><span class="co"># with drainage area lower than thrADraw </span></span></span>
 <span class="r-in"><span><span class="fu">draw_simple_OCN</span><span class="op">(</span><span class="va">OCN_250_T</span>, easyDraw <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># this will take some seconds</span></span></span>
