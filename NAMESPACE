@@ -36,5 +36,6 @@ importFrom("rgdal", "writeOGR")
 importFrom("sp", "Line", "Lines", "SpatialLines", "SpatialLinesDataFrame",
 	"SpatialPointsDataFrame")
 importFrom("utils", "write.table")
+importFrom(Rcpp, evalCpp)
 
 useDynLib(OCNet, .registration = TRUE)
