@@ -21,8 +21,8 @@ create_OCN <- function(dimX,dimY,
                        saveN8=FALSE,
                        saveN4=FALSE,
                        displayUpdates=1){
-  
-  if (dimX<2 | dimY<2) stop("Dimensions too small.")
+   
+  if (dimX < 2 | dimY < 2) stop("Dimensions too small.")
   if (dimX*dimY > 1000) {
     dim <- sqrt(dimX*dimY)
     estTime <- (7.988e-1 - 1.266e-1*dim + 7.198e-3*dim^2 - 6.807e-5*dim^3 +  1.372e-6*dim^4) / (30*dimX*dimY) * nIter
