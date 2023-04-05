@@ -33,7 +33,7 @@ Description: Generate and analyze Optimal Channel Networks (OCNs):
 	<doi:10.1073/pnas.1322700111> for a theoretical overview on the OCN 
 	concept; Furrer and Sain (2010) <doi:10.18637/jss.v036.i10> for the 
 	construct used.
-Imports: fields, spam, rgl, methods, igraph, SSN, rgdal, sp
+Imports: fields, spam, rgl, methods, igraph, SSN, rgdal, sp, Rcpp (>= 1.0.10)
 License: GPL-3 
 Encoding: UTF-8
 LazyData: true
@@ -44,3 +44,4 @@ Suggests:
     bookdown
 VignetteBuilder: knitr
 URL: https://lucarraro.github.io/OCNet/
+LinkingTo: Rcpp

@@ -1,9 +1,11 @@
 /* Reinhard Furrer,  fall 2019, based on spam's version and 'Writing R extensions'. */
 
+//#include <R.h>
 #include <R_ext/RS.h>
 #include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
 #include <R_ext/Lapack.h>
+//#include <Rinternals.h>
 
 #include "invperm.c"
 
@@ -14,9 +16,11 @@
 
 
 /* .Call calls */
+extern SEXP _OCNet_paths_cpp(SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
   {"inv_permutation", (DL_FUNC) &inv_permutation, 1},
+  {"_OCNet_paths_cpp", (DL_FUNC) &_OCNet_paths_cpp, 5},
   {NULL, NULL, 0}
 };
 
