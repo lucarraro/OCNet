@@ -1,5 +1,10 @@
 # OCNet 1.0.0.9000
 
+# Minor changes
+
+* `aggregate_OCN`: faster algorithm
+* `paths_OCN`: faster algorithm (via `Rcpp` implementation) 
+
 # OCNet 1.0.0
 
 ## Major changes
