@@ -269,7 +269,7 @@ aggregate_OCN <- function(OCN,
   # Calculate slopes of reaches
   Slope_AG <- numeric(Nnodes_AG)
   for (i in 1:Nnodes_AG){
-    if (i != Outlet_AG)
+    if (!(i %in% Outlet_AG))
       Slope_AG[i] <- (Z_AG[i] - Z_AG[DownNode_AG[i]])/Length_AG[i]
   }
 
