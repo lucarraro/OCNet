@@ -5,6 +5,10 @@
 * `aggregate_OCN`: faster algorithm
 * `paths_OCN`: faster algorithm (via `Rcpp` implementation) 
 
+# Bugs fixed
+
+* `aggregate_OCN`: bug fixed for `thrA = 0`.
+
 # OCNet 1.0.0
 
 ## Major changes

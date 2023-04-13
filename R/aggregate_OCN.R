@@ -15,6 +15,8 @@ aggregate_OCN <- function(OCN,
   }
   #t1 <- Sys.time()
   
+  if (thrA==0) maxReachLength <- OCN$cellsize*sqrt(2)
+  
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
   # BUILD NETWORK AT RN LEVEL ####
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
@@ -146,13 +148,6 @@ aggregate_OCN <- function(OCN,
   }
   
   Nnodes_AG <- length(X_AG)
-  
-  # if thrA=0, do not perform aggregation. Every pixel is a node 
-  # (note that with thrA=1, reaches with more than one pixel can exist)
-  if (thrA==0){
-    Nnodes_AG <- Nnodes_RN
-    RN_to_AG <- 1:Nnodes_RN
-  }
   
   # FD_to_SC: vector of length OCN$FD$nNodes containing subcatchmentID for every pixel of the catchment
   # AG_to_FD: list containing FD indices of pixels belonging to a given reach 
