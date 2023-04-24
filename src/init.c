@@ -28,7 +28,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"_OCNet_WSC", (DL_FUNC) &_OCNet_WSC, 4},
   {"_OCNet_NN_OCN", (DL_FUNC) &_OCNet_NN_OCN, 4},
   {"_OCNet_NN_river", (DL_FUNC) &_OCNet_NN_river, 6},
-  {"_OCNet_NN_FD", (DL_FUNC) &_OCNet_NN_river, 5},
+  {"_OCNet_NN_FD", (DL_FUNC) &_OCNet_NN_FD, 5},
   {NULL, NULL, 0}
 };
 
