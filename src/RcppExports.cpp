@@ -10,6 +10,20 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// WSC
+List WSC(int nNodes, List SC_to_FD, IntegerVector FD_to_SC, List NeighbouringNodes);
+RcppExport SEXP _OCNet_WSC(SEXP nNodesSEXP, SEXP SC_to_FDSEXP, SEXP FD_to_SCSEXP, SEXP NeighbouringNodesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type nNodes(nNodesSEXP);
+    Rcpp::traits::input_parameter< List >::type SC_to_FD(SC_to_FDSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type FD_to_SC(FD_to_SCSEXP);
+    Rcpp::traits::input_parameter< List >::type NeighbouringNodes(NeighbouringNodesSEXP);
+    rcpp_result_gen = Rcpp::wrap(WSC(nNodes, SC_to_FD, FD_to_SC, NeighbouringNodes));
+    return rcpp_result_gen;
+END_RCPP
+}
 // paths_cpp
 List paths_cpp(S4 OCN, String str, bool includePaths, bool includeDownstreamNode, bool includeUnconnectedPaths);
 RcppExport SEXP _OCNet_paths_cpp(SEXP OCNSEXP, SEXP strSEXP, SEXP includePathsSEXP, SEXP includeDownstreamNodeSEXP, SEXP includeUnconnectedPathsSEXP) {

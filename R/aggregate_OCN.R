@@ -364,24 +364,27 @@ aggregate_OCN <- function(OCN,
   }
   
   # Subcatchment adjacency matrix: find which subcatchments have borders in common
-  W_SC <- spam(0,Nnodes_SC,Nnodes_SC)
-  indices <- matrix(0,Nnodes_SC*20,2)
-  k <- 1
-  for (i in 1:Nnodes_SC){
-    set <- SC_to_FD[[i]]
-    nodes <- numeric(0)
-    for (s in set){ nodes <- union(nodes, FD_to_SC[NeighbouringNodes[[s]]])}
-    NeighSubcatch <- setdiff(nodes, i)
-    indices[k:(k+length(NeighSubcatch)-1),1] <- i
-    indices[k:(k+length(NeighSubcatch)-1),2] <- NeighSubcatch
-    k <- k + length(NeighSubcatch)
-    if (displayUpdates){
-      if ((i %% max(1,round(Nnodes_SC*0.01)))==0){
-        message(sprintf("Calculating network at SC level... %.1f%%\r",i/Nnodes_AG*100), appendLF = FALSE)}}
-  }
-  indices <- indices[1:(k-1),]
-  W_SC[indices] <- 1  
+  # W_SC <- spam(0,Nnodes_SC,Nnodes_SC)
+  # indices <- matrix(0,Nnodes_SC*20,2)
+  # k <- 1
+  # for (i in 1:Nnodes_SC){
+  #   set <- SC_to_FD[[i]]
+  #   nodes <- numeric(0)
+  #   for (s in set){ nodes <- union(nodes, FD_to_SC[NeighbouringNodes[[s]]])}
+  #   NeighSubcatch <- setdiff(nodes, i)
+  #   indices[k:(k+length(NeighSubcatch)-1),1] <- i
+  #   indices[k:(k+length(NeighSubcatch)-1),2] <- NeighSubcatch
+  #   k <- k + length(NeighSubcatch)
+  #   if (displayUpdates){
+  #     if ((i %% max(1,round(Nnodes_SC*0.01)))==0){
+  #       message(sprintf("Calculating network at SC level... %.1f%%\r",i/Nnodes_AG*100), appendLF = FALSE)}}
+  # }
+  # indices <- indices[1:(k-1),]
+  # W_SC[indices] <- 1  
   
+  ll <- WSC(Nnodes_SC,SC_to_FD,FD_to_SC,NeighbouringNodes)
+  W_SC <- spam(0,Nnodes_SC,Nnodes_SC) 
+  W_SC[cbind(ll[[1]],ll[[2]])] <- 1
   
   # X,Y of subcatchment centroids
   X_SC <- numeric(Nnodes_SC)

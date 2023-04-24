@@ -17,10 +17,12 @@
 
 /* .Call calls */
 extern SEXP _OCNet_paths_cpp(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP _OCNet_WSC(SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
   {"inv_permutation", (DL_FUNC) &inv_permutation, 1},
   {"_OCNet_paths_cpp", (DL_FUNC) &_OCNet_paths_cpp, 5},
+  {"_OCNet_WSC", (DL_FUNC) &_OCNet_WSC, 4},
   {NULL, NULL, 0}
 };
 
