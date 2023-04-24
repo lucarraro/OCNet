@@ -152,7 +152,7 @@ aggregate_OCN <- function(OCN,
   # FD_to_SC: vector of length OCN$FD$nNodes containing subcatchmentID for every pixel of the catchment
   # AG_to_FD: list containing FD indices of pixels belonging to a given reach 
   # SC_to_FD: list containing FD indices of pixels belonging to a given subcatchment 
-  FD_to_SC <- NaN*numeric(OCN$FD$nNodes)
+  FD_to_SC <- numeric(OCN$FD$nNodes)
   
   # initialize FD_to_SC by attributing SC values to pixels belonging to AG level
   FD_to_SC[RN_mask] <- RN_to_AG 
@@ -175,20 +175,23 @@ aggregate_OCN <- function(OCN,
       SC_to_FD[[i]] <- OCN$FD$outlet[OCN$FD$A[OCN$FD$outlet]<thrA][i-Nnodes_AG]
     }}
   
-  for (i in 1:length(IndexHeadpixel)){ # i: index that spans all headwater pixels
-    p <- IndexHeadpixel[i] # p: ID of headwater pixel
-    pNew <- p; # pNew: pixel downstream of p 
-    k <- NaN; # k: SC value of pixel pNew
-    sub_p <- integer(0) # sub_p is the subset of pixels downstream of pixel p
-    while (is.nan(k)){ # continue downstream movement until a pixel to which the SC has already been attributed is found
-      k <- FD_to_SC[pNew]
-      if (is.nan(k)){
-        sub_p <- c(sub_p,pNew)
-        pNew <- OCN$FD$downNode[pNew]
-      }}
-    FD_to_SC[sub_p] <- k
-    SC_to_FD[[k]] <- c(SC_to_FD[[k]],sub_p)
-  }
+  # for (i in 1:length(IndexHeadpixel)){ # i: index that spans all headwater pixels
+  #   p <- IndexHeadpixel[i] # p: ID of headwater pixel
+  #   pNew <- p; # pNew: pixel downstream of p 
+  #   k <- 0; # k: SC value of pixel pNew
+  #   sub_p <- integer(0) # sub_p is the subset of pixels downstream of pixel p
+  #   while (k==0){ # continue downstream movement until a pixel to which the SC has already been attributed is found
+  #     k <- FD_to_SC[pNew]
+  #     if (k==0){
+  #       sub_p <- c(sub_p,pNew)
+  #       pNew <- OCN$FD$downNode[pNew]
+  #     }}
+  #   FD_to_SC[sub_p] <- k
+  #   SC_to_FD[[k]] <- c(SC_to_FD[[k]],sub_p)
+  # }
+ll <- continue_FD_SC(IndexHeadpixel, FD_to_SC, SC_to_FD, OCN$FD$downNode)
+FD_to_SC <- ll$FD_to_SC
+SC_to_FD <- ll$SC_to_FD
   
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
   # CALCULATE PROPERTIES AT AG LEVEL ####
@@ -353,7 +356,7 @@ aggregate_OCN <- function(OCN,
   }
 
   if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){ # general contour OCNs and real rivers
-    NeighbouringNodes_FD <- NN_FD(OCN$FD$nNodes, OCN$dimX, OCN$dimY, NeighbouringNodes, OCN$FD$toDEM)
+    NeighbouringNodes <- NN_FD(OCN$FD$nNodes, OCN$dimX, OCN$dimY, NeighbouringNodes, OCN$FD$toDEM)
     # NeighbouringNodes_FD <- vector("list", OCN$FD$nNodes)
     # DEM_to_FD <- numeric(OCN$dimX*OCN$dimY)
     # DEM_to_FD[OCN$FD$toDEM] <- 1:OCN$FD$nNodes
@@ -362,7 +365,7 @@ aggregate_OCN <- function(OCN,
     #   tmp <- DEM_to_FD[NeighbouringNodes[[indDEM]]]
     #   NeighbouringNodes_FD[[i]] <- tmp[tmp != 0]
     # }
-    NeighbouringNodes <- NeighbouringNodes_FD
+    # NeighbouringNodes <- NeighbouringNodes_FD
   }
 
   

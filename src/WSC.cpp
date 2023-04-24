@@ -26,3 +26,33 @@ IntegerVector indices2;
   List Lout = List::create(_["ind1"] = indices1, _["ind2"] = indices2);
   return(Lout);
 }
+
+ #include <Rcpp.h>
+using namespace Rcpp;
+// [[Rcpp::export]]
+List continue_FD_SC(IntegerVector IndexHeadpixel, IntegerVector FD_to_SC, List SC_to_FD, IntegerVector downNode){
+for (int ind{0}; ind<IndexHeadpixel.length(); ++ind){
+int p = IndexHeadpixel[ind];
+int pNew = p;
+int k = 0;
+IntegerVector sub_p;
+while(k==0){
+k = FD_to_SC[pNew-1];
+if (k==0){
+sub_p.push_back(pNew);
+pNew = downNode[pNew-1];
+}
+}
+IntegerVector foo (sub_p.length(), k);
+FD_to_SC[sub_p-1] = foo;
+IntegerVector tmp = SC_to_FD[k-1];
+IntegerVector tmp2 (tmp.length() + sub_p.length());
+int i=0;
+for( ; i<tmp.size(); i++) tmp2[i] = tmp[i] ;
+for( int j{0}; j<sub_p.size(); i++, j++) tmp2[i] = sub_p[j] ;
+
+SC_to_FD[k-1] = tmp2;
+}
+List Lout = List::create(_["FD_to_SC"]=FD_to_SC, _["SC_to_FD"]=SC_to_FD);
+return(Lout);
+}

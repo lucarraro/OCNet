@@ -69,6 +69,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// continue_FD_SC
+List continue_FD_SC(IntegerVector IndexHeadpixel, IntegerVector FD_to_SC, List SC_to_FD, IntegerVector downNode);
+RcppExport SEXP _OCNet_continue_FD_SC(SEXP IndexHeadpixelSEXP, SEXP FD_to_SCSEXP, SEXP SC_to_FDSEXP, SEXP downNodeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type IndexHeadpixel(IndexHeadpixelSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type FD_to_SC(FD_to_SCSEXP);
+    Rcpp::traits::input_parameter< List >::type SC_to_FD(SC_to_FDSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type downNode(downNodeSEXP);
+    rcpp_result_gen = Rcpp::wrap(continue_FD_SC(IndexHeadpixel, FD_to_SC, SC_to_FD, downNode));
+    return rcpp_result_gen;
+END_RCPP
+}
 // paths_cpp
 List paths_cpp(S4 OCN, String str, bool includePaths, bool includeDownstreamNode, bool includeUnconnectedPaths);
 RcppExport SEXP _OCNet_paths_cpp(SEXP OCNSEXP, SEXP strSEXP, SEXP includePathsSEXP, SEXP includeDownstreamNodeSEXP, SEXP includeUnconnectedPathsSEXP) {
