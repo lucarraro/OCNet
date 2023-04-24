@@ -10,6 +10,36 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// NN_OCN
+List NN_OCN(int dimX, int dimY, bool periodicBoundaries, IntegerMatrix movement);
+RcppExport SEXP _OCNet_NN_OCN(SEXP dimXSEXP, SEXP dimYSEXP, SEXP periodicBoundariesSEXP, SEXP movementSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type dimX(dimXSEXP);
+    Rcpp::traits::input_parameter< int >::type dimY(dimYSEXP);
+    Rcpp::traits::input_parameter< bool >::type periodicBoundaries(periodicBoundariesSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type movement(movementSEXP);
+    rcpp_result_gen = Rcpp::wrap(NN_OCN(dimX, dimY, periodicBoundaries, movement));
+    return rcpp_result_gen;
+END_RCPP
+}
+// NN_river
+List NN_river(int dimX, int dimY, bool periodicBoundaries, IntegerMatrix movement, IntegerVector toDEM, int nNodes);
+RcppExport SEXP _OCNet_NN_river(SEXP dimXSEXP, SEXP dimYSEXP, SEXP periodicBoundariesSEXP, SEXP movementSEXP, SEXP toDEMSEXP, SEXP nNodesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type dimX(dimXSEXP);
+    Rcpp::traits::input_parameter< int >::type dimY(dimYSEXP);
+    Rcpp::traits::input_parameter< bool >::type periodicBoundaries(periodicBoundariesSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type movement(movementSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type toDEM(toDEMSEXP);
+    Rcpp::traits::input_parameter< int >::type nNodes(nNodesSEXP);
+    rcpp_result_gen = Rcpp::wrap(NN_river(dimX, dimY, periodicBoundaries, movement, toDEM, nNodes));
+    return rcpp_result_gen;
+END_RCPP
+}
 // WSC
 List WSC(int nNodes, List SC_to_FD, IntegerVector FD_to_SC, List NeighbouringNodes);
 RcppExport SEXP _OCNet_WSC(SEXP nNodesSEXP, SEXP SC_to_FDSEXP, SEXP FD_to_SCSEXP, SEXP NeighbouringNodesSEXP) {
