@@ -72,3 +72,23 @@ List NN_river(int dimX, int dimY, bool periodicBoundaries, IntegerMatrix movemen
   }
   return(NeighbouringNodes);
 }
+
+#include <Rcpp.h>
+using namespace Rcpp;
+// [[Rcpp::export]]
+List NN_FD(int nNodes, int dimX, int dimY, List NeighbouringNodes, IntegerVector toDEM){ //  
+  List NeighbouringNodes_FD(nNodes);
+  IntegerVector DEM_to_FD(dimX*dimY);
+  IntegerVector foo = seq(1,nNodes);
+  DEM_to_FD[toDEM-1] = foo;
+  for (int ind{0};ind<nNodes;++ind){
+    int indDEM = toDEM[ind];
+    IntegerVector tmp = NeighbouringNodes[indDEM-1];
+    tmp = tmp - 1;
+    tmp = DEM_to_FD[tmp];
+    LogicalVector foo = (tmp > 0);
+    NeighbouringNodes_FD[ind] = tmp[foo];
+  }
+  return(NeighbouringNodes_FD);
+}
+

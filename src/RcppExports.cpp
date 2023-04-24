@@ -40,6 +40,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// NN_FD
+List NN_FD(int nNodes, int dimX, int dimY, List NeighbouringNodes, IntegerVector toDEM);
+RcppExport SEXP _OCNet_NN_FD(SEXP nNodesSEXP, SEXP dimXSEXP, SEXP dimYSEXP, SEXP NeighbouringNodesSEXP, SEXP toDEMSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type nNodes(nNodesSEXP);
+    Rcpp::traits::input_parameter< int >::type dimX(dimXSEXP);
+    Rcpp::traits::input_parameter< int >::type dimY(dimYSEXP);
+    Rcpp::traits::input_parameter< List >::type NeighbouringNodes(NeighbouringNodesSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type toDEM(toDEMSEXP);
+    rcpp_result_gen = Rcpp::wrap(NN_FD(nNodes, dimX, dimY, NeighbouringNodes, toDEM));
+    return rcpp_result_gen;
+END_RCPP
+}
 // WSC
 List WSC(int nNodes, List SC_to_FD, IntegerVector FD_to_SC, List NeighbouringNodes);
 RcppExport SEXP _OCNet_WSC(SEXP nNodesSEXP, SEXP SC_to_FDSEXP, SEXP FD_to_SCSEXP, SEXP NeighbouringNodesSEXP) {

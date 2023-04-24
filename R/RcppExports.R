@@ -9,6 +9,10 @@ NN_river <- function(dimX, dimY, periodicBoundaries, movement, toDEM, nNodes) {
     .Call(`_OCNet_NN_river`, dimX, dimY, periodicBoundaries, movement, toDEM, nNodes)
 }
 
+NN_FD <- function(nNodes, dimX, dimY, NeighbouringNodes, toDEM) {
+    .Call(`_OCNet_NN_FD`, nNodes, dimX, dimY, NeighbouringNodes, toDEM)
+}
+
 WSC <- function(nNodes, SC_to_FD, FD_to_SC, NeighbouringNodes) {
     .Call(`_OCNet_WSC`, nNodes, SC_to_FD, FD_to_SC, NeighbouringNodes)
 }

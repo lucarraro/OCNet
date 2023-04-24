@@ -353,16 +353,18 @@ aggregate_OCN <- function(OCN,
   }
 
   if (OCN$FD$nNodes < OCN$dimX*OCN$dimY){ # general contour OCNs and real rivers
-    NeighbouringNodes_FD <- vector("list", OCN$FD$nNodes)
-    DEM_to_FD <- numeric(OCN$dimX*OCN$dimY)
-    DEM_to_FD[OCN$FD$toDEM] <- 1:OCN$FD$nNodes
-    for (i in 1:OCN$FD$nNodes){
-      indDEM <- OCN$FD$toDEM[i]
-      tmp <- DEM_to_FD[NeighbouringNodes[[indDEM]]]
-      NeighbouringNodes_FD[[i]] <- tmp[tmp != 0]
-    }
-    NeighbouringNodes <- NeighbouringNodes_FD
+    NeighbouringNodes <- NN_FD(OCN$FD$nNodes, OCN$dimX, OCN$dimY, NeighbouringNodes, OCN$FD$toDEM)
+    # NeighbouringNodes_FD <- vector("list", OCN$FD$nNodes)
+    # DEM_to_FD <- numeric(OCN$dimX*OCN$dimY)
+    # DEM_to_FD[OCN$FD$toDEM] <- 1:OCN$FD$nNodes
+    # for (i in 1:OCN$FD$nNodes){
+    #   indDEM <- OCN$FD$toDEM[i]
+    #   tmp <- DEM_to_FD[NeighbouringNodes[[indDEM]]]
+    #   NeighbouringNodes_FD[[i]] <- tmp[tmp != 0]
+    # }
+    # NeighbouringNodes <- NeighbouringNodes_FD
   }
+
   
   # Subcatchment adjacency matrix: find which subcatchments have borders in common
   # W_SC <- spam(0,Nnodes_SC,Nnodes_SC)
