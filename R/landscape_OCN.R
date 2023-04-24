@@ -17,8 +17,12 @@ landscape_OCN <- function(OCN,
   Length <- rep(0,OCN$FD$nNodes)
   kount <- 0
   for (i in AvailableNodes){
+    if (OCN$periodicBoundaries){
     Length[i] <- sqrt((abs(OCN$FD$X[OCN$FD$downNode[i]]-OCN$FD$X[i]) %% ((OCN$dimX-1)*OCN$cellsize-2*min(OCN$FD$X)))^2 + 
                         (abs(OCN$FD$Y[OCN$FD$downNode[i]]-OCN$FD$Y[i]) %% ((OCN$dimY-1)*OCN$cellsize-2*min(OCN$FD$Y)))^2)
+    } else {
+    Length[i] <- sqrt((abs(OCN$FD$X[OCN$FD$downNode[i]]-OCN$FD$X[i]))^2 + (abs(OCN$FD$Y[OCN$FD$downNode[i]]-OCN$FD$Y[i]))^2)
+    }
     if (displayUpdates==2){
       kount <- kount + 1
       if (kount && round(0.01*length(AvailableNodes))){

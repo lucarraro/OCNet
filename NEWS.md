@@ -2,6 +2,7 @@
 
 # Minor changes
 
+* `landscape_OCN`: faster algorithm
 * `aggregate_OCN`: faster algorithm
 * `paths_OCN`: faster algorithm (via `Rcpp` implementation) 
 
