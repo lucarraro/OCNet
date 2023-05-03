@@ -1,3 +1,9 @@
+# OCNet 1.0.1.9000
+
+## Bugs fixed
+
+* `paths_OCN`: bug fixed for rivers with multiple outlets.
+
 # OCNet 1.0.1
 
 ## Minor changes
