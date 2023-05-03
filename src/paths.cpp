@@ -22,7 +22,7 @@ List paths_cpp(S4 OCN, String str = "RN", bool includePaths = false, bool includ
   
   NumericVector leng = L["leng"];
   List upstream = L["upstream"];
-  int outlet = L["outlet"];
+  IntegerVector outlet = L["outlet"];
   int k = 0;
   
   List downstreamPath(nNodes); // initialize even when includePaths = false, otherwise the compiler complains
@@ -49,7 +49,7 @@ List paths_cpp(S4 OCN, String str = "RN", bool includePaths = false, bool includ
     IntegerVector path = IntegerVector::create(i+1);
     int j = i;
     int node_j = j+1;
-    while (!(node_j == outlet))
+    while (!(std::find(outlet.begin(), outlet.end(), node_j)!=outlet.end())) //(!(node_j == outlet))
     {
       node_j = downNode(j);
       j = node_j-1;
