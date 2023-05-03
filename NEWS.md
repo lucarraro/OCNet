@@ -1,12 +1,12 @@
-# OCNet 1.0.0.9000
+# OCNet 1.0.1
 
-# Minor changes
+## Minor changes
 
 * `landscape_OCN`: faster algorithm
-* `aggregate_OCN`: faster algorithm
+* `aggregate_OCN`: faster algorithm (via `Rcpp` implementation) 
 * `paths_OCN`: faster algorithm (via `Rcpp` implementation) 
 
-# Bugs fixed
+## Bugs fixed
 
 * `aggregate_OCN`: bug fixed for `thrA = 0`.
 
