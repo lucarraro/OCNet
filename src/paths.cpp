@@ -1,11 +1,18 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 // [[Rcpp::export]]
-List paths_cpp(S4 OCN, String str = "RN", bool includePaths = false, bool includeDownstreamNode = false, bool includeUnconnectedPaths = false){
+List paths_cpp(S4 OCN, IntegerVector whichNodes, String str = "RN", bool includePaths = false, bool includeDownstreamNode = false, bool includeUnconnectedPaths = false){
   
   //
   List L = OCN.slot(str);
   int nNodes = L["nNodes"];
+  LogicalVector whichNodes_bool (nNodes);
+  for (int i{0}; i < whichNodes.length(); ++i)
+  {
+	  int ind = whichNodes[i];
+	  ind = ind - 1;
+	  whichNodes_bool[ind] = true;
+  }
   NumericVector downNode = L["downNode"];
   NumericVector foo = NumericVector::create(1000,0.1*nNodes);
   foo = ceiling(foo);
@@ -35,8 +42,10 @@ List paths_cpp(S4 OCN, String str = "RN", bool includePaths = false, bool includ
     }
   }
   
-  for (int i{0}; i<nNodes; ++i)
+  for (int ind1{0}; ind1<whichNodes.length(); ++ind1)
   {
+	  int i = whichNodes[ind1];
+	  i = i - 1;
     if (includePaths)
       as<List>(downstreamPath[i])[i] = i+1;
     if (includeDownstreamNode)
@@ -49,26 +58,31 @@ List paths_cpp(S4 OCN, String str = "RN", bool includePaths = false, bool includ
     IntegerVector path = IntegerVector::create(i+1);
     int j = i;
     int node_j = j+1;
+	double sl = 0;
     while (!(std::find(outlet.begin(), outlet.end(), node_j)!=outlet.end())) //(!(node_j == outlet))
     {
       node_j = downNode(j);
       j = node_j-1;
       path.push_back(node_j);
-      if (includePaths)
-        as<List>(downstreamPath[i])[j] = path;
-      set_row(k) = i;
-      set_col(k) = j;
-      NumericVector tmp = leng[path-1];
-      double sl = sum(tmp);
-      if (includeDownstreamNode)
-        set_values(k) = sl;
-      else
-        set_values(k) = sl - leng(j);
-      k++;
-      
+	  if (whichNodes_bool[j])
+	  {
+		if (includePaths)
+			as<List>(downstreamPath[i])[j] = path;
+		set_row(k) = i;
+		set_col(k) = j;
+		NumericVector tmp = leng[path-1];
+		sl = sum(tmp);
+		if (includeDownstreamNode)
+			set_values(k) = sl;
+		else
+			set_values(k) = sl - leng(j);
+		k++;
+      }
+	  
       if (includeUnconnectedPaths)
       {
         IntegerVector tmp1 = upstream[j];
+		tmp1 = intersect(tmp1, whichNodes);
         int ind = path[path.length()-2] -1;
         IntegerVector tmp2 = upstream[ind];
         tmp2.push_back(node_j);

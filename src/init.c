@@ -16,7 +16,7 @@
 
 
 /* .Call calls */
-extern SEXP _OCNet_paths_cpp(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP _OCNet_paths_cpp(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP _OCNet_WSC(SEXP, SEXP, SEXP, SEXP);
 extern SEXP _OCNet_NN_OCN(SEXP, SEXP, SEXP, SEXP);
 extern SEXP _OCNet_NN_river(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -25,7 +25,7 @@ extern SEXP _OCNet_continue_FD_SC(SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
   {"inv_permutation", (DL_FUNC) &inv_permutation, 1},
-  {"_OCNet_paths_cpp", (DL_FUNC) &_OCNet_paths_cpp, 5},
+  {"_OCNet_paths_cpp", (DL_FUNC) &_OCNet_paths_cpp, 6},
   {"_OCNet_WSC", (DL_FUNC) &_OCNet_WSC, 4},
   {"_OCNet_NN_OCN", (DL_FUNC) &_OCNet_NN_OCN, 4},
   {"_OCNet_NN_river", (DL_FUNC) &_OCNet_NN_river, 6},

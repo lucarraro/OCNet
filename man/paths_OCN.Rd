@@ -2,13 +2,19 @@
 \alias{paths_OCN}
 \title{Calculate paths between nodes in an Optimal Channel Network}
 \usage{
-paths_OCN(OCN, level = c("RN","AG"), includePaths = FALSE, 
+paths_OCN(OCN, level = c("RN","AG"), whichNodes = NULL, includePaths = FALSE, 
 includeDownstreamNode = FALSE, includeUnconnectedPaths = FALSE, displayUpdates = FALSE)
 }
 \arguments{
 \item{OCN}{A \code{river} object as produced by \code{\link{aggregate_OCN}}.}
 
 \item{level}{Character vector. At which level should paths be calculated? Possible values are \code{"RN"}, \code{"AG"}, or both.}
+
+\item{whichNodes}{List. It allows specifying a subset of nodes for which paths are computed. In the case of large rivers, this could 
+speed up the function execution substantially. It must contain objects named \code{RN} and/or \code{AG}. Each of these objects is a 
+vector with the indices of the nodes for which paths are to be calculated. Default is \code{NULL}, which leads to calculation of paths 
+between all nodes at the level(s) specified in \code{level}. If \code{whichNodes} contains a single object (\code{RN} or \code{AG}), 
+this is taken as the level at which paths are calculated (i.e., \code{level} is overwritten).}
 
 \item{includePaths}{Logical. If \code{TRUE}, \code{RN$downstreamPath} and \code{AG$downstreamPath} are included to the output object. Note that this might slow down the function execution considerably, and create RAM issues for very large OCNs.}
 
