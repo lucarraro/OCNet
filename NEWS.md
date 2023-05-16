@@ -1,5 +1,9 @@
 # OCNet 1.0.1.9000
 
+## Major changes
+
+* `paths_OCN`: `whichNodes` argument and relative example added.
+
 ## Bugs fixed
 
 * `paths_OCN`: bug fixed for rivers with multiple outlets.
