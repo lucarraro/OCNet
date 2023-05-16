@@ -1,14 +1,25 @@
-paths_OCN <- function(OCN, level = c("RN","AG"), includePaths = FALSE, 
-                      includeDownstreamNode = FALSE, includeUnconnectedPaths = FALSE, 
+paths_OCN <- function(OCN, level = c("RN","AG"), whichNodes = NULL,
+                      includePaths = FALSE, 
+                      includeDownstreamNode = FALSE, 
+                      includeUnconnectedPaths = FALSE, 
                       displayUpdates = FALSE){
   
   if (length(OCN$RN$nNodes)==0){
     stop('Missing fields in OCN. You should run aggregate_OCN prior to paths_OCN.')
   }
+  
+  if (is.null(whichNodes)){
+    whichNodes <- vector("list")
+    for (str in level){ whichNodes[[str]] <- 1:OCN[[str]]$nNodes }
+  } else {level <- names(whichNodes)}
+  
   for (str in level){
     if (displayUpdates){message(sprintf("%s downstream paths... \n",str), appendLF = FALSE)}
     
-    ll <- paths_cpp(OCN, str=str, includePaths = includePaths,
+    wN <- whichNodes[[str]]
+    if (!(OCN[[str]]$outlet %in% wN)) wN <- c(wN, OCN[[str]]$outlet)
+    
+    ll <- paths_cpp(OCN, whichNodes=wN, str=str, includePaths = includePaths,
                     includeDownstreamNode = includeDownstreamNode,
                     includeUnconnectedPaths = includeUnconnectedPaths)
     tmp <- list(i=ll$i, j=ll$j, values=ll$values)

@@ -2,13 +2,20 @@
 \alias{paths_OCN}
 \title{Calculate paths between nodes in an Optimal Channel Network}
 \usage{
-paths_OCN(OCN, level = c("RN","AG"), includePaths = FALSE, 
+paths_OCN(OCN, level = c("RN","AG"), whichNodes = NULL, includePaths = FALSE, 
 includeDownstreamNode = FALSE, includeUnconnectedPaths = FALSE, displayUpdates = FALSE)
 }
 \arguments{
 \item{OCN}{A \code{river} object as produced by \code{\link{aggregate_OCN}}.}
 
 \item{level}{Character vector. At which level should paths be calculated? Possible values are \code{"RN"}, \code{"AG"}, or both.}
+
+\item{whichNodes}{List. It allows specifying a subset of nodes for which paths are computed. In the case of large rivers, this could 
+speed up the function execution substantially. It must contain objects named \code{RN} and/or \code{AG}. Each of these objects is a 
+vector with the indices of the nodes for which paths are to be calculated. Default is \code{NULL}, which leads to calculation of paths 
+between all nodes at the level(s) specified in \code{level}. If \code{whichNodes} contains a single object (\code{RN} or \code{AG}), 
+this is taken as the level at which paths are calculated (i.e., \code{level} is overwritten). If not present, the outlet node is 
+automatically added. See example.}
 
 \item{includePaths}{Logical. If \code{TRUE}, \code{RN$downstreamPath} and \code{AG$downstreamPath} are included to the output object. Note that this might slow down the function execution considerably, and create RAM issues for very large OCNs.}
 
@@ -55,7 +62,7 @@ Function that determines upstream and downstream paths and path lengths between 
 \examples{
 # 1) Calculate paths between nodes of an OCN
 OCN <- paths_OCN(aggregate_OCN(landscape_OCN(OCN_20), thrA = 4))
-\dontrun{
+\donttest{
 # 2) Display distance to outlet (at the RN level) along the main stem
 # of an OCN
 OCN <- aggregate_OCN(landscape_OCN(OCN_250_T)) # this takes some seconds
@@ -69,5 +76,21 @@ theme[mainStem] <- distanceToOutlet[mainStem]
 
 draw_thematic_OCN(theme, OCN)
 title("Distance to outlet along the main stem [pixel units]")
+
+# 3) use whichNodes to compute distance between two non flow-connected nodes 
+OCN <- aggregate_OCN(landscape_OCN(OCN_250_T)) # this takes some seconds
+RNnodes <- c(483, 516)
+plot(OCN)
+points(OCN$RN$X[RNnodes], OCN$RN$Y[RNnodes], pch = 19) # nodes 483 and 516 are not flow-connected
+OCN <- paths_OCN(OCN, whichNodes = list(RN=RNnodes), includePaths = TRUE,
+				 includeUnconnectedPaths = TRUE)
+OCN$RN$downstreamPath[[RNnodes[1]]][[OCN$RN$outlet]] 
+# the outlet node has been added to whichNodes$RN
+OCN$RN$downstreamLengthUnconnected[RNnodes[1], RNnodes[2]] 
+# distance from node 1 to the common downstream confluence
+OCN$RN$downstreamLengthUnconnected[RNnodes[2], RNnodes[1]] 
+# distance from node 2 to the common downstream confluence
 }
+
+
 }

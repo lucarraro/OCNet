@@ -84,17 +84,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // paths_cpp
-List paths_cpp(S4 OCN, String str, bool includePaths, bool includeDownstreamNode, bool includeUnconnectedPaths);
-RcppExport SEXP _OCNet_paths_cpp(SEXP OCNSEXP, SEXP strSEXP, SEXP includePathsSEXP, SEXP includeDownstreamNodeSEXP, SEXP includeUnconnectedPathsSEXP) {
+List paths_cpp(S4 OCN, IntegerVector whichNodes, String str, bool includePaths, bool includeDownstreamNode, bool includeUnconnectedPaths);
+RcppExport SEXP _OCNet_paths_cpp(SEXP OCNSEXP, SEXP whichNodesSEXP, SEXP strSEXP, SEXP includePathsSEXP, SEXP includeDownstreamNodeSEXP, SEXP includeUnconnectedPathsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< S4 >::type OCN(OCNSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type whichNodes(whichNodesSEXP);
     Rcpp::traits::input_parameter< String >::type str(strSEXP);
     Rcpp::traits::input_parameter< bool >::type includePaths(includePathsSEXP);
     Rcpp::traits::input_parameter< bool >::type includeDownstreamNode(includeDownstreamNodeSEXP);
     Rcpp::traits::input_parameter< bool >::type includeUnconnectedPaths(includeUnconnectedPathsSEXP);
-    rcpp_result_gen = Rcpp::wrap(paths_cpp(OCN, str, includePaths, includeDownstreamNode, includeUnconnectedPaths));
+    rcpp_result_gen = Rcpp::wrap(paths_cpp(OCN, whichNodes, str, includePaths, includeDownstreamNode, includeUnconnectedPaths));
     return rcpp_result_gen;
 END_RCPP
 }

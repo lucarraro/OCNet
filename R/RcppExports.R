@@ -21,7 +21,7 @@ continue_FD_SC <- function(IndexHeadpixel, FD_to_SC, SC_to_FD, downNode) {
     .Call(`_OCNet_continue_FD_SC`, IndexHeadpixel, FD_to_SC, SC_to_FD, downNode)
 }
 
-paths_cpp <- function(OCN, str = "RN", includePaths = FALSE, includeDownstreamNode = FALSE, includeUnconnectedPaths = FALSE) {
-    .Call(`_OCNet_paths_cpp`, OCN, str, includePaths, includeDownstreamNode, includeUnconnectedPaths)
+paths_cpp <- function(OCN, whichNodes, str = "RN", includePaths = FALSE, includeDownstreamNode = FALSE, includeUnconnectedPaths = FALSE) {
+    .Call(`_OCNet_paths_cpp`, OCN, whichNodes, str, includePaths, includeDownstreamNode, includeUnconnectedPaths)
 }
 
