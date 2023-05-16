@@ -16,7 +16,10 @@ paths_OCN <- function(OCN, level = c("RN","AG"), whichNodes = NULL,
   for (str in level){
     if (displayUpdates){message(sprintf("%s downstream paths... \n",str), appendLF = FALSE)}
     
-    ll <- paths_cpp(OCN, whichNodes=whichNodes[[str]], str=str, includePaths = includePaths,
+    wN <- whichNodes[[str]]
+    if (!(OCN[[str]]$outlet %in% wN)) wN <- c(wN, OCN[[str]]$outlet)
+    
+    ll <- paths_cpp(OCN, whichNodes=wN, str=str, includePaths = includePaths,
                     includeDownstreamNode = includeDownstreamNode,
                     includeUnconnectedPaths = includeUnconnectedPaths)
     tmp <- list(i=ll$i, j=ll$j, values=ll$values)

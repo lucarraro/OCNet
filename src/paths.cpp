@@ -64,14 +64,14 @@ List paths_cpp(S4 OCN, IntegerVector whichNodes, String str = "RN", bool include
       node_j = downNode(j);
       j = node_j-1;
       path.push_back(node_j);
+	  NumericVector tmp = leng[path-1];
+	  sl = sum(tmp);
 	  if (whichNodes_bool[j])
 	  {
 		if (includePaths)
 			as<List>(downstreamPath[i])[j] = path;
 		set_row(k) = i;
 		set_col(k) = j;
-		NumericVector tmp = leng[path-1];
-		sl = sum(tmp);
 		if (includeDownstreamNode)
 			set_values(k) = sl;
 		else
