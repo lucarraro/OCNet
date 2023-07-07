@@ -39,7 +39,8 @@ Possible character strings for \code{weight} are:
 where \eqn{w} is the weight value for a given link, \eqn{r} its resistance value and \eqn{r_{max}} the maximum resistance value across all links.
 }
 }
- 
+\seealso{\code{\link{aem}}}
+
 \examples{
 OCN <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 5)
 
