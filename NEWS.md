@@ -3,6 +3,7 @@
 ## Major changes
 
 * `paths_OCN`: `whichNodes` argument and relative example added.
+* `OCN_to_AEM`: function added.
 
 ## Bugs fixed
 

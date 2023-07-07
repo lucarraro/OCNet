@@ -1,6 +1,10 @@
-OCN_to_AEM <- function(OCN, level="AG", resistance = "length",
-                       weight = NULL) {
+OCN_to_AEM <- function(OCN, level="AG", weight = NULL,
+                       resistance = "length") {
 
+  if (length(OCN$RN$nNodes)==0){
+    stop('Missing aggregation level in OCN. Run landscape_OCN and/or aggregate_OCN prior to OCN_to_SSN.')
+  }
+  
   if (resistance=="time" & length(OCN[[level]]$velocity)==0){
     stop('Missing velocities. resistance = "time" cannot be used.
          Use OCNet::rivergeometry_OCN or rivnet::hydro_river to compute velocities.')
