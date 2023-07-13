@@ -2,7 +2,7 @@ OCN_to_AEM <- function(OCN, level="AG", weight = NULL,
                        resistance = "length") {
 
   if (length(OCN$RN$nNodes)==0){
-    stop('Missing aggregation level in OCN. Run landscape_OCN and/or aggregate_OCN prior to OCN_to_SSN.')
+    stop('Missing aggregation level in OCN. Run landscape_OCN and/or aggregate_OCN prior to OCN_to_AEM.')
   }
   
   if (resistance=="time" & length(OCN[[level]]$velocity)==0){

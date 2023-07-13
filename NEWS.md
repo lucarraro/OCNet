@@ -1,3 +1,9 @@
+# OCNet 1.1.0.9000
+
+## Minor changes
+
+* `OCN_to_AEM`: error message updated.
+
 # OCNet 1.1.0
 
 ## Major changes
