@@ -1,5 +1,5 @@
 OCN_to_AEM <- function(OCN, level="AG", weight = NULL,
-                       resistance = "length") {
+                       resistance = "length", moranI = FALSE) {
 
   if (length(OCN$RN$nNodes)==0){
     stop('Missing aggregation level in OCN. Run landscape_OCN and/or aggregate_OCN prior to OCN_to_AEM.')
@@ -39,6 +39,13 @@ OCN_to_AEM <- function(OCN, level="AG", weight = NULL,
   weight[weight==Inf] <- 0 # it doesn't matter which value
 
   res <- aem(bin.mat.OCN, weight=weight)
-
+  
+  if (moranI){
+    matW <- t(as.matrix.spam(OCN[[level]]$W * weight))
+    listW <- suppressWarnings(mat2listw(matW))
+    moranI <- moran.randtest(res$vectors, listW)
+    res[["moranI"]] <- moranI
+  }
+  
   invisible(res)
 }

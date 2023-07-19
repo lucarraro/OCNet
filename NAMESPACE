@@ -26,6 +26,7 @@ import(spam)
 # import(bookdown)
 import(igraph)
 import(adespatial)
+import(spdep)
 
 importFrom("fields", "imagePlot")
 importFrom("grDevices", "colorRampPalette", "contourLines", "rainbow",

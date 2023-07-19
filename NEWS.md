@@ -3,6 +3,7 @@
 ## Minor changes
 
 * `OCN_to_AEM`: error message updated.
+* `OCN_to_AEM`: `moranI` option added.
 
 # OCNet 1.1.0
 
