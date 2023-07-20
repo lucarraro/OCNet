@@ -491,8 +491,8 @@ references:
     given: A.
   - family: Altermatt
     given: F. 
-  container-title: bioRxiv
-  URL: 'http://dx.doi.org/10.1101/2020.02.17.948851'
+  container-title: Ecology and Evolution
+  URL: 'https://doi.org/10.1002/ece3.6479'
   type: article-journal
   issued:
     year: 2020
