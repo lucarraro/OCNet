@@ -2,6 +2,7 @@
 
 ## Minor changes
 
+* `create_general_contour_OCN`: documentation updated.
 * `OCN_to_AEM`: error message updated.
 * `OCN_to_AEM`: `moranI` option added.
 

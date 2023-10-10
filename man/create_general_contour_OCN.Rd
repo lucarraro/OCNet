@@ -13,8 +13,9 @@ create_general_contour_OCN(flowDirStart, expEnergy = 0.5,
 \arguments{
 
 \item{flowDirStart}{Matrix with custom initial flow directions. Cells outside the catchment must have value equal to \code{NaN}. 
-Cells within the catchment have natural numbers between 1 and 8. Key is as follows:
+Cells within the catchment have natural numbers between 0 and 8. Key is as follows:
 \describe{
+\item{\code{0}}{Outlet}
 \item{\code{1}}{+1 column}
 \item{\code{2}}{-1 row, +1 column}
 \item{\code{3}}{-1 row}
@@ -23,7 +24,9 @@ Cells within the catchment have natural numbers between 1 and 8. Key is as follo
 \item{\code{6}}{+1 row, -1 column}
 \item{\code{7}}{+1 row}
 \item{\code{8}}{+1 row, +1 column}
-}}
+}
+Note that \code{flowDirStart} must have at least one outlet, that is one cell with value 0. The position of outlet(s) will not be altered by the OCN search algorithm. 
+}
 
 \item{expEnergy}{Exponent of the functional \code{sum(A^expEnergy)} that is minimized during the OCN search algorithm.}
 
