@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OCNet</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,10 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>flowDirStart</dt>
 <dd><p>Matrix with custom initial flow directions. Cells outside the catchment must have value equal to <code>NaN</code>. 
-Cells within the catchment have natural numbers between 1 and 8. Key is as follows:</p><dl><dt><code>1</code></dt>
+Cells within the catchment have natural numbers between 0 and 8. Key is as follows:</p><dl><dt><code>0</code></dt>
+<dd><p>Outlet</p></dd>
+
+<dt><code>1</code></dt>
 <dd><p>+1 column</p></dd>
 
 <dt><code>2</code></dt>
@@ -86,7 +89,7 @@ Cells within the catchment have natural numbers between 1 and 8. Key is as follo
 <dd><p>+1 row, +1 column</p></dd>
 
 
-</dl></dd>
+</dl><p>Note that <code>flowDirStart</code> must have at least one outlet, that is one cell with value 0. The position of outlet(s) will not be altered by the OCN search algorithm.</p></dd>
 
 
 <dt>expEnergy</dt>
