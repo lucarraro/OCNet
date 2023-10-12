@@ -19,7 +19,7 @@ export(OCN_to_SSN)
 export(OCN_to_AEM)
 exportClasses(river)
 exportMethods(plot, show, names, "$<-", "$", "[[","[[<-") 
-import(SSN)
+# import(SSN)
 # import(fields)
 import(rgl)
 import(spam)
@@ -35,9 +35,9 @@ importFrom("graphics", "lines", "par", "persp", "plot", "points",
 			 "polygon","legend")
 importFrom("methods", "new", "slot", "slot<-", "slotNames", "show")
 importFrom("stats", "optim", "runif")
-importFrom("rgdal", "writeOGR")
-importFrom("sp", "Line", "Lines", "SpatialLines", "SpatialLinesDataFrame",
-	"SpatialPointsDataFrame")
+# importFrom("rgdal", "writeOGR")
+# importFrom("sp", "Line", "Lines", "SpatialLines", "SpatialLinesDataFrame",
+#	"SpatialPointsDataFrame")
 importFrom("utils", "write.table")
 importFrom(Rcpp, evalCpp)
 
