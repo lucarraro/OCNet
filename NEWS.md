@@ -1,4 +1,8 @@
-# OCNet 1.1.0.9000
+# OCNet 1.2.0
+
+## Major changes
+
+* `OCN_to_SSN`: disabled following archiving of package `SSN` from CRAN.
 
 ## Minor changes
 

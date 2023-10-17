@@ -14,7 +14,7 @@ OCN_to_SSN(OCN, ...)
 No output is produced.
 }
 \description{
-In \code{OCNet} v1.2.0, this function is disabled following the archival 
+In \code{OCNet} v1.2.0, this function is disabled following the archiving 
 of the \code{SSN} package from CRAN (due to the retirement of \code{rgdal}). 
 A new \code{OCN_to_SSN} function will be included in the next release of \code{OCNet}.
 }
