@@ -4,7 +4,7 @@
 \usage{
 aggregate_OCN(OCN, thrA = 0.002 * OCN$FD$nNodes *
   OCN$cellsize^2, streamOrderType = "Strahler", maxReachLength = Inf,
-  breakpoints = NULL, displayUpdates = FALSE)
+  equalizeLengths = FALSE, breakpoints = NULL, displayUpdates = FALSE)
 }
 \arguments{
 \item{OCN}{A \code{river} object as produced by \code{\link{landscape_OCN}}.}
@@ -19,6 +19,8 @@ such as \code{OCN$AG$streamOrder}.}
 is higher than \code{maxReachLength}, the reach starting from the channel head will have a length up to \code{maxReachLength}, while the next downstream 
 pixel is considered as a new channel head, from which a new reach departs. Values lower than \code{OCN$cellsize*sqrt(2)} are not allowed. If 
 \code{maxReachLength < 2*OCN$cellsize}, every RN node is also an AG node.}
+
+\item{equalizeLengths}{Logical. Only effective when \code{maxReachLength < Inf}.}
 
 \item{breakpoints}{Indices of additional nodes at the RN level that should be also nodes at the AG level (beyond source, confluence, outlet nodes 
 and AG nodes determined via \code{maxReachLength}). To determine such indices, a preliminary run of \code{aggregate_OCN} with the same \code{thrA} 

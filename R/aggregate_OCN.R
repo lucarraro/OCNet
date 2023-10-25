@@ -3,6 +3,7 @@ aggregate_OCN <- function(OCN,
                           thrA=0.002*OCN$FD$nNodes*OCN$cellsize^2,
                           streamOrderType="Strahler",
                           maxReachLength=Inf,
+                          equalizeLengths=FALSE,
                           breakpoints=NULL,
                           displayUpdates=FALSE){
   
@@ -115,38 +116,86 @@ aggregate_OCN <- function(OCN,
   Z_AG <- NaN*numeric(Nnodes_AG)
   A_AG <- NaN*numeric(Nnodes_AG)
   
-  while (length(whichNodeAG) != 0){ # explore all AG Nodes
-    i <- whichNodeAG[1] # select the first
-    RN_to_AG[i] <- reachID
-    AG_to_RN[[reachID]] <- i
-    j <- DownNode_RN[i] 
-    X_AG[reachID] <- X_RN[i]
-    Y_AG[reachID] <- Y_RN[i]
-    Z_AG[reachID] <- Z_RN[i]
-    A_AG[reachID] <- A_RN[i]
-    #Length_AG[reachID] <- Length_RN[i]
-    tmp_length <- Length_RN[i]
-    tmp <- NULL
-    j0 <- j
-    while (!IsNodeAG[j] && j!=0 && tmp_length <= maxReachLength) {
-      tmp <- c(tmp, j)
-      tmp_length <-  tmp_length + Length_RN[j]
-      j_old <- j
-      j <- DownNode_RN[j]} 
-    if (tmp_length > maxReachLength){
-      j <- j_old
-      whichNodeAG <- c(whichNodeAG, j)
-      ChannelHeads[j] <- 1
-      tmp_length <- tmp_length - Length_RN[j]
-      tmp <- tmp[-length(tmp)]
+  if (equalizeLengths){
+    while (length(whichNodeAG) != 0){ # explore all AG Nodes
+      i <- whichNodeAG[1] # select the first
+      RN_to_AG[i] <- reachID
+      AG_to_RN[[reachID]] <- i
+      j <- DownNode_RN[i]
+      X_AG[reachID] <- X_RN[i]
+      Y_AG[reachID] <- Y_RN[i]
+      Z_AG[reachID] <- Z_RN[i]
+      A_AG[reachID] <- A_RN[i]
+      Length_AG[reachID] <- Length_RN[i]
+      tmp_length <- Length_RN[i]
+      tmp <- NULL
+      j0 <- j
+      while (!IsNodeAG[j] && j!=0) {
+        tmp <- c(tmp, j)
+        tmp_length <-  tmp_length + Length_RN[j]
+        j_old <- j
+        j <- DownNode_RN[j]}
+
+      if (tmp_length > maxReachLength){
+        n_splits <- ceiling(tmp_length/maxReachLength)
+        new_maxLength <- tmp_length/n_splits
+        new_maxLength <- max(new_maxLength, 1.5*OCN$cellsize)
+        j <- j0
+        while (!IsNodeAG[j] && j!=0 && Length_AG[reachID] <= new_maxLength) {
+          RN_to_AG[j] <- reachID
+          AG_to_RN[[reachID]] <- c(AG_to_RN[[reachID]], tmp)
+          Length_AG[reachID] <-  Length_AG[reachID] + Length_RN[j]
+          j_old <- j
+          j <- DownNode_RN[j]}
+        if (Length_AG[reachID] > new_maxLength){
+          j <- j_old
+          Length_AG[reachID] <-  Length_AG[reachID] - Length_RN[j]
+          ChannelHeads[j] <- 1
+          whichNodeAG <- c(whichNodeAG,j)}
+
+      } else {
+        RN_to_AG[tmp] <- reachID
+        AG_to_RN[[reachID]] <- c(AG_to_RN[[reachID]], tmp)
+        Length_AG[reachID] <- tmp_length
+      }
+
+      reachID <- reachID + 1
+      whichNodeAG <- whichNodeAG[-1]
     }
-    Length_AG[reachID] <- tmp_length
-    RN_to_AG[tmp] <- reachID
-    AG_to_RN[[reachID]] <- c(AG_to_RN[[reachID]], tmp)
-    reachID <- reachID + 1
-    whichNodeAG <- whichNodeAG[-1]
+  } else {
+    while (length(whichNodeAG) != 0){ # explore all AG Nodes
+      i <- whichNodeAG[1] # select the first
+      RN_to_AG[i] <- reachID
+      AG_to_RN[[reachID]] <- i
+      j <- DownNode_RN[i] 
+      X_AG[reachID] <- X_RN[i]
+      Y_AG[reachID] <- Y_RN[i]
+      Z_AG[reachID] <- Z_RN[i]
+      A_AG[reachID] <- A_RN[i]
+      #Length_AG[reachID] <- Length_RN[i]
+      tmp_length <- Length_RN[i]
+      tmp <- NULL
+      j0 <- j
+      while (!IsNodeAG[j] && j!=0 && tmp_length <= maxReachLength) {
+        tmp <- c(tmp, j)
+        tmp_length <-  tmp_length + Length_RN[j]
+        j_old <- j
+        j <- DownNode_RN[j]} 
+      if (tmp_length > maxReachLength){
+        j <- j_old
+        whichNodeAG <- c(whichNodeAG, j)
+        ChannelHeads[j] <- 1
+        tmp_length <- tmp_length - Length_RN[j]
+        tmp <- tmp[-length(tmp)]
+      }
+      Length_AG[reachID] <- tmp_length
+      RN_to_AG[tmp] <- reachID
+      AG_to_RN[[reachID]] <- c(AG_to_RN[[reachID]], tmp)
+      reachID <- reachID + 1
+      whichNodeAG <- whichNodeAG[-1]
+    }
   }
-  
+
   Nnodes_AG <- length(X_AG)
   
   # FD_to_SC: vector of length OCN$FD$nNodes containing subcatchmentID for every pixel of the catchment
