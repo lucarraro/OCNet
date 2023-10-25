@@ -81,7 +81,7 @@ The generation of an OCN is performed by function `create_OCN`. Its only require
           + `paths_OCN`: calculates paths and path lengths among OCN nodes
           + `rivergeometry_OCN`: evaluates hydraulic properties of the OCN
           + `OCN_to_igraph`: transforms the OCN into an igraph object
-          + `OCN_to_SSN`: transforms the OCN into a SpatialStreamNetwork object^[In `OCNet` v1.2.0, this function is disabled following the archival of the `SSN` package from CRAN (due to the retirement of `rgdal`). A new `OCN_to_SSN` function will be included in the next release of `OCNet`.]
+          + `OCN_to_SSN`: transforms the OCN into a SpatialStreamNetwork object^[In `OCNet` v1.2.0, this function is disabled following the archiving of the `SSN` package from CRAN (due to the retirement of `rgdal`). A new `OCN_to_SSN` function will be included in the next release of `OCNet`.]
       + `draw_contour_OCN`: draws "real-shaped"^[If the OCN was generated with option `periodicBoundaries = FALSE`, the real-shaped representation of the OCN is equal to the simple, within-lattice representation provided by `draw_simple_OCN`. If the OCN was generated with `periodicBoundaries = TRUE`, its real-shaped representation is such that, starting from the outlet(s), the position of a FD node `i` is flipped with respect to a lattice side if the edge between `i` and the pixel downstream of `i` crosses such lattice side.] OCNs and catchment contours
       + `draw_elev2D_OCN`: draws 2D elevation field
       + `draw_elev3D_OCN`: draws 3D elevation field
