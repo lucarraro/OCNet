@@ -116,85 +116,137 @@ aggregate_OCN <- function(OCN,
   Z_AG <- NaN*numeric(Nnodes_AG)
   A_AG <- NaN*numeric(Nnodes_AG)
   
-  if (equalizeLengths){
-    while (length(whichNodeAG) != 0){ # explore all AG Nodes
-      i <- whichNodeAG[1] # select the first
-      RN_to_AG[i] <- reachID
-      AG_to_RN[[reachID]] <- i
-      j <- DownNode_RN[i]
-      X_AG[reachID] <- X_RN[i]
-      Y_AG[reachID] <- Y_RN[i]
-      Z_AG[reachID] <- Z_RN[i]
-      A_AG[reachID] <- A_RN[i]
-      Length_AG[reachID] <- Length_RN[i]
-      tmp_length <- Length_RN[i]
-      tmp <- NULL
-      j0 <- j
-      while (!IsNodeAG[j] && j!=0) {
-        tmp <- c(tmp, j)
-        tmp_length <-  tmp_length + Length_RN[j]
-        j_old <- j
-        j <- DownNode_RN[j]}
-
-      if (tmp_length > maxReachLength){
-        n_splits <- ceiling(tmp_length/maxReachLength)
-        new_maxLength <- tmp_length/n_splits
-        new_maxLength <- max(new_maxLength, 1.5*OCN$cellsize)
-        j <- j0
-        while (!IsNodeAG[j] && j!=0 && Length_AG[reachID] <= new_maxLength) {
-          RN_to_AG[j] <- reachID
-          AG_to_RN[[reachID]] <- c(AG_to_RN[[reachID]], tmp)
-          Length_AG[reachID] <-  Length_AG[reachID] + Length_RN[j]
+  # new version
+  new_maxLength <- maxReachLength
+  while (length(whichNodeAG) != 0){ # explore all AG Nodes
+    i <- whichNodeAG[1] # select the first
+    RN_to_AG[i] <- reachID
+    AG_to_RN[[reachID]] <- i
+    X_AG[reachID] <- X_RN[i]
+    Y_AG[reachID] <- Y_RN[i]
+    Z_AG[reachID] <- Z_RN[i]
+    A_AG[reachID] <- A_RN[i]
+    
+    if (equalizeLengths){
+      if (IsNodeAG[i]){ # if the node is pre-established AG node, re-estimate new_maxReachLength; otherwise, use previously calculated value
+        j <- DownNode_RN[i]
+        tmp_length <-  Length_RN[i]
+        while (!IsNodeAG[j] && j!=0) {
+          tmp_length <-  tmp_length + Length_RN[j]
           j_old <- j
           j <- DownNode_RN[j]}
-        if (Length_AG[reachID] > new_maxLength){
-          j <- j_old
-          Length_AG[reachID] <-  Length_AG[reachID] - Length_RN[j]
-          ChannelHeads[j] <- 1
-          whichNodeAG <- c(whichNodeAG,j)}
-
-      } else {
-        RN_to_AG[tmp] <- reachID
-        AG_to_RN[[reachID]] <- c(AG_to_RN[[reachID]], tmp)
-        Length_AG[reachID] <- tmp_length
+        
+        n_splits <- max(1, ceiling(tmp_length/maxReachLength)) # it works even if tmp_length < maxReachLength. min is 1, to prevent issues when i=outlet 
+        new_maxLength <- min(tmp_length/n_splits + 1.5*OCN$cellsize, maxReachLength) # sum +1.5 cellsize to avoid creating additional reaches due to rounding
+        new_maxLength <- max(new_maxLength, 1.5*OCN$cellsize)
       }
-
-      reachID <- reachID + 1
-      whichNodeAG <- whichNodeAG[-1]
-    }
-  } else {
-    while (length(whichNodeAG) != 0){ # explore all AG Nodes
-      i <- whichNodeAG[1] # select the first
-      RN_to_AG[i] <- reachID
-      AG_to_RN[[reachID]] <- i
-      j <- DownNode_RN[i] 
-      X_AG[reachID] <- X_RN[i]
-      Y_AG[reachID] <- Y_RN[i]
-      Z_AG[reachID] <- Z_RN[i]
-      A_AG[reachID] <- A_RN[i]
-      #Length_AG[reachID] <- Length_RN[i]
-      tmp_length <- Length_RN[i]
-      tmp <- NULL
-      j0 <- j
-      while (!IsNodeAG[j] && j!=0 && tmp_length <= maxReachLength) {
+    } else {new_maxLength <- maxReachLength}
+    
+    lengReach <- Length_RN[i]
+    j <- DownNode_RN[i] 
+    j0 <- j
+    tmp <- NULL
+    
+    while (!IsNodeAG[j] && j!=0 && lengReach <= new_maxLength) {
         tmp <- c(tmp, j)
-        tmp_length <-  tmp_length + Length_RN[j]
+        lengReach <-  lengReach + Length_RN[j]
         j_old <- j
         j <- DownNode_RN[j]} 
-      if (tmp_length > maxReachLength){
+      if (lengReach > new_maxLength){
         j <- j_old
-        whichNodeAG <- c(whichNodeAG, j)
+        whichNodeAG <- c(whichNodeAG[1], j, whichNodeAG[-1]) # new channel head is added at the front, so that same new_maxLength is applied
+                                                             # second position (first is to be deleted)
         ChannelHeads[j] <- 1
-        tmp_length <- tmp_length - Length_RN[j]
+        lengReach <- lengReach - Length_RN[j]
         tmp <- tmp[-length(tmp)]
       }
-      Length_AG[reachID] <- tmp_length
+      Length_AG[reachID] <- lengReach
       RN_to_AG[tmp] <- reachID
       AG_to_RN[[reachID]] <- c(AG_to_RN[[reachID]], tmp)
       reachID <- reachID + 1
       whichNodeAG <- whichNodeAG[-1]
-    }
   }
+  
+  # # old version
+  # if (equalizeLengths){
+  #   while (length(whichNodeAG) != 0){ # explore all AG Nodes
+  #     i <- whichNodeAG[1] # select the first
+  #     RN_to_AG[i] <- reachID
+  #     AG_to_RN[[reachID]] <- i
+  #     j <- DownNode_RN[i]
+  #     X_AG[reachID] <- X_RN[i]
+  #     Y_AG[reachID] <- Y_RN[i]
+  #     Z_AG[reachID] <- Z_RN[i]
+  #     A_AG[reachID] <- A_RN[i]
+  #     Length_AG[reachID] <- Length_RN[i]
+  #     tmp_length <- Length_RN[i]
+  #     tmp <- NULL
+  #     j0 <- j
+  #     while (!IsNodeAG[j] && j!=0) {
+  #       tmp_length <-  tmp_length + Length_RN[j]
+  #       j_old <- j
+  #       j <- DownNode_RN[j]}
+  # 
+  #     if (tmp_length > maxReachLength){
+  #       n_splits <- ceiling(tmp_length/maxReachLength)
+  #       new_maxLength <- tmp_length/n_splits
+  #       new_maxLength <- max(new_maxLength, 1.5*OCN$cellsize)
+  #       j <- j0
+  #       while (!IsNodeAG[j] && j!=0 && Length_AG[reachID] <= new_maxLength) {
+  #         tmp <- c(tmp, j)
+  #         RN_to_AG[j] <- reachID
+  #         AG_to_RN[[reachID]] <- c(AG_to_RN[[reachID]], tmp)
+  #         Length_AG[reachID] <-  Length_AG[reachID] + Length_RN[j]
+  #         j_old <- j
+  #         j <- DownNode_RN[j]}
+  #       if (Length_AG[reachID] > new_maxLength){
+  #         j <- j_old
+  #         Length_AG[reachID] <-  Length_AG[reachID] - Length_RN[j]
+  #         ChannelHeads[j] <- 1
+  #         whichNodeAG <- c(whichNodeAG,j)}
+  # 
+  #     } else {
+  #       RN_to_AG[tmp] <- reachID
+  #       AG_to_RN[[reachID]] <- c(AG_to_RN[[reachID]], tmp)
+  #       Length_AG[reachID] <- tmp_length
+  #     }
+  # 
+  #     reachID <- reachID + 1
+  #     whichNodeAG <- whichNodeAG[-1]
+  #   }
+  # } else {
+  #   while (length(whichNodeAG) != 0){ # explore all AG Nodes
+  #     i <- whichNodeAG[1] # select the first
+  #     RN_to_AG[i] <- reachID
+  #     AG_to_RN[[reachID]] <- i
+  #     j <- DownNode_RN[i] 
+  #     X_AG[reachID] <- X_RN[i]
+  #     Y_AG[reachID] <- Y_RN[i]
+  #     Z_AG[reachID] <- Z_RN[i]
+  #     A_AG[reachID] <- A_RN[i]
+  #     #Length_AG[reachID] <- Length_RN[i]
+  #     tmp_length <- Length_RN[i]
+  #     tmp <- NULL
+  #     j0 <- j # useless?
+  #     while (!IsNodeAG[j] && j!=0 && tmp_length <= maxReachLength) {
+  #       tmp <- c(tmp, j)
+  #       tmp_length <-  tmp_length + Length_RN[j]
+  #       j_old <- j
+  #       j <- DownNode_RN[j]} 
+  #     if (tmp_length > maxReachLength){
+  #       j <- j_old
+  #       whichNodeAG <- c(whichNodeAG, j)
+  #       ChannelHeads[j] <- 1
+  #       tmp_length <- tmp_length - Length_RN[j]
+  #       tmp <- tmp[-length(tmp)]
+  #     }
+  #     Length_AG[reachID] <- tmp_length
+  #     RN_to_AG[tmp] <- reachID
+  #     AG_to_RN[[reachID]] <- c(AG_to_RN[[reachID]], tmp)
+  #     reachID <- reachID + 1
+  #     whichNodeAG <- whichNodeAG[-1]
+  #   }
+  # }
 
   Nnodes_AG <- length(X_AG)
   
