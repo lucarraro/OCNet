@@ -278,13 +278,14 @@ are also part of subcatchment <code>i</code>).</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># 1a) aggregate a 20x20 OCN by imposing thrA = 4. </span></span></span>
 <span class="r-in"><span><span class="va">OCN</span> <span class="op">&lt;-</span> <span class="fu">aggregate_OCN</span><span class="op">(</span><span class="fu"><a href="landscape_OCN.html">landscape_OCN</a></span><span class="op">(</span><span class="va">OCN_20</span><span class="op">)</span>, thrA <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="draw_thematic_OCN.html">draw_thematic_OCN</a></span><span class="op">(</span><span class="va">OCN</span>, drawNodes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="aggregate_OCN-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># 1b) same as above, but identify all RN nodes as AG nodes</span></span></span>
 <span class="r-in"><span><span class="va">mrl</span> <span class="op">&lt;-</span> <span class="fl">1.5</span><span class="op">*</span><span class="va">OCN_20</span><span class="op">$</span><span class="va">cellsize</span></span></span>
 <span class="r-in"><span><span class="va">OCN2</span> <span class="op">&lt;-</span> <span class="fu">aggregate_OCN</span><span class="op">(</span><span class="fu"><a href="landscape_OCN.html">landscape_OCN</a></span><span class="op">(</span><span class="va">OCN_20</span><span class="op">)</span>, thrA <span class="op">=</span> <span class="fl">4</span>, maxReachLength <span class="op">=</span> <span class="va">mrl</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="draw_thematic_OCN.html">draw_thematic_OCN</a></span><span class="op">(</span><span class="va">OCN2</span>, drawNodes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="aggregate_OCN-1.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="aggregate_OCN-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
@@ -308,21 +309,21 @@ are also part of subcatchment <code>i</code>).</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">OCN_c</span><span class="op">$</span><span class="va">AG</span><span class="op">$</span><span class="va">X</span>, <span class="va">OCN_c</span><span class="op">$</span><span class="va">AG</span><span class="op">$</span><span class="va">Y</span>, pch <span class="op">=</span> <span class="fl">19</span>, col <span class="op">=</span> <span class="st">"#0044bb"</span><span class="op">)</span> </span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"No. AG nodes = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">OCN_c</span><span class="op">$</span><span class="va">AG</span><span class="op">$</span><span class="va">nNodes</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    sep<span class="op">=</span><span class="st">""</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="aggregate_OCN-2.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="aggregate_OCN-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">old.par</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 3) use of breakpoints</span></span></span>
 <span class="r-in"><span><span class="va">OCN</span> <span class="op">&lt;-</span> <span class="fu">aggregate_OCN</span><span class="op">(</span><span class="fu"><a href="landscape_OCN.html">landscape_OCN</a></span><span class="op">(</span><span class="va">OCN_20</span><span class="op">)</span>, thrA <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="draw_thematic_OCN.html">draw_thematic_OCN</a></span><span class="op">(</span><span class="va">OCN</span>, drawNodes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="aggregate_OCN-3.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="aggregate_OCN-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># add an AG node downstream of node 1 at AG level</span></span></span>
 <span class="r-in"><span><span class="va">new_node_RN</span> <span class="op">&lt;-</span> <span class="va">OCN</span><span class="op">$</span><span class="va">RN</span><span class="op">$</span><span class="va">downNode</span><span class="op">[</span><span class="va">OCN</span><span class="op">$</span><span class="va">AG</span><span class="op">$</span><span class="va">toRN</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="va">OCN2</span> <span class="op">&lt;-</span> <span class="fu">aggregate_OCN</span><span class="op">(</span><span class="fu"><a href="landscape_OCN.html">landscape_OCN</a></span><span class="op">(</span><span class="va">OCN_20</span><span class="op">)</span>, thrA <span class="op">=</span> <span class="fl">5</span>, breakpoints <span class="op">=</span> <span class="va">new_node_RN</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="draw_thematic_OCN.html">draw_thematic_OCN</a></span><span class="op">(</span><span class="va">OCN2</span>, drawNodes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">OCN</span><span class="op">$</span><span class="va">RN</span><span class="op">$</span><span class="va">X</span><span class="op">[</span><span class="va">new_node_RN</span><span class="op">]</span>, <span class="va">OCN</span><span class="op">$</span><span class="va">RN</span><span class="op">$</span><span class="va">Y</span><span class="op">[</span><span class="va">new_node_RN</span><span class="op">]</span>, </span></span>
 <span class="r-in"><span>  pch <span class="op">=</span> <span class="fl">19</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="co"># this node has been added</span></span></span>
-<span class="r-plt img"><img src="aggregate_OCN-4.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="aggregate_OCN-5.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
