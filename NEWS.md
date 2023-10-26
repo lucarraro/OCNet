@@ -1,3 +1,9 @@
+# OCNet 1.2.0.9000
+
+## Minor changes
+
+* `aggregate_OCN`: `equalizeLength` option added.
+
 # OCNet 1.2.0
 
 ## Major changes

@@ -20,7 +20,10 @@ is higher than \code{maxReachLength}, the reach starting from the channel head w
 pixel is considered as a new channel head, from which a new reach departs. Values lower than \code{OCN$cellsize*sqrt(2)} are not allowed. If 
 \code{maxReachLength < 2*OCN$cellsize}, every RN node is also an AG node.}
 
-\item{equalizeLengths}{Logical. Only effective when \code{maxReachLength < Inf}.}
+\item{equalizeLengths}{Logical. Only effective when \code{maxReachLength < Inf}. If \code{TRUE}, reaches longer than \code{maxReachLength} are 
+split in portions of similar length. If \code{FALSE} (default), a split is made whenever adding one more pixel to a reach would violate the \code{maxReachLength}
+constrain, which could result in the creation of very short reaches. Note that setting \code{equalizeLengths = TRUE} might increase the number of AG nodes 
+with respect to the default case (see example 2).}
 
 \item{breakpoints}{Indices of additional nodes at the RN level that should be also nodes at the AG level (beyond source, confluence, outlet nodes 
 and AG nodes determined via \code{maxReachLength}). To determine such indices, a preliminary run of \code{aggregate_OCN} with the same \code{thrA} 
@@ -134,14 +137,16 @@ draw_thematic_OCN(OCN2, drawNodes = TRUE)
 }
 
 \donttest{
-# 2) explore the effects of thrA and maxReachLength on a large OCN
+# 2) explore the effects of thrA, maxReachLength and equalizeLengths on a large OCN
 OCN <- landscape_OCN(OCN_250_T) # it takes some seconds
 OCN_a <- aggregate_OCN(OCN, thrA = 200) # it takes some seconds
 OCN_b <- aggregate_OCN(OCN, thrA = 1000) # it takes some seconds
 OCN_c <- aggregate_OCN(OCN, thrA = 1000, maxReachLength = 20) # it takes some seconds
+OCN_d <- aggregate_OCN(OCN, thrA = 1000, maxReachLength = 20, 
+equalizeLengths = TRUE) # it takes some seconds
 
 old.par <- par(no.readonly = TRUE)
-par(mfrow = c(1,3))
+par(mfrow = c(2,2))
 draw_subcatchments_OCN(OCN_a)
 points(OCN_a$AG$X, OCN_a$AG$Y, pch = 19, col = "#0044bb") 
 title(paste("No. AG nodes = ", as.character(OCN_a$AG$nNodes),
@@ -154,7 +159,12 @@ draw_subcatchments_OCN(OCN_c)
 points(OCN_c$AG$X, OCN_c$AG$Y, pch = 19, col = "#0044bb") 
 title(paste("No. AG nodes = ", as.character(OCN_c$AG$nNodes),
 		sep=""))
+		draw_subcatchments_OCN(OCN_d)
+points(OCN_d$AG$X, OCN_d$AG$Y, pch = 19, col = "#0044bb") 
+title(paste("No. AG nodes = ", as.character(OCN_d$AG$nNodes),
+		sep=""))
 par(old.par)
+# note the difference between OCN_c and OCN_d at the bottom right corner of the lattice
 }
 
 # 3) use of breakpoints

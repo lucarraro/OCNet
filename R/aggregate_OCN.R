@@ -136,7 +136,8 @@ aggregate_OCN <- function(OCN,
           j_old <- j
           j <- DownNode_RN[j]}
         
-        n_splits <- max(1, ceiling(tmp_length/maxReachLength)) # it works even if tmp_length < maxReachLength. min is 1, to prevent issues when i=outlet 
+        n_splits <- max(1, ceiling((tmp_length+1.5*OCN$cellsize)/maxReachLength)) # it works even if tmp_length < maxReachLength. min is 1, to prevent issues when i=outlet
+                                                                                  # +1.5 cellsize to avoid unsplittable reaches
         new_maxLength <- min(tmp_length/n_splits + 1.5*OCN$cellsize, maxReachLength) # sum +1.5 cellsize to avoid creating additional reaches due to rounding
         new_maxLength <- max(new_maxLength, 1.5*OCN$cellsize)
       }
