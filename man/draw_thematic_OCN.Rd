@@ -71,6 +71,8 @@ Function that draws OCNs with color of RN or AG nodes depending on an arbitrary 
 This function can be used to show how a certain spatial field varies along the river network.
 
 \emph{Default plot options.} By default, it is set \code{asp = 1}, \code{xlab = ""}, \code{ylab = ""}. If at least one between \code{xlim} and \code{ylim} is specified by the user, the default for \code{axes} is \code{TRUE}, and is \code{FALSE} if not. Specifying \code{xlim} and \code{ylim} helps zoom into a portion of the river network; however, due to the default \code{asp = 1}, the displayed region might be larger than what is expected if the ranges of \code{xlim} and \code{ylim} are different. To avoid this, set \code{asp = NA} (at the cost of producing a deformed river network).
+
+\emph{Adding scale bar and north arrow.} Scale bar and north arrow can be added via \code{terra}'s functions \code{\link{sbar}} and \code{\link{north}}, respectively. However, note that arguments \code{d} and \code{xy} must be specified by the user (because no \code{rast} object is plotted). See example 5.
 }
 \examples{
 # 1a) Six different ways to display contributing area at the AG level
@@ -139,9 +141,15 @@ draw_thematic_OCN(OCN, OCN$AG$A,
 draw_thematic_OCN(OCN, OCN$AG$streamOrder, 
 	discreteLevels = TRUE, args_legend = list(x = -2, y = 1))
 
-# 5) add thematic OCN on top of map
+# 5) add thematic OCN on top of map and show scale bar and north arrow
 draw_elev2D_OCN(OCN)
 draw_thematic_OCN(OCN, OCN$AG$slope, backgroundColor = NULL, 
 add = TRUE, colPalette = hcl.colors(1000, "Grays", rev = TRUE),
 args_imagePlot = list(smallplot=c(0.05,0.07,0.1,0.9)))
+# now add scale bar and north arrow
+library(terra)
+# sbar() # this would throw an error
+# north()# this would throw an error
+sbar(d=1, xy=c(min(OCN$FD$X), min(OCN$FD$Y)-1)) # this works
+north(d=1, xy=c(max(OCN$FD$X)+1, max(OCN$FD$Y))) # this works
 }

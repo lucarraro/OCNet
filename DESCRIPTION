@@ -33,7 +33,7 @@ Description: Generate and analyze Optimal Channel Networks (OCNs):
 	<doi:10.1073/pnas.1322700111> for a theoretical overview on the OCN 
 	concept; Furrer and Sain (2010) <doi:10.18637/jss.v036.i10> for the 
 	construct used.
-Imports: fields, spam, rgl, methods, igraph, Rcpp (>= 1.0.10), adespatial, spdep
+Imports: fields, spam, rgl, methods, igraph, Rcpp (>= 1.0.10), adespatial, spdep, terra
 License: GPL-3 
 Encoding: UTF-8
 LazyData: true

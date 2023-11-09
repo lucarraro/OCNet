@@ -3,6 +3,8 @@
 ## Minor changes
 
 * `aggregate_OCN`: `equalizeLength` option added.
+* examples on drawing of scale bar and north arrow in `plot` and `draw_thematic_OCN` added.
+* dependency on package `terra` added. 
 
 # OCNet 1.2.0
 

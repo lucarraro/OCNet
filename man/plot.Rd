@@ -37,6 +37,10 @@ been run), the plotting function used is \code{draw_simple_OCN}. If the elevatio
 has not been aggregated (via \code{aggregate_OCN} or \code{aggregate_river}), the default plotting function used is 
  \code{draw_contour_OCN}. If the river has been aggregated, \code{draw_subcatchments_OCN} or \code{draw_thematic_OCN} are used depending on \code{type}.
  Elevation maps can be produced with \code{type = "elev2D"}, regardless of whether the river has been aggregated.
+
+\emph{Adding scale bar and north arrow.} Scale bar and north arrow can be added via \code{terra}'s functions \code{\link{sbar}} and \code{\link{north}}, respectively. 
+However, note that arguments \code{d} and \code{xy} must be specified by the user (because no \code{rast} object is plotted). See example.
+
 }
 
 \seealso{
@@ -58,4 +62,10 @@ plot(OCN, OCN$AG$A) # equivalent to draw_thematic_OCN (with theme specified)
 
 plot(OCN, type = "SC") # equivalent to draw_subcatchments_OCN (with no theme specified)
 plot(OCN, OCN$AG$A, type = "SC") # equivalent to draw_subcatchments_OCN (with theme specified)
+# now add scale bar and north arrow
+library(terra)
+# sbar() # this would throw an error
+# north()# this would throw an error
+sbar(d=1, xy=c(min(OCN$FD$X), min(OCN$FD$Y)-1)) # this works
+north(d=1, xy=c(max(OCN$FD$X)+1, max(OCN$FD$Y))) # this works
 }
