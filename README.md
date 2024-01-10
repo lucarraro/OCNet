@@ -1,12 +1,17 @@
+<<<<<<< HEAD
 <img align="right" width="250" src="man/figures/logo.png">
+=======
+>>>>>>> 28bf4d72c53f721e0f9f6a22f95890cd4d4b4b04
 
-# OCNet
+# OCNet <img align="right" width="250" src="man/figures/logo.png">
 
-An R-package to generate and analyze Optimal Channel Networks
-
+<!-- badges: start -->
 [![Linux Build Status](https://travis-ci.com/lucarraro/OCNet.svg?branch=master)](https://travis-ci.com/lucarraro/OCNet.svg?branch=master)
 [![CRAN](http://www.r-pkg.org/badges/version/OCNet)](http://CRAN.R-project.org/package=OCNet) 
 [![DOI](https://zenodo.org/badge/219014909.svg)](https://zenodo.org/badge/latestdoi/219014909)
+<!-- badges: end -->
+
+An R-package to generate and analyze Optimal Channel Networks
 
 ## Overview
 
