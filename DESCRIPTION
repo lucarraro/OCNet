@@ -44,4 +44,5 @@ Suggests:
     bookdown
 VignetteBuilder: knitr
 URL: https://lucarraro.github.io/OCNet/
+BugReports: https://github.com/lucarraro/OCNet/issues
 LinkingTo: Rcpp
