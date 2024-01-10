@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-<img align="right" width="250" src="man/figures/logo.png">
-=======
->>>>>>> 28bf4d72c53f721e0f9f6a22f95890cd4d4b4b04
-
 # OCNet <img align="right" width="250" src="man/figures/logo.png">
 
 <!-- badges: start -->
