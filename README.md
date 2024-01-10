@@ -1,4 +1,4 @@
-<img align="right" width="250" src="man/figures/OCNet_logo.png">
+<img align="right" width="250" src="man/figures/logo.png">
 
 # OCNet
 
