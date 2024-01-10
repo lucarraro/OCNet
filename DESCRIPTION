@@ -1,6 +1,6 @@
 Package: OCNet
 Title: Optimal Channel Networks
-Version: 1.2.1
+Version: 1.2.1.9000
 Authors@R: 
     c(person(given = "Luca",
            family = "Carraro",
