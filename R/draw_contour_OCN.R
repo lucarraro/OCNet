@@ -9,10 +9,17 @@ draw_contour_OCN <- function(OCN,
                              pch=15,
                              colPalOut="#000000",
                              min_lwd=0.5,
-                             max_lwd=5){
+                             max_lwd=5,
+                             contour_lwd=2,
+                             add=FALSE){
   
   if (!("Z" %in% names(OCN$FD))){
     stop('Missing fields in OCN. You should run landscape_OCN prior to draw_contour_OCN.')
+  }
+  
+  if (is.null(dev.list()) & add==TRUE){
+    add <- FALSE
+    warning("'add' will be ignored as there is no existing plot")
   }
   
   if (OCN$FD$nNodes>4e4) {
@@ -74,7 +81,9 @@ draw_contour_OCN <- function(OCN,
   #old.par <- par(no.readonly =TRUE) 
   #on.exit(par(old.par))
   #par(bty="n")
-  plot(c(min(XDraw),max(XDraw)),c(min(YDraw),max(YDraw)),type="n",xlab=" ",ylab=" ",axes=FALSE,asp=1)
+  if (!add){
+  plot(c(min(XDraw),max(XDraw)),c(min(YDraw),max(YDraw)),
+       type="n",xlab=" ",ylab=" ",axes=FALSE,asp=1)}
   
   if (drawOutlets==1) {
     for (i in 1:OCN$nOutlet){
@@ -98,7 +107,7 @@ draw_contour_OCN <- function(OCN,
   if (drawContours){
     for (j in 1:OCN$nOutlet){
       for (k in 1:length(Xc[[j]])){
-        lines(Xc[[j]][[k]],Yc[[j]][[k]],lwd=2,col=colPalCont[j])
+        lines(Xc[[j]][[k]],Yc[[j]][[k]],lwd=contour_lwd,col=colPalCont[j])
       }
     }
   }

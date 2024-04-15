@@ -1,6 +1,9 @@
 # OCNet 1.2.1.9000
 
 * BugReports link added in DESCRIPTION
+* `plot`: option `type = "contour"` and relative example added.
+* `draw_contour_OCN`, `draw_simple_OCN`: argument `add` added.
+* `draw_contour_OCN`: argument `contour_lwd` added.
 
 # OCNet 1.2.1
 

@@ -5,7 +5,7 @@
 draw_contour_OCN(OCN, thrADraw = 0.002 * OCN$FD$nNodes *
   OCN$cellsize^2, exactDraw = TRUE, drawContours = TRUE, colPalRiver = NULL, 
   colPalCont = "#000000", drawOutlets = 0, pch = 15, colPalOut = "#000000",
-  min_lwd = 0.5, max_lwd = 5)
+  min_lwd = 0.5, max_lwd = 5, contour_lwd = 2, add = FALSE)
 }
 \arguments{
 \item{OCN}{A \code{river} object as produced by \code{\link{landscape_OCN}}.}
@@ -28,6 +28,10 @@ the pixel that is not contiguous to its outlet is flipped. It is only effective 
 \item{colPalOut}{Color palette used to plot the outlet points (if \code{drawOutlets = TRUE}). Details as in \code{colPalRiver}. Additionally, if \code{colPalOut = 0}, the palette specified in \code{colPalRiver} is copied. }
 
 \item{min_lwd, max_lwd}{Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).}
+
+\item{contour_lwd}{Line width value for catchment contour plotting.}
+
+\item{add}{Logical. If \code{TRUE}, add to an already existing plot. Taken as \code{FALSE} (with a warning if a different value is supplied) if no graphics device is open.}
 
 }
 \value{

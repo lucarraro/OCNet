@@ -4,7 +4,8 @@ draw_simple_OCN <- function(OCN,
                             riverColor="#0066FF",
                             easyDraw=NULL,
                             min_lwd=0.5,
-                            max_lwd=5){
+                            max_lwd=5,
+                            add=FALSE){
   
   if (is.null(easyDraw)){
   if (OCN$FD$nNodes>4e4) {
@@ -12,13 +13,19 @@ draw_simple_OCN <- function(OCN,
   } else {easyDraw=FALSE}
   }
   
+  if (is.null(dev.list()) & add==TRUE){
+    add <- FALSE
+    warning("'add' will be ignored as there is no existing plot")
+  }
+  
   ## plot final state
   AvailableNodes <- setdiff(1:OCN$FD$nNodes,OCN$FD$outlet)
   #old.par <- par(no.readonly = TRUE)
   #on.exit(par(old.par))
   #par(bty="n")
+  if (!add){
   plot(c(min(OCN$FD$X),max(OCN$FD$X)),c(min(OCN$FD$Y),max(OCN$FD$Y)),
-       type="n",asp=1,axes=FALSE,xlab=" ",ylab=" ")
+       type="n",asp=1,axes=FALSE,xlab=" ",ylab=" ")}
   #points(OCN$FD$X[OCN$FD$outlet],OCN$FD$Y[OCN$FD$outlet],pch=22,col="#000000",bg="#000000")
   
   if (easyDraw==FALSE){
