@@ -62,7 +62,7 @@ plot(OCN) # equivalent to draw_thematic_OCN (with no theme specified)
 plot(OCN, OCN$AG$A) # equivalent to draw_thematic_OCN (with theme specified)
 
 plot(OCN, type = "contour") # equivalent to draw_contour_OCN 
-                            #  (which isn't the default when the OCN is aggregated)
+
 plot(OCN, type = "SC") # equivalent to draw_subcatchments_OCN (with no theme specified)
 plot(OCN, OCN$AG$A, type = "SC") # equivalent to draw_subcatchments_OCN (with theme specified)
 
