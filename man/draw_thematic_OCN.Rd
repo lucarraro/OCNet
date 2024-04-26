@@ -41,7 +41,7 @@ In this case, \code{nanColor} can be used to define the color of the river netwo
 
 \item{nanColor}{Color attributed to RN or AG nodes whose theme value is \code{NA} or \code{NaN}.}
 
-\item{riverColor}{Only effective if \code{drawNodes == TRUE}. Color used to display the OCN below the nodes.}
+\item{riverColor}{Only effective if \code{drawNodes == TRUE} or if \code{theme} is a vector of \code{NA} values (as in the default option). Color used to display the OCN below the nodes.}
 
 \item{backgroundColor}{Color used in the background of the figure. It can be either a single value, or a vector with number of components 
 equal to \code{length(chooseCM)}. If \code{length(backgroundColor) == length(chooseCM)}, each color is used to identify a different catchment selected in \code{chooseCM}

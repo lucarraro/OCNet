@@ -1,4 +1,12 @@
-# OCNet 1.2.1.9000
+# OCNet 1.2.2.9000
+
+## Minor changes
+
+* `draw_thematic_OCN`: functioning of argument `riverColor` changed.
+
+# OCNet 1.2.2
+
+## Minor changes
 
 * BugReports link added in DESCRIPTION
 * `plot`: option `type = "contour"` and relative example added.

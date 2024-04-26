@@ -178,7 +178,7 @@ draw_thematic_OCN <- function(OCN,theme=NA*numeric(OCN$AG$nNodes),
         
         hexcolor <- colPalette[colvalue]
       }
-      if (drawNodes==TRUE){
+      if (drawNodes==TRUE | all(is.na(theme))){
         lines(c(X[i],X[OCN$RN$downNode[i]]),c(Y[i],Y[OCN$RN$downNode[i]]),
               lwd=min_lwd+(max_lwd-min_lwd)*(OCN$RN$A[i]/max(OCN$RN$A[AvailableNodes]))^0.5,col=riverColor)
       } else {
