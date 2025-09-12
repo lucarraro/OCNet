@@ -11,7 +11,7 @@ riverColor = "#00BFFF", min_lwd = 0.5, max_lwd = 5, args_imagePlot = list())
 
 \item{colPalette}{Color palette used for the plot.}
 
-\item{addLegend}{Logical. If \code{TRUE}, \code{\link{image.plot}} is used to display the legend; as a result, elements (e.g. node coordinates) subsequently plotted of on top of the 2D elevation map might be wrongly positioned.}
+\item{addLegend}{Logical. If \code{TRUE}, \code{\link[fields]{imagePlot}} is used to display the legend; as a result, elements (e.g. node coordinates) subsequently plotted of on top of the 2D elevation map might be wrongly positioned.}
 
 \item{drawRiver}{Logical. If \code{TRUE}, draw the OCN on top of the elevation map.}
 
@@ -21,7 +21,7 @@ riverColor = "#00BFFF", min_lwd = 0.5, max_lwd = 5, args_imagePlot = list())
 
 \item{min_lwd, max_lwd}{Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).}
 
-\item{args_imagePlot}{List of arguments passed to \code{\link{imagePlot}} (or to \code{\link{image}} if \code{addLegend = FALSE}). For example, argument \code{smallplot} can be used to specify the plot coordinates for the legend.}
+\item{args_imagePlot}{List of arguments passed to \code{\link[fields]{imagePlot}} (or to \code{\link{image}} if \code{addLegend = FALSE}). For example, argument \code{smallplot} can be used to specify the plot coordinates for the legend.}
 }
 \value{
 No output is returned.

@@ -90,7 +90,7 @@ A \code{\link{river}} object. It is de facto a list, whose objects are listed be
 Adjacency matrices describing 4- or 8- nearest-neighbours connectivity among pixels are contained in lists \code{N4} and \code{N8}, respectively. 
 \item{\code{FD$A}}{Vector (of length \code{dimX*dimY}) containing drainage area values for all FD pixels (in square planar units).}
 \item{\code{FD$W}}{Adjacency matrix (\code{dimX*dimY} by \code{dimX*dimY}) at the FD level. 
-It is a \code{\link{spam}} object.}
+It is a \code{\link[spam]{spam}} object.}
 \item{\code{FD$downNode}}{Vector (of length \code{dimX*dimY}) representing the adjacency matrix at FD level in a vector form: 
 if \code{FD$downNode[i] = j} then \code{FD$W[i,j] = 1}. If \code{o} is the outlet pixel, 
 then \code{FD$downNode[o] = 0}.}

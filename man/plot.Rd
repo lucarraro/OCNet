@@ -39,7 +39,7 @@ has not been aggregated (via \code{aggregate_OCN} or \code{aggregate_river}), th
  \code{draw_contour_OCN}. If the river has been aggregated, \code{draw_subcatchments_OCN} or \code{draw_thematic_OCN} are used depending on \code{type}.
  Elevation maps can be produced with \code{type = "elev2D"}, regardless of whether the river has been aggregated.
 
-\emph{Adding scale bar and north arrow.} Scale bar and north arrow can be added via \code{terra}'s functions \code{\link{sbar}} and \code{\link{north}}, respectively. 
+\emph{Adding scale bar and north arrow.} Scale bar and north arrow can be added via \code{terra}'s functions \code{\link[terra]{sbar}} and \code{\link[terra]{north}}, respectively. 
 However, note that arguments \code{d} and \code{xy} must be specified by the user (because no \code{rast} object is plotted). See example.
 
 }

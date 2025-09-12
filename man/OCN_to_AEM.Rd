@@ -22,12 +22,12 @@ In such a case, water velocities must be contained in the \code{OCN} (e.g. via
 \code{\link{rivergeometry_OCN}}).}
 
 \item{moranI}{Logical. Should Moran's I statistics be computed and random tests be performed via 
-\code{\link{moran.randtest}}? 
+\code{\link[adespatial]{moran.randtest}}? 
 }
 
 }
 \value{
-A list as produced by a call to \code{\link{aem}}. If \code{moranI = TRUE}, a \code{krandtest} resulting from
+A list as produced by a call to \code{\link[adespatial]{aem}}. If \code{moranI = TRUE}, a \code{krandtest} resulting from
 the call to \code{moran.randtest} is appended to the output list.
 }
 \description{
@@ -44,7 +44,7 @@ Possible character strings for \code{weight} are:
 where \eqn{w} is the weight value for a given link, \eqn{r} its resistance value and \eqn{r_{max}} the maximum resistance value across all links.
 }
 }
-\seealso{\code{\link{aem}}, \code{\link{moran.randtest}}}
+\seealso{\code{\link[adespatial]{aem}}, \code{\link[adespatial]{moran.randtest}}}
 
 \examples{
 OCN <- aggregate_OCN(landscape_OCN(OCN_20), thrA = 5)

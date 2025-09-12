@@ -25,7 +25,7 @@ draw_subcatchments_OCN(OCN, theme = NULL, drawRiver = TRUE,
 
 \item{add}{Logical. If \code{TRUE}, add to an already existing plot. Taken as \code{FALSE} (with a warning if a different value is supplied) if no graphics device is open.}
 
-\item{args_imagePlot}{Only effective if \code{addLegend = TRUE}. List of arguments passed to \code{\link{imagePlot}} for drawing a continuous legend. For example, argument \code{smallplot} can be used to specify the plot coordinates for the legend.}
+\item{args_imagePlot}{Only effective if \code{addLegend = TRUE}. List of arguments passed to \code{\link[fields]{imagePlot}} for drawing a continuous legend. For example, argument \code{smallplot} can be used to specify the plot coordinates for the legend.}
 
 \item{...}{Further arguments to be passed to \code{image}. Default plot options are as in \code{draw_thematic_OCN}.}
 }

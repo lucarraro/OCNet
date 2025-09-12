@@ -50,7 +50,7 @@ of the slope/area relationship along upstream paths.}
 identified by the corresponding \code{OCN$FD$outlet}.}
 \item{\code{CM$W}}{Adjacency matrix (\code{OCN$nOutlet} by \code{OCN$nOutlet}) at the catchment level. Two catchments are connected 
 if they share a border. Note that this is not a flow connection. Unlike the adjacency matrices at levels FD, RN, AG, this matrix is symmetric. 
-It is a \code{\link{spam}} object.}
+It is a \code{\link[spam]{spam}} object.}
 \item{\code{CM$XContour} (\code{CM$Y_contour})}{List with number of objects equal to \code{OCN$FD$nOutlet}. Each object \code{i} is a list 
 with X (Y) coordinates of the contour of catchment \code{i} for use in plots with \code{exactDraw = FALSE} (see functions \code{\link{draw_contour_OCN}}, 
 \code{\link{draw_thematic_OCN}}). If catchment \code{i} is constituted by regions that are only connected through a diagonal flow direction, 

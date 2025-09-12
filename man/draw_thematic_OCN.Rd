@@ -48,13 +48,13 @@ equal to \code{length(chooseCM)}. If \code{length(backgroundColor) == length(cho
 (corresponding to the respective outlet). If instead \code{length(chooseCM) > 1} and \code{length(backgroundColor) == 1}, all catchments are colored with the same 
 \code{backgroundColor}.}
 
-\item{addLegend}{Logical. If \code{TRUE}, add legend to the plot. If also \code{discreteLevels = FALSE}, \code{\link{image.plot}} is used to display the legend, which appears as a colorbar; as a result, elements (e.g. node coordinates) subsequently plotted of on top of the 2D elevation map might be wrongly positioned. }
+\item{addLegend}{Logical. If \code{TRUE}, add legend to the plot. If also \code{discreteLevels = FALSE}, \code{\link[fields]{imagePlot}} is used to display the legend, which appears as a colorbar; as a result, elements (e.g. node coordinates) subsequently plotted of on top of the 2D elevation map might be wrongly positioned. }
 
 \item{min_lwd, max_lwd}{Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).}
 
 \item{add}{Logical. If \code{TRUE}, add to an already existing plot. Taken as \code{FALSE} (with a warning if a different value is supplied) if no graphics device is open.}
 
-\item{args_imagePlot}{Only effective if \code{addLegend = TRUE} and \code{discreteLevels = FALSE}. List of arguments passed to \code{\link{imagePlot}} for drawing a continuous legend. For example, argument \code{smallplot} can be used to specify the plot coordinates for the legend.}
+\item{args_imagePlot}{Only effective if \code{addLegend = TRUE} and \code{discreteLevels = FALSE}. List of arguments passed to \code{\link[fields]{imagePlot}} for drawing a continuous legend. For example, argument \code{smallplot} can be used to specify the plot coordinates for the legend.}
 
 \item{args_legend}{Only effective if \code{addLegend = TRUE} and \code{discreteLevels = TRUE}. List of arguments passed to \code{\link{legend}} for drawing a discrete legend.}
 
@@ -72,7 +72,7 @@ This function can be used to show how a certain spatial field varies along the r
 
 \emph{Default plot options.} By default, it is set \code{asp = 1}, \code{xlab = ""}, \code{ylab = ""}. If at least one between \code{xlim} and \code{ylim} is specified by the user, the default for \code{axes} is \code{TRUE}, and is \code{FALSE} if not. Specifying \code{xlim} and \code{ylim} helps zoom into a portion of the river network; however, due to the default \code{asp = 1}, the displayed region might be larger than what is expected if the ranges of \code{xlim} and \code{ylim} are different. To avoid this, set \code{asp = NA} (at the cost of producing a deformed river network).
 
-\emph{Adding scale bar and north arrow.} Scale bar and north arrow can be added via \code{terra}'s functions \code{\link{sbar}} and \code{\link{north}}, respectively. However, note that arguments \code{d} and \code{xy} must be specified by the user (because no \code{rast} object is plotted). See example 5.
+\emph{Adding scale bar and north arrow.} Scale bar and north arrow can be added via \code{terra}'s functions \code{\link[terra]{sbar}} and \code{\link[terra]{north}}, respectively. However, note that arguments \code{d} and \code{xy} must be specified by the user (because no \code{rast} object is plotted). See example 5.
 }
 \examples{
 # 1a) Six different ways to display contributing area at the AG level

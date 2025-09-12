@@ -42,7 +42,7 @@ If \code{FD$toRN[i] != 0}, then \code{FD$toRN[i]} is the index at the RN level o
 \item{\code{FD$toSC}}{Vector (of length \code{OCN$FD$nNodes}) of SC indices for all nodes at the FD level. 
 If \code{OCN$FD$toSC[i] = j}, then \code{i \%in\% OCN$SC$toFD[[j]] = TRUE}.}
 \item{\code{RN$A}}{Vector (of length \code{RN$nNodes}) containing drainage area values for all RN nodes (in square planar units).}
-\item{\code{RN$W}}{Adjacency matrix (\code{RN$nNodes} by \code{RN$nNodes}) at the RN level. It is a \code{\link{spam}} 
+\item{\code{RN$W}}{Adjacency matrix (\code{RN$nNodes} by \code{RN$nNodes}) at the RN level. It is a \code{\link[spam]{spam}} 
 object.}
 \item{\code{RN$downNode}}{Vector (of length \code{RN$nNodes}) representing the adjacency matrix at RN level in a vector form: 
 if \code{RN$downNode[i] = j} then \code{RN$W[i,j] = 1}. If \code{o} is the outlet node, then \code{RN$downNode[o] = 0}.}
@@ -70,7 +70,7 @@ If \code{i} is a channel head, then \code{AG$A[RN$toAG[i]] = RN$A[i]}.}
 \item{\code{AG$AReach}}{Vector (of length \code{AG$nNodes}) containing drainage area values computed by accounting for the areas drained by edges departing from AG nodes. 
 In other words, \code{AG$AReach[i]} is equal to the drainage area of the last downstream node belonging to the reach that departs from \code{i} 
 (namely \code{AG$AReach[i] = max(RN$A[RN$toAG == i])}).}
-\item{\code{AG$W}}{Adjacency matrix (\code{AG$nNodes} by \code{AG$nNodes}) at the AG level. It is a \code{\link{spam}} object.}
+\item{\code{AG$W}}{Adjacency matrix (\code{AG$nNodes} by \code{AG$nNodes}) at the AG level. It is a \code{\link[spam]{spam}} object.}
 \item{\code{AG$downNode}}{Vector (of length \code{AG$nNodes}) representing the adjacency matrix at AG level in a vector form: 
 if \code{AG$downNode[i] = j} then \code{AG$W[i,j] = 1}. If \code{o} is the outlet node, then \code{AG$downNode[o] = 0}.}
 \item{\code{AG$leng}}{Vector (of length \code{AG$nNodes}) of lengths of edges departing from nodes at AG level. Note that \code{AG$leng[i] = sum(RN$leng[RN$toAG == i])}.
@@ -105,7 +105,7 @@ If \code{o} is an outlet node, then \code{AG$ZReach = NaN}.}
 \item{\code{SC$ALocal}}{Vector (of length \code{SC$nNodes}) with values of subcatchment area, that is the number of FD pixels 
 (multiplied by \code{OCN$FD$cellsize^2}) that constitutes a subcatchment. If \code{o} is an outlet node, then \code{ALocal[o] = 0}.}
 \item{\code{SC$W}}{Adjacency matrix (\code{SC$nNodes} by \code{SC$nNodes}) at the subcatchment level. Two subcatchments are connected if they share a border. 
-Note that this is not a flow connection. Unlike the adjacency matrices at levels FD, RN, AG, this matrix is symmetric. It is a \code{\link{spam}} object.
+Note that this is not a flow connection. Unlike the adjacency matrices at levels FD, RN, AG, this matrix is symmetric. It is a \code{\link[spam]{spam}} object.
 If \code{o} is an outlet node, then \code{SC$W[o,]} and \code{SC$W[,o]} only contain zeros (i.e., \code{o} is unconnected to the other nodes).}
 \item{\code{SC$nNodes}}{Number of subcatchments into which the lattice is partitioned. If \code{nOutlet = 1}, then \code{SC$nNodes = AG$nNodes}. 
 If multiple outlets are present, \code{SC$nNodes} might be greater than \code{AG$nNodes} in the case when some catchments have drainage area lower than \code{thrA}. 

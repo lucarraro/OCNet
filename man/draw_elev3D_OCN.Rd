@@ -33,7 +33,7 @@ the shade at a surface facet.}
 
 \item{min_lwd, max_lwd}{Minimum and maximum values of line width used to display the OCN (actual line width is proportional to the square root of drainage area).}
 
-\item{args_imagePlot}{Only effective if \code{addColorbar = TRUE}. List of arguments passed to \code{\link{imagePlot}} for drawing a continuous legend. For example, argument \code{smallplot} can be used to specify the plot coordinates for the legend.}
+\item{args_imagePlot}{Only effective if \code{addColorbar = TRUE}. List of arguments passed to \code{\link[fields]{imagePlot}} for drawing a continuous legend. For example, argument \code{smallplot} can be used to specify the plot coordinates for the legend.}
 }
 \value{
 No output is returned.
